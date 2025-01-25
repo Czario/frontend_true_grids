@@ -1,33 +1,37 @@
 # Development stage
-FROM node:alpine AS development
+FROM node:20-alpine AS development
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
+RUN npm install -g pnpm
 
-RUN npm install
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+
+RUN pnpm install
 
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
 
 # Production stage
-FROM node:alpine AS production
+FROM node:20-alpine AS production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
+RUN npm install -g pnpm
 
-RUN npm install --only=production
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+
+RUN pnpm install --frozen-lockfile --only=production
 
 COPY --from=development /usr/src/app/.next ./.next
 COPY --from=development /usr/src/app/public ./public
 
 EXPOSE 4000
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
