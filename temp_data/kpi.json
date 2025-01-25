@@ -1,0 +1,3976 @@
+{
+    "_id": "67928d94f460430cc44d64c4",
+    "sheetName": "kpi",
+    "data": [
+        {
+            "_id": "67928d94f460430cc44d62c4",
+            "cells": [
+                {
+                    "value": "Key Performance Indicators",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62c5"
+                },
+                {
+                    "value": "Q3-2024",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62c6"
+                },
+                {
+                    "value": "Q2-2024",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62c7"
+                },
+                {
+                    "value": "Q1-2024",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62c8"
+                },
+                {
+                    "value": "Q4-2023",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62c9"
+                },
+                {
+                    "value": "Q3-2023",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62ca"
+                },
+                {
+                    "value": "Q2-2023",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62cb"
+                },
+                {
+                    "value": "Q1-2023",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62cc"
+                },
+                {
+                    "value": "Q4-2022",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62cd"
+                },
+                {
+                    "value": "Q3-2022",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62ce"
+                },
+                {
+                    "value": "Q2-2022",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62cf"
+                },
+                {
+                    "value": "Q1-2022",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d0"
+                },
+                {
+                    "value": "Q4-2021",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d1"
+                },
+                {
+                    "value": "Q3-2021",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d2"
+                },
+                {
+                    "value": "Q2-2021",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d3"
+                },
+                {
+                    "value": "Q1-2021",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d4"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d62d6",
+                    "cells": [
+                        {
+                            "value": "Total Production",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62d7"
+                        },
+                        {
+                            "value": 469796,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62d8"
+                        },
+                        {
+                            "value": 410831,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62d9"
+                        },
+                        {
+                            "value": 433371,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62da"
+                        },
+                        {
+                            "value": 494989,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62db"
+                        },
+                        {
+                            "value": 430488,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62dc"
+                        },
+                        {
+                            "value": 479700,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62dd"
+                        },
+                        {
+                            "value": 440808,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62de"
+                        },
+                        {
+                            "value": 439701,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62df"
+                        },
+                        {
+                            "value": 365923,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e0"
+                        },
+                        {
+                            "value": 258580,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e1"
+                        },
+                        {
+                            "value": 305407,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e2"
+                        },
+                        {
+                            "value": 305840,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e3"
+                        },
+                        {
+                            "value": 237823,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e4"
+                        },
+                        {
+                            "value": 206421,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e5"
+                        },
+                        {
+                            "value": 180338,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62e6"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "67928d94f460430cc44d62f9",
+                            "cells": [
+                                {
+                                    "value": "Model 3/Y Production",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d62fa"
+                                },
+                                {
+                                    "value": 443668,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d62fb"
+                                },
+                                {
+                                    "value": 386576,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d62fc"
+                                },
+                                {
+                                    "value": 412376,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d62fd"
+                                },
+                                {
+                                    "value": 476777,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d62fe"
+                                },
+                                {
+                                    "value": 416800,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d62ff"
+                                },
+                                {
+                                    "value": 460211,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6300"
+                                },
+                                {
+                                    "value": 421371,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6301"
+                                },
+                                {
+                                    "value": 419088,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6302"
+                                },
+                                {
+                                    "value": 345988,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6303"
+                                },
+                                {
+                                    "value": 242169,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6304"
+                                },
+                                {
+                                    "value": 291189,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6305"
+                                },
+                                {
+                                    "value": 292731,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6306"
+                                },
+                                {
+                                    "value": 228882,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6307"
+                                },
+                                {
+                                    "value": 204081,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6308"
+                                },
+                                {
+                                    "value": 180338,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6309"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d62d6",
+                            "order": 2,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d631c",
+                            "cells": [
+                                {
+                                    "value": "Other Models Production",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d631d"
+                                },
+                                {
+                                    "value": 26128,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d631e"
+                                },
+                                {
+                                    "value": 24255,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d631f"
+                                },
+                                {
+                                    "value": 20995,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6320"
+                                },
+                                {
+                                    "value": 18212,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6321"
+                                },
+                                {
+                                    "value": 13688,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6322"
+                                },
+                                {
+                                    "value": 19489,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6323"
+                                },
+                                {
+                                    "value": 19437,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6324"
+                                },
+                                {
+                                    "value": 20613,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6325"
+                                },
+                                {
+                                    "value": 19935,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6326"
+                                },
+                                {
+                                    "value": 16411,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6327"
+                                },
+                                {
+                                    "value": 14218,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6328"
+                                },
+                                {
+                                    "value": 13109,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6329"
+                                },
+                                {
+                                    "value": 8941,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d632a"
+                                },
+                                {
+                                    "value": 2340,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d632b"
+                                },
+                                {
+                                    "value": 0,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d632c"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d62d6",
+                            "order": 3,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "67928d94f460430cc44d62c4",
+                    "order": 1,
+                    "level": 1
+                },
+                {
+                    "_id": "67928d94f460430cc44d633f",
+                    "cells": [
+                        {
+                            "value": "Total Deliveries",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6340"
+                        },
+                        {
+                            "value": 462890,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6341"
+                        },
+                        {
+                            "value": 443956,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6342"
+                        },
+                        {
+                            "value": 386810,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6343"
+                        },
+                        {
+                            "value": 484507,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6344"
+                        },
+                        {
+                            "value": 435059,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6345"
+                        },
+                        {
+                            "value": 466140,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6346"
+                        },
+                        {
+                            "value": 422875,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6347"
+                        },
+                        {
+                            "value": 405278,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6348"
+                        },
+                        {
+                            "value": 343830,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6349"
+                        },
+                        {
+                            "value": 254695,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d634a"
+                        },
+                        {
+                            "value": 310048,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d634b"
+                        },
+                        {
+                            "value": 308650,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d634c"
+                        },
+                        {
+                            "value": 241391,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d634d"
+                        },
+                        {
+                            "value": 201304,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d634e"
+                        },
+                        {
+                            "value": 184877,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d634f"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "67928d94f460430cc44d6362",
+                            "cells": [
+                                {
+                                    "value": "Model 3/Y Deliveries",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6363"
+                                },
+                                {
+                                    "value": 439975,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6364"
+                                },
+                                {
+                                    "value": 422405,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6365"
+                                },
+                                {
+                                    "value": 369783,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6366"
+                                },
+                                {
+                                    "value": 461538,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6367"
+                                },
+                                {
+                                    "value": 419074,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6368"
+                                },
+                                {
+                                    "value": 446915,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6369"
+                                },
+                                {
+                                    "value": 412180,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d636a"
+                                },
+                                {
+                                    "value": 388131,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d636b"
+                                },
+                                {
+                                    "value": 325158,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d636c"
+                                },
+                                {
+                                    "value": 238533,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d636d"
+                                },
+                                {
+                                    "value": 295324,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d636e"
+                                },
+                                {
+                                    "value": 296884,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d636f"
+                                },
+                                {
+                                    "value": 232102,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6370"
+                                },
+                                {
+                                    "value": 199409,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6371"
+                                },
+                                {
+                                    "value": 182847,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6372"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d633f",
+                            "order": 5,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d6385",
+                            "cells": [
+                                {
+                                    "value": "Other Models Deliveries",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6386"
+                                },
+                                {
+                                    "value": 22915,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6387"
+                                },
+                                {
+                                    "value": 21551,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6388"
+                                },
+                                {
+                                    "value": 17027,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6389"
+                                },
+                                {
+                                    "value": 22969,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d638a"
+                                },
+                                {
+                                    "value": 15985,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d638b"
+                                },
+                                {
+                                    "value": 19225,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d638c"
+                                },
+                                {
+                                    "value": 10695,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d638d"
+                                },
+                                {
+                                    "value": 17147,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d638e"
+                                },
+                                {
+                                    "value": 18672,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d638f"
+                                },
+                                {
+                                    "value": 16162,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6390"
+                                },
+                                {
+                                    "value": 14724,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6391"
+                                },
+                                {
+                                    "value": 11766,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6392"
+                                },
+                                {
+                                    "value": 9289,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6393"
+                                },
+                                {
+                                    "value": 1895,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6394"
+                                },
+                                {
+                                    "value": 2030,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6395"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d633f",
+                            "order": 6,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "67928d94f460430cc44d62c4",
+                    "order": 4,
+                    "level": 1
+                },
+                {
+                    "_id": "67928d94f460430cc44d63a8",
+                    "cells": [
+                        {
+                            "value": "Revenue by Geography",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63a9"
+                        },
+                        {
+                            "value": 25182,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63aa"
+                        },
+                        {
+                            "value": 25500,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63ab"
+                        },
+                        {
+                            "value": 21301,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63ac"
+                        },
+                        {
+                            "value": 25167,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63ad"
+                        },
+                        {
+                            "value": 23350,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63ae"
+                        },
+                        {
+                            "value": 24927,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63af"
+                        },
+                        {
+                            "value": 23329,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b0"
+                        },
+                        {
+                            "value": 24318,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b1"
+                        },
+                        {
+                            "value": 21454,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b2"
+                        },
+                        {
+                            "value": 16934,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b3"
+                        },
+                        {
+                            "value": 18756,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b4"
+                        },
+                        {
+                            "value": 17719,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b5"
+                        },
+                        {
+                            "value": 13757,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b6"
+                        },
+                        {
+                            "value": 11958,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b7"
+                        },
+                        {
+                            "value": 10389,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63b8"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "67928d94f460430cc44d63cb",
+                            "cells": [
+                                {
+                                    "value": "United States Revenue",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63cc"
+                                },
+                                {
+                                    "value": 12584,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63cd"
+                                },
+                                {
+                                    "value": 13256,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63ce"
+                                },
+                                {
+                                    "value": 9762,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63cf"
+                                },
+                                {
+                                    "value": 11763,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d0"
+                                },
+                                {
+                                    "value": 10893,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d1"
+                                },
+                                {
+                                    "value": 11332,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d2"
+                                },
+                                {
+                                    "value": 11247,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d3"
+                                },
+                                {
+                                    "value": 11969,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d4"
+                                },
+                                {
+                                    "value": 10236,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d5"
+                                },
+                                {
+                                    "value": 9614,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d6"
+                                },
+                                {
+                                    "value": 8734,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d7"
+                                },
+                                {
+                                    "value": 7930,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d8"
+                                },
+                                {
+                                    "value": 6414,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63d9"
+                                },
+                                {
+                                    "value": 5205,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63da"
+                                },
+                                {
+                                    "value": 4424,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63db"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d63a8",
+                            "order": 8,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d63ee",
+                            "cells": [
+                                {
+                                    "value": "China Revenue",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63ef"
+                                },
+                                {
+                                    "value": 5665,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f0"
+                                },
+                                {
+                                    "value": 4636,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f1"
+                                },
+                                {
+                                    "value": 4592,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f2"
+                                },
+                                {
+                                    "value": 6103,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f3"
+                                },
+                                {
+                                    "value": 5020,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f4"
+                                },
+                                {
+                                    "value": 5731,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f5"
+                                },
+                                {
+                                    "value": 4891,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f6"
+                                },
+                                {
+                                    "value": 4577,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f7"
+                                },
+                                {
+                                    "value": 5131,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f8"
+                                },
+                                {
+                                    "value": 3787,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63f9"
+                                },
+                                {
+                                    "value": 4650,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63fa"
+                                },
+                                {
+                                    "value": 4829,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63fb"
+                                },
+                                {
+                                    "value": 3113,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63fc"
+                                },
+                                {
+                                    "value": 2859,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63fd"
+                                },
+                                {
+                                    "value": 3043,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d63fe"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d63a8",
+                            "order": 9,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d6411",
+                            "cells": [
+                                {
+                                    "value": "Other Geographic Revenue",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6412"
+                                },
+                                {
+                                    "value": 6933,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6413"
+                                },
+                                {
+                                    "value": 7608,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6414"
+                                },
+                                {
+                                    "value": 6947,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6415"
+                                },
+                                {
+                                    "value": 7301,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6416"
+                                },
+                                {
+                                    "value": 7437,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6417"
+                                },
+                                {
+                                    "value": 7864,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6418"
+                                },
+                                {
+                                    "value": 7191,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6419"
+                                },
+                                {
+                                    "value": 7772,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d641a"
+                                },
+                                {
+                                    "value": 6087,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d641b"
+                                },
+                                {
+                                    "value": 3533,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d641c"
+                                },
+                                {
+                                    "value": 5372,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d641d"
+                                },
+                                {
+                                    "value": 4960,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d641e"
+                                },
+                                {
+                                    "value": 4230,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d641f"
+                                },
+                                {
+                                    "value": 3894,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6420"
+                                },
+                                {
+                                    "value": 2922,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6421"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d63a8",
+                            "order": 10,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "67928d94f460430cc44d62c4",
+                    "order": 7,
+                    "level": 1
+                },
+                {
+                    "_id": "67928d94f460430cc44d6434",
+                    "cells": [
+                        {
+                            "value": "Assets by Geography",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6435"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "67928d94f460430cc44d6448",
+                            "cells": [
+                                {
+                                    "value": "United States",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6449"
+                                },
+                                {
+                                    "value": 26629,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d644a"
+                                },
+                                {
+                                    "value": 21667,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d644b"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6434",
+                            "order": 12,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d644f",
+                            "cells": [
+                                {
+                                    "value": "Germany",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6450"
+                                },
+                                {
+                                    "value": 4258,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6451"
+                                },
+                                {
+                                    "value": 3547,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6452"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6434",
+                            "order": 13,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d6456",
+                            "cells": [
+                                {
+                                    "value": "China",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6457"
+                                },
+                                {
+                                    "value": 2820,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6458"
+                                },
+                                {
+                                    "value": 2978,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6459"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6434",
+                            "order": 14,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d645d",
+                            "cells": [
+                                {
+                                    "value": "Other international",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d645e"
+                                },
+                                {
+                                    "value": 1247,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d645f"
+                                },
+                                {
+                                    "value": 845,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6460"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6434",
+                            "order": 15,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "67928d94f460430cc44d62c4",
+                    "order": 11,
+                    "level": 1
+                },
+                {
+                    "_id": "67928d94f460430cc44d6464",
+                    "cells": [
+                        {
+                            "value": "Inventory",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6465"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "67928d94f460430cc44d6478",
+                            "cells": [
+                                {
+                                    "value": "Automotive",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6479"
+                                },
+                                {
+                                    "value": 11139,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d647a"
+                                },
+                                {
+                                    "value": 10996,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d647b"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6464",
+                            "order": 17,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d647f",
+                            "cells": [
+                                {
+                                    "value": "Energy generation and storage",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6480"
+                                },
+                                {
+                                    "value": 2487,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6481"
+                                },
+                                {
+                                    "value": 1843,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d6482"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6464",
+                            "order": 18,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "67928d94f460430cc44d62c4",
+                    "order": 16,
+                    "level": 1
+                },
+                {
+                    "_id": "67928d94f460430cc44d6486",
+                    "cells": [
+                        {
+                            "value": "Production Location",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6487"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "67928d94f460430cc44d649a",
+                            "cells": [
+                                {
+                                    "value": "Fremont Factory",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d649b"
+                                },
+                                {
+                                    "value": "Model S / Model X/ Model 3 / Model Y",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d649c"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 20,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d64a0",
+                            "cells": [
+                                {
+                                    "value": "Gigafactory Shanghai",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64a1"
+                                },
+                                {
+                                    "value": "Model 3 / Model Y",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64a2"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 21,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d64a6",
+                            "cells": [
+                                {
+                                    "value": "Gigafactory Berlin-Brandenburg",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64a7"
+                                },
+                                {
+                                    "value": "Model Y",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64a8"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 22,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d64ac",
+                            "cells": [
+                                {
+                                    "value": "Gigafactory Texas",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64ad"
+                                },
+                                {
+                                    "value": "Model Y / Cybertruck",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64ae"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 23,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d64b2",
+                            "cells": [
+                                {
+                                    "value": "Gigafactory Nevada",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64b3"
+                                },
+                                {
+                                    "value": "Tesla Semi",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64b4"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 24,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d64b8",
+                            "cells": [
+                                {
+                                    "value": "Various",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64b9"
+                                },
+                                {
+                                    "value": "Next Generation Platform",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64ba"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 25,
+                            "level": 2
+                        },
+                        {
+                            "_id": "67928d94f460430cc44d64be",
+                            "cells": [
+                                {
+                                    "value": "TBD",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64bf"
+                                },
+                                {
+                                    "value": "Roadster",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "67928d94f460430cc44d64c0"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "67928d94f460430cc44d6486",
+                            "order": 26,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "67928d94f460430cc44d62c4",
+                    "order": 19,
+                    "level": 1
+                }
+            ],
+            "parent": null,
+            "order": 0,
+            "level": 0
+        },
+        {
+            "_id": "67928d94f460430cc44d62d6",
+            "cells": [
+                {
+                    "value": "Total Production",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d7"
+                },
+                {
+                    "value": 469796,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d8"
+                },
+                {
+                    "value": 410831,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62d9"
+                },
+                {
+                    "value": 433371,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62da"
+                },
+                {
+                    "value": 494989,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62db"
+                },
+                {
+                    "value": 430488,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62dc"
+                },
+                {
+                    "value": 479700,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62dd"
+                },
+                {
+                    "value": 440808,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62de"
+                },
+                {
+                    "value": 439701,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62df"
+                },
+                {
+                    "value": 365923,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e0"
+                },
+                {
+                    "value": 258580,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e1"
+                },
+                {
+                    "value": 305407,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e2"
+                },
+                {
+                    "value": 305840,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e3"
+                },
+                {
+                    "value": 237823,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e4"
+                },
+                {
+                    "value": 206421,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e5"
+                },
+                {
+                    "value": 180338,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62e6"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d62f9",
+                    "cells": [
+                        {
+                            "value": "Model 3/Y Production",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62fa"
+                        },
+                        {
+                            "value": 443668,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62fb"
+                        },
+                        {
+                            "value": 386576,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62fc"
+                        },
+                        {
+                            "value": 412376,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62fd"
+                        },
+                        {
+                            "value": 476777,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62fe"
+                        },
+                        {
+                            "value": 416800,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d62ff"
+                        },
+                        {
+                            "value": 460211,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6300"
+                        },
+                        {
+                            "value": 421371,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6301"
+                        },
+                        {
+                            "value": 419088,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6302"
+                        },
+                        {
+                            "value": 345988,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6303"
+                        },
+                        {
+                            "value": 242169,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6304"
+                        },
+                        {
+                            "value": 291189,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6305"
+                        },
+                        {
+                            "value": 292731,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6306"
+                        },
+                        {
+                            "value": 228882,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6307"
+                        },
+                        {
+                            "value": 204081,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6308"
+                        },
+                        {
+                            "value": 180338,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6309"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d62d6",
+                    "order": 2,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d631c",
+                    "cells": [
+                        {
+                            "value": "Other Models Production",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d631d"
+                        },
+                        {
+                            "value": 26128,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d631e"
+                        },
+                        {
+                            "value": 24255,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d631f"
+                        },
+                        {
+                            "value": 20995,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6320"
+                        },
+                        {
+                            "value": 18212,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6321"
+                        },
+                        {
+                            "value": 13688,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6322"
+                        },
+                        {
+                            "value": 19489,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6323"
+                        },
+                        {
+                            "value": 19437,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6324"
+                        },
+                        {
+                            "value": 20613,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6325"
+                        },
+                        {
+                            "value": 19935,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6326"
+                        },
+                        {
+                            "value": 16411,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6327"
+                        },
+                        {
+                            "value": 14218,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6328"
+                        },
+                        {
+                            "value": 13109,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6329"
+                        },
+                        {
+                            "value": 8941,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d632a"
+                        },
+                        {
+                            "value": 2340,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d632b"
+                        },
+                        {
+                            "value": 0,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d632c"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d62d6",
+                    "order": 3,
+                    "level": 2
+                }
+            ],
+            "parent": "67928d94f460430cc44d62c4",
+            "order": 1,
+            "level": 1
+        },
+        {
+            "_id": "67928d94f460430cc44d62f9",
+            "cells": [
+                {
+                    "value": "Model 3/Y Production",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62fa"
+                },
+                {
+                    "value": 443668,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62fb"
+                },
+                {
+                    "value": 386576,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62fc"
+                },
+                {
+                    "value": 412376,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62fd"
+                },
+                {
+                    "value": 476777,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62fe"
+                },
+                {
+                    "value": 416800,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d62ff"
+                },
+                {
+                    "value": 460211,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6300"
+                },
+                {
+                    "value": 421371,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6301"
+                },
+                {
+                    "value": 419088,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6302"
+                },
+                {
+                    "value": 345988,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6303"
+                },
+                {
+                    "value": 242169,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6304"
+                },
+                {
+                    "value": 291189,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6305"
+                },
+                {
+                    "value": 292731,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6306"
+                },
+                {
+                    "value": 228882,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6307"
+                },
+                {
+                    "value": 204081,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6308"
+                },
+                {
+                    "value": 180338,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6309"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d62d6",
+            "order": 2,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d631c",
+            "cells": [
+                {
+                    "value": "Other Models Production",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d631d"
+                },
+                {
+                    "value": 26128,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d631e"
+                },
+                {
+                    "value": 24255,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d631f"
+                },
+                {
+                    "value": 20995,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6320"
+                },
+                {
+                    "value": 18212,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6321"
+                },
+                {
+                    "value": 13688,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6322"
+                },
+                {
+                    "value": 19489,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6323"
+                },
+                {
+                    "value": 19437,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6324"
+                },
+                {
+                    "value": 20613,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6325"
+                },
+                {
+                    "value": 19935,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6326"
+                },
+                {
+                    "value": 16411,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6327"
+                },
+                {
+                    "value": 14218,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6328"
+                },
+                {
+                    "value": 13109,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6329"
+                },
+                {
+                    "value": 8941,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d632a"
+                },
+                {
+                    "value": 2340,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d632b"
+                },
+                {
+                    "value": 0,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d632c"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d62d6",
+            "order": 3,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d633f",
+            "cells": [
+                {
+                    "value": "Total Deliveries",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6340"
+                },
+                {
+                    "value": 462890,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6341"
+                },
+                {
+                    "value": 443956,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6342"
+                },
+                {
+                    "value": 386810,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6343"
+                },
+                {
+                    "value": 484507,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6344"
+                },
+                {
+                    "value": 435059,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6345"
+                },
+                {
+                    "value": 466140,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6346"
+                },
+                {
+                    "value": 422875,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6347"
+                },
+                {
+                    "value": 405278,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6348"
+                },
+                {
+                    "value": 343830,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6349"
+                },
+                {
+                    "value": 254695,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d634a"
+                },
+                {
+                    "value": 310048,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d634b"
+                },
+                {
+                    "value": 308650,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d634c"
+                },
+                {
+                    "value": 241391,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d634d"
+                },
+                {
+                    "value": 201304,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d634e"
+                },
+                {
+                    "value": 184877,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d634f"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d6362",
+                    "cells": [
+                        {
+                            "value": "Model 3/Y Deliveries",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6363"
+                        },
+                        {
+                            "value": 439975,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6364"
+                        },
+                        {
+                            "value": 422405,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6365"
+                        },
+                        {
+                            "value": 369783,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6366"
+                        },
+                        {
+                            "value": 461538,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6367"
+                        },
+                        {
+                            "value": 419074,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6368"
+                        },
+                        {
+                            "value": 446915,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6369"
+                        },
+                        {
+                            "value": 412180,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d636a"
+                        },
+                        {
+                            "value": 388131,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d636b"
+                        },
+                        {
+                            "value": 325158,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d636c"
+                        },
+                        {
+                            "value": 238533,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d636d"
+                        },
+                        {
+                            "value": 295324,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d636e"
+                        },
+                        {
+                            "value": 296884,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d636f"
+                        },
+                        {
+                            "value": 232102,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6370"
+                        },
+                        {
+                            "value": 199409,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6371"
+                        },
+                        {
+                            "value": 182847,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6372"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d633f",
+                    "order": 5,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d6385",
+                    "cells": [
+                        {
+                            "value": "Other Models Deliveries",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6386"
+                        },
+                        {
+                            "value": 22915,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6387"
+                        },
+                        {
+                            "value": 21551,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6388"
+                        },
+                        {
+                            "value": 17027,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6389"
+                        },
+                        {
+                            "value": 22969,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d638a"
+                        },
+                        {
+                            "value": 15985,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d638b"
+                        },
+                        {
+                            "value": 19225,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d638c"
+                        },
+                        {
+                            "value": 10695,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d638d"
+                        },
+                        {
+                            "value": 17147,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d638e"
+                        },
+                        {
+                            "value": 18672,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d638f"
+                        },
+                        {
+                            "value": 16162,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6390"
+                        },
+                        {
+                            "value": 14724,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6391"
+                        },
+                        {
+                            "value": 11766,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6392"
+                        },
+                        {
+                            "value": 9289,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6393"
+                        },
+                        {
+                            "value": 1895,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6394"
+                        },
+                        {
+                            "value": 2030,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6395"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d633f",
+                    "order": 6,
+                    "level": 2
+                }
+            ],
+            "parent": "67928d94f460430cc44d62c4",
+            "order": 4,
+            "level": 1
+        },
+        {
+            "_id": "67928d94f460430cc44d6362",
+            "cells": [
+                {
+                    "value": "Model 3/Y Deliveries",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6363"
+                },
+                {
+                    "value": 439975,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6364"
+                },
+                {
+                    "value": 422405,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6365"
+                },
+                {
+                    "value": 369783,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6366"
+                },
+                {
+                    "value": 461538,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6367"
+                },
+                {
+                    "value": 419074,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6368"
+                },
+                {
+                    "value": 446915,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6369"
+                },
+                {
+                    "value": 412180,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d636a"
+                },
+                {
+                    "value": 388131,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d636b"
+                },
+                {
+                    "value": 325158,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d636c"
+                },
+                {
+                    "value": 238533,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d636d"
+                },
+                {
+                    "value": 295324,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d636e"
+                },
+                {
+                    "value": 296884,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d636f"
+                },
+                {
+                    "value": 232102,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6370"
+                },
+                {
+                    "value": 199409,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6371"
+                },
+                {
+                    "value": 182847,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6372"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d633f",
+            "order": 5,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d6385",
+            "cells": [
+                {
+                    "value": "Other Models Deliveries",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6386"
+                },
+                {
+                    "value": 22915,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6387"
+                },
+                {
+                    "value": 21551,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6388"
+                },
+                {
+                    "value": 17027,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6389"
+                },
+                {
+                    "value": 22969,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d638a"
+                },
+                {
+                    "value": 15985,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d638b"
+                },
+                {
+                    "value": 19225,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d638c"
+                },
+                {
+                    "value": 10695,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d638d"
+                },
+                {
+                    "value": 17147,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d638e"
+                },
+                {
+                    "value": 18672,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d638f"
+                },
+                {
+                    "value": 16162,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6390"
+                },
+                {
+                    "value": 14724,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6391"
+                },
+                {
+                    "value": 11766,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6392"
+                },
+                {
+                    "value": 9289,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6393"
+                },
+                {
+                    "value": 1895,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6394"
+                },
+                {
+                    "value": 2030,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6395"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d633f",
+            "order": 6,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d63a8",
+            "cells": [
+                {
+                    "value": "Revenue by Geography",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63a9"
+                },
+                {
+                    "value": 25182,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63aa"
+                },
+                {
+                    "value": 25500,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63ab"
+                },
+                {
+                    "value": 21301,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63ac"
+                },
+                {
+                    "value": 25167,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63ad"
+                },
+                {
+                    "value": 23350,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63ae"
+                },
+                {
+                    "value": 24927,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63af"
+                },
+                {
+                    "value": 23329,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b0"
+                },
+                {
+                    "value": 24318,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b1"
+                },
+                {
+                    "value": 21454,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b2"
+                },
+                {
+                    "value": 16934,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b3"
+                },
+                {
+                    "value": 18756,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b4"
+                },
+                {
+                    "value": 17719,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b5"
+                },
+                {
+                    "value": 13757,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b6"
+                },
+                {
+                    "value": 11958,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b7"
+                },
+                {
+                    "value": 10389,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63b8"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d63cb",
+                    "cells": [
+                        {
+                            "value": "United States Revenue",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63cc"
+                        },
+                        {
+                            "value": 12584,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63cd"
+                        },
+                        {
+                            "value": 13256,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63ce"
+                        },
+                        {
+                            "value": 9762,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63cf"
+                        },
+                        {
+                            "value": 11763,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d0"
+                        },
+                        {
+                            "value": 10893,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d1"
+                        },
+                        {
+                            "value": 11332,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d2"
+                        },
+                        {
+                            "value": 11247,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d3"
+                        },
+                        {
+                            "value": 11969,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d4"
+                        },
+                        {
+                            "value": 10236,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d5"
+                        },
+                        {
+                            "value": 9614,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d6"
+                        },
+                        {
+                            "value": 8734,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d7"
+                        },
+                        {
+                            "value": 7930,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d8"
+                        },
+                        {
+                            "value": 6414,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63d9"
+                        },
+                        {
+                            "value": 5205,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63da"
+                        },
+                        {
+                            "value": 4424,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63db"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d63a8",
+                    "order": 8,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d63ee",
+                    "cells": [
+                        {
+                            "value": "China Revenue",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63ef"
+                        },
+                        {
+                            "value": 5665,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f0"
+                        },
+                        {
+                            "value": 4636,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f1"
+                        },
+                        {
+                            "value": 4592,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f2"
+                        },
+                        {
+                            "value": 6103,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f3"
+                        },
+                        {
+                            "value": 5020,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f4"
+                        },
+                        {
+                            "value": 5731,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f5"
+                        },
+                        {
+                            "value": 4891,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f6"
+                        },
+                        {
+                            "value": 4577,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f7"
+                        },
+                        {
+                            "value": 5131,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f8"
+                        },
+                        {
+                            "value": 3787,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63f9"
+                        },
+                        {
+                            "value": 4650,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63fa"
+                        },
+                        {
+                            "value": 4829,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63fb"
+                        },
+                        {
+                            "value": 3113,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63fc"
+                        },
+                        {
+                            "value": 2859,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63fd"
+                        },
+                        {
+                            "value": 3043,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d63fe"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d63a8",
+                    "order": 9,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d6411",
+                    "cells": [
+                        {
+                            "value": "Other Geographic Revenue",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6412"
+                        },
+                        {
+                            "value": 6933,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6413"
+                        },
+                        {
+                            "value": 7608,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6414"
+                        },
+                        {
+                            "value": 6947,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6415"
+                        },
+                        {
+                            "value": 7301,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6416"
+                        },
+                        {
+                            "value": 7437,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6417"
+                        },
+                        {
+                            "value": 7864,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6418"
+                        },
+                        {
+                            "value": 7191,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6419"
+                        },
+                        {
+                            "value": 7772,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d641a"
+                        },
+                        {
+                            "value": 6087,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d641b"
+                        },
+                        {
+                            "value": 3533,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d641c"
+                        },
+                        {
+                            "value": 5372,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d641d"
+                        },
+                        {
+                            "value": 4960,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d641e"
+                        },
+                        {
+                            "value": 4230,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d641f"
+                        },
+                        {
+                            "value": 3894,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6420"
+                        },
+                        {
+                            "value": 2922,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6421"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d63a8",
+                    "order": 10,
+                    "level": 2
+                }
+            ],
+            "parent": "67928d94f460430cc44d62c4",
+            "order": 7,
+            "level": 1
+        },
+        {
+            "_id": "67928d94f460430cc44d63cb",
+            "cells": [
+                {
+                    "value": "United States Revenue",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63cc"
+                },
+                {
+                    "value": 12584,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63cd"
+                },
+                {
+                    "value": 13256,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63ce"
+                },
+                {
+                    "value": 9762,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63cf"
+                },
+                {
+                    "value": 11763,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d0"
+                },
+                {
+                    "value": 10893,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d1"
+                },
+                {
+                    "value": 11332,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d2"
+                },
+                {
+                    "value": 11247,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d3"
+                },
+                {
+                    "value": 11969,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d4"
+                },
+                {
+                    "value": 10236,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d5"
+                },
+                {
+                    "value": 9614,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d6"
+                },
+                {
+                    "value": 8734,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d7"
+                },
+                {
+                    "value": 7930,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d8"
+                },
+                {
+                    "value": 6414,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63d9"
+                },
+                {
+                    "value": 5205,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63da"
+                },
+                {
+                    "value": 4424,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63db"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d63a8",
+            "order": 8,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d63ee",
+            "cells": [
+                {
+                    "value": "China Revenue",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63ef"
+                },
+                {
+                    "value": 5665,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f0"
+                },
+                {
+                    "value": 4636,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f1"
+                },
+                {
+                    "value": 4592,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f2"
+                },
+                {
+                    "value": 6103,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f3"
+                },
+                {
+                    "value": 5020,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f4"
+                },
+                {
+                    "value": 5731,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f5"
+                },
+                {
+                    "value": 4891,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f6"
+                },
+                {
+                    "value": 4577,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f7"
+                },
+                {
+                    "value": 5131,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f8"
+                },
+                {
+                    "value": 3787,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63f9"
+                },
+                {
+                    "value": 4650,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63fa"
+                },
+                {
+                    "value": 4829,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63fb"
+                },
+                {
+                    "value": 3113,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63fc"
+                },
+                {
+                    "value": 2859,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63fd"
+                },
+                {
+                    "value": 3043,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d63fe"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d63a8",
+            "order": 9,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d6411",
+            "cells": [
+                {
+                    "value": "Other Geographic Revenue",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6412"
+                },
+                {
+                    "value": 6933,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6413"
+                },
+                {
+                    "value": 7608,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6414"
+                },
+                {
+                    "value": 6947,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6415"
+                },
+                {
+                    "value": 7301,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6416"
+                },
+                {
+                    "value": 7437,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6417"
+                },
+                {
+                    "value": 7864,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6418"
+                },
+                {
+                    "value": 7191,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6419"
+                },
+                {
+                    "value": 7772,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d641a"
+                },
+                {
+                    "value": 6087,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d641b"
+                },
+                {
+                    "value": 3533,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d641c"
+                },
+                {
+                    "value": 5372,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d641d"
+                },
+                {
+                    "value": 4960,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d641e"
+                },
+                {
+                    "value": 4230,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d641f"
+                },
+                {
+                    "value": 3894,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6420"
+                },
+                {
+                    "value": 2922,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6421"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d63a8",
+            "order": 10,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d6434",
+            "cells": [
+                {
+                    "value": "Assets by Geography",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6435"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d6448",
+                    "cells": [
+                        {
+                            "value": "United States",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6449"
+                        },
+                        {
+                            "value": 26629,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d644a"
+                        },
+                        {
+                            "value": 21667,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d644b"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6434",
+                    "order": 12,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d644f",
+                    "cells": [
+                        {
+                            "value": "Germany",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6450"
+                        },
+                        {
+                            "value": 4258,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6451"
+                        },
+                        {
+                            "value": 3547,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6452"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6434",
+                    "order": 13,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d6456",
+                    "cells": [
+                        {
+                            "value": "China",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6457"
+                        },
+                        {
+                            "value": 2820,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6458"
+                        },
+                        {
+                            "value": 2978,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6459"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6434",
+                    "order": 14,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d645d",
+                    "cells": [
+                        {
+                            "value": "Other international",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d645e"
+                        },
+                        {
+                            "value": 1247,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d645f"
+                        },
+                        {
+                            "value": 845,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6460"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6434",
+                    "order": 15,
+                    "level": 2
+                }
+            ],
+            "parent": "67928d94f460430cc44d62c4",
+            "order": 11,
+            "level": 1
+        },
+        {
+            "_id": "67928d94f460430cc44d6448",
+            "cells": [
+                {
+                    "value": "United States",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6449"
+                },
+                {
+                    "value": 26629,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d644a"
+                },
+                {
+                    "value": 21667,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d644b"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6434",
+            "order": 12,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d644f",
+            "cells": [
+                {
+                    "value": "Germany",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6450"
+                },
+                {
+                    "value": 4258,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6451"
+                },
+                {
+                    "value": 3547,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6452"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6434",
+            "order": 13,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d6456",
+            "cells": [
+                {
+                    "value": "China",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6457"
+                },
+                {
+                    "value": 2820,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6458"
+                },
+                {
+                    "value": 2978,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6459"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6434",
+            "order": 14,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d645d",
+            "cells": [
+                {
+                    "value": "Other international",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d645e"
+                },
+                {
+                    "value": 1247,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d645f"
+                },
+                {
+                    "value": 845,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6460"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6434",
+            "order": 15,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d6464",
+            "cells": [
+                {
+                    "value": "Inventory",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6465"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d6478",
+                    "cells": [
+                        {
+                            "value": "Automotive",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6479"
+                        },
+                        {
+                            "value": 11139,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d647a"
+                        },
+                        {
+                            "value": 10996,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d647b"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6464",
+                    "order": 17,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d647f",
+                    "cells": [
+                        {
+                            "value": "Energy generation and storage",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6480"
+                        },
+                        {
+                            "value": 2487,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6481"
+                        },
+                        {
+                            "value": 1843,
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d6482"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6464",
+                    "order": 18,
+                    "level": 2
+                }
+            ],
+            "parent": "67928d94f460430cc44d62c4",
+            "order": 16,
+            "level": 1
+        },
+        {
+            "_id": "67928d94f460430cc44d6478",
+            "cells": [
+                {
+                    "value": "Automotive",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6479"
+                },
+                {
+                    "value": 11139,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d647a"
+                },
+                {
+                    "value": 10996,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d647b"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6464",
+            "order": 17,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d647f",
+            "cells": [
+                {
+                    "value": "Energy generation and storage",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6480"
+                },
+                {
+                    "value": 2487,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6481"
+                },
+                {
+                    "value": 1843,
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6482"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6464",
+            "order": 18,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d6486",
+            "cells": [
+                {
+                    "value": "Production Location",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d6487"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "67928d94f460430cc44d649a",
+                    "cells": [
+                        {
+                            "value": "Fremont Factory",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d649b"
+                        },
+                        {
+                            "value": "Model S / Model X/ Model 3 / Model Y",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d649c"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 20,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d64a0",
+                    "cells": [
+                        {
+                            "value": "Gigafactory Shanghai",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64a1"
+                        },
+                        {
+                            "value": "Model 3 / Model Y",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64a2"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 21,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d64a6",
+                    "cells": [
+                        {
+                            "value": "Gigafactory Berlin-Brandenburg",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64a7"
+                        },
+                        {
+                            "value": "Model Y",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64a8"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 22,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d64ac",
+                    "cells": [
+                        {
+                            "value": "Gigafactory Texas",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64ad"
+                        },
+                        {
+                            "value": "Model Y / Cybertruck",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64ae"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 23,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d64b2",
+                    "cells": [
+                        {
+                            "value": "Gigafactory Nevada",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64b3"
+                        },
+                        {
+                            "value": "Tesla Semi",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64b4"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 24,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d64b8",
+                    "cells": [
+                        {
+                            "value": "Various",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64b9"
+                        },
+                        {
+                            "value": "Next Generation Platform",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64ba"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 25,
+                    "level": 2
+                },
+                {
+                    "_id": "67928d94f460430cc44d64be",
+                    "cells": [
+                        {
+                            "value": "TBD",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64bf"
+                        },
+                        {
+                            "value": "Roadster",
+                            "comments": [],
+                            "links": null,
+                            "_id": "67928d94f460430cc44d64c0"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "67928d94f460430cc44d6486",
+                    "order": 26,
+                    "level": 2
+                }
+            ],
+            "parent": "67928d94f460430cc44d62c4",
+            "order": 19,
+            "level": 1
+        },
+        {
+            "_id": "67928d94f460430cc44d649a",
+            "cells": [
+                {
+                    "value": "Fremont Factory",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d649b"
+                },
+                {
+                    "value": "Model S / Model X/ Model 3 / Model Y",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d649c"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 20,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d64a0",
+            "cells": [
+                {
+                    "value": "Gigafactory Shanghai",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64a1"
+                },
+                {
+                    "value": "Model 3 / Model Y",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64a2"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 21,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d64a6",
+            "cells": [
+                {
+                    "value": "Gigafactory Berlin-Brandenburg",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64a7"
+                },
+                {
+                    "value": "Model Y",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64a8"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 22,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d64ac",
+            "cells": [
+                {
+                    "value": "Gigafactory Texas",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64ad"
+                },
+                {
+                    "value": "Model Y / Cybertruck",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64ae"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 23,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d64b2",
+            "cells": [
+                {
+                    "value": "Gigafactory Nevada",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64b3"
+                },
+                {
+                    "value": "Tesla Semi",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64b4"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 24,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d64b8",
+            "cells": [
+                {
+                    "value": "Various",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64b9"
+                },
+                {
+                    "value": "Next Generation Platform",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64ba"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 25,
+            "level": 2
+        },
+        {
+            "_id": "67928d94f460430cc44d64be",
+            "cells": [
+                {
+                    "value": "TBD",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64bf"
+                },
+                {
+                    "value": "Roadster",
+                    "comments": [],
+                    "links": null,
+                    "_id": "67928d94f460430cc44d64c0"
+                }
+            ],
+            "children": [],
+            "parent": "67928d94f460430cc44d6486",
+            "order": 26,
+            "level": 2
+        }
+    ]
+}

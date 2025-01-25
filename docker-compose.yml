@@ -1,0 +1,19 @@
+# filepath: docker-compose.yml
+version: '3.8'
+
+services:
+  web_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: npm run dev
+    env_file:
+      - ./.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+
