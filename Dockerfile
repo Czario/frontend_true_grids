@@ -12,7 +12,7 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm run build
+RUN pnpm install
 
 # Production stage
 FROM node:20-alpine AS production

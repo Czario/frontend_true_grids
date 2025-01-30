@@ -1,0 +1,666 @@
+{
+    "_id": "679a1e0c3de456b61673251d",
+    "sheetName": "Income Statement",
+    "data": [
+        {
+            "_id": "679a1e0b3de456b616732430",
+            "cells": [
+                {
+                    "value": "Label",
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732431"
+                },
+                {
+                    "value": "Sept 2024",
+                    "comments": [],
+                    "links": "https://www.sec.gov/ix?doc=/Archives/edgar/data/1318605/000162828024043486/tsla-20240930.htm",
+                    "_id": "679a1e0b3de456b616732432"
+                },
+                {
+                    "value": 45444,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732433"
+                },
+                {
+                    "value": 45352,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732434"
+                }
+            ],
+            "children": [],
+            "parent": null,
+            "order": 0,
+            "level": 0
+        },
+        {
+            "_id": "679a1e0b3de456b616732436",
+            "cells": [
+                {
+                    "value": "Revenues",
+                    "comments": [
+                        "======\nID#AAABcEuvLRU\n    (2025-01-20 08:27:57)\nTotal Revenues =  \nTotal automotive revenues +  \nEnergy generation and storage +   Services and other"
+                    ],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732437"
+                },
+                {
+                    "value": 25182,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732438"
+                },
+                {
+                    "value": 25500,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732439"
+                },
+                {
+                    "value": 21301,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b61673243a"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "679a1e0b3de456b61673243c",
+                    "cells": [
+                        {
+                            "value": "Total Automotive Revenues",
+                            "comments": [
+                                "======\nID#AAABcEuvLUI\n    (2025-01-20 08:27:57)\nTotal automotive revenues = Automotive sales + Automotive regulatory credits + Automotive leasing"
+                            ],
+                            "links": null,
+                            "_id": "679a1e0b3de456b61673243d"
+                        },
+                        {
+                            "value": 20016,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0b3de456b61673243e"
+                        },
+                        {
+                            "value": 19878,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0b3de456b61673243f"
+                        },
+                        {
+                            "value": 17378,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0b3de456b616732440"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "679a1e0c3de456b616732447",
+                            "cells": [
+                                {
+                                    "value": "Automotive Sales",
+                                    "comments": [
+                                        "======\nID#AAABcEuvLVs\n    (2025-01-20 08:27:57)\nRevenues related to cash and financing deliveries of new Model S, Model X, Semi, Model 3, Model Y, and Cybertruck vehicles, including access to our FSD Capability features and their ongoing maintenance, internet connectivity, free Supercharging programs and over-the-air software updates. These deliveries are vehicles that are not subject to lease accounting."
+                                    ],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732448"
+                                },
+                                {
+                                    "value": 18831,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732449"
+                                },
+                                {
+                                    "value": 18530,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673244a"
+                                },
+                                {
+                                    "value": 16460,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673244b"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0b3de456b61673243c",
+                            "order": 3,
+                            "level": 2
+                        },
+                        {
+                            "_id": "679a1e0c3de456b616732452",
+                            "cells": [
+                                {
+                                    "value": "Automotive Regulatory Credits",
+                                    "comments": [
+                                        "======\nID#AAABcEuvLPQ\n    (2025-01-20 08:27:57)\nAutomotive regulatory credits includes sales of regulatory credits to other automotive manufacturers. Our revenue from automotive regulatory credits is directly related to our new vehicle production, sales and pricing negotiated with our customers. We monetize them proactively as new vehicles are sold based on standing arrangements with buyers of such credits, typically as close as possible to the production and delivery of the vehicle or changes in regulation impacting the credits."
+                                    ],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732453"
+                                },
+                                {
+                                    "value": 739,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732454"
+                                },
+                                {
+                                    "value": 890,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732455"
+                                },
+                                {
+                                    "value": 442,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732456"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0b3de456b61673243c",
+                            "order": 4,
+                            "level": 2
+                        },
+                        {
+                            "_id": "679a1e0c3de456b61673245d",
+                            "cells": [
+                                {
+                                    "value": "Automotive Leasing",
+                                    "comments": [
+                                        "======\nID#AAABcEuvLWk\n    (2025-01-20 08:27:57)\nAutomotive leasing revenue includes the amortization of revenue for vehicles under direct operating lease agreements. Additionally, automotive leasing revenue includes direct sales-type leasing programs where we recognize all revenue associated with the sales-type lease upon delivery to the customer."
+                                    ],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673245e"
+                                },
+                                {
+                                    "value": 446,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673245f"
+                                },
+                                {
+                                    "value": 458,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732460"
+                                },
+                                {
+                                    "value": 476,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732461"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0b3de456b61673243c",
+                            "order": 5,
+                            "level": 2
+                        },
+                        {
+                            "_id": "679a1e0c3de456b616732468",
+                            "cells": [
+                                {
+                                    "value": "Automotive Leasing (10K)",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732469"
+                                }
+                            ],
+                            "children": [
+                                "679a1e0c3de456b616732470",
+                                "679a1e0c3de456b616732478",
+                                "679a1e0c3de456b616732480"
+                            ],
+                            "parent": "679a1e0b3de456b61673243c",
+                            "order": 6,
+                            "level": 2
+                        },
+                        {
+                            "_id": "679a1e0c3de456b616732488",
+                            "cells": [
+                                {
+                                    "value": "Energy Generation And Storage",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732489"
+                                },
+                                {
+                                    "value": 2376,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673248a"
+                                },
+                                {
+                                    "value": 3014,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673248b"
+                                },
+                                {
+                                    "value": 1635,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673248c"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0b3de456b61673243c",
+                            "order": 10,
+                            "level": 2
+                        },
+                        {
+                            "_id": "679a1e0c3de456b616732493",
+                            "cells": [
+                                {
+                                    "value": "Services And Other",
+                                    "comments": [
+                                        "======\nID#AAABcEuvLV8\n    (2025-01-20 08:27:57)\nServices and other revenue consists of sales of used vehicles, non-warranty after-sales vehicle services, body shop and parts, paid Supercharging, vehicle insurance revenue and retail merchandise."
+                                    ],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732494"
+                                },
+                                {
+                                    "value": 2790,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732495"
+                                },
+                                {
+                                    "value": 2608,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732496"
+                                },
+                                {
+                                    "value": 2288,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732497"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0b3de456b61673243c",
+                            "order": 11,
+                            "level": 2
+                        }
+                    ],
+                    "parent": "679a1e0b3de456b616732436",
+                    "order": 2,
+                    "level": 1
+                }
+            ],
+            "parent": null,
+            "order": 1,
+            "level": 0
+        },
+        {
+            "_id": "679a1e0b3de456b61673243c",
+            "cells": [
+                {
+                    "value": "Total Automotive Revenues",
+                    "comments": [
+                        "======\nID#AAABcEuvLUI\n    (2025-01-20 08:27:57)\nTotal automotive revenues = Automotive sales + Automotive regulatory credits + Automotive leasing"
+                    ],
+                    "links": null,
+                    "_id": "679a1e0b3de456b61673243d"
+                },
+                {
+                    "value": 20016,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b61673243e"
+                },
+                {
+                    "value": 19878,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b61673243f"
+                },
+                {
+                    "value": 17378,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0b3de456b616732440"
+                }
+            ],
+            "children": [
+                {
+                    "_id": "679a1e0c3de456b616732447",
+                    "cells": [
+                        {
+                            "value": "Automotive Sales",
+                            "comments": [
+                                "======\nID#AAABcEuvLVs\n    (2025-01-20 08:27:57)\nRevenues related to cash and financing deliveries of new Model S, Model X, Semi, Model 3, Model Y, and Cybertruck vehicles, including access to our FSD Capability features and their ongoing maintenance, internet connectivity, free Supercharging programs and over-the-air software updates. These deliveries are vehicles that are not subject to lease accounting."
+                            ],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732448"
+                        },
+                        {
+                            "value": 18831,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732449"
+                        },
+                        {
+                            "value": 18530,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673244a"
+                        },
+                        {
+                            "value": 16460,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673244b"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "679a1e0b3de456b61673243c",
+                    "order": 3,
+                    "level": 2
+                },
+                {
+                    "_id": "679a1e0c3de456b616732452",
+                    "cells": [
+                        {
+                            "value": "Automotive Regulatory Credits",
+                            "comments": [
+                                "======\nID#AAABcEuvLPQ\n    (2025-01-20 08:27:57)\nAutomotive regulatory credits includes sales of regulatory credits to other automotive manufacturers. Our revenue from automotive regulatory credits is directly related to our new vehicle production, sales and pricing negotiated with our customers. We monetize them proactively as new vehicles are sold based on standing arrangements with buyers of such credits, typically as close as possible to the production and delivery of the vehicle or changes in regulation impacting the credits."
+                            ],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732453"
+                        },
+                        {
+                            "value": 739,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732454"
+                        },
+                        {
+                            "value": 890,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732455"
+                        },
+                        {
+                            "value": 442,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732456"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "679a1e0b3de456b61673243c",
+                    "order": 4,
+                    "level": 2
+                },
+                {
+                    "_id": "679a1e0c3de456b61673245d",
+                    "cells": [
+                        {
+                            "value": "Automotive Leasing",
+                            "comments": [
+                                "======\nID#AAABcEuvLWk\n    (2025-01-20 08:27:57)\nAutomotive leasing revenue includes the amortization of revenue for vehicles under direct operating lease agreements. Additionally, automotive leasing revenue includes direct sales-type leasing programs where we recognize all revenue associated with the sales-type lease upon delivery to the customer."
+                            ],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673245e"
+                        },
+                        {
+                            "value": 446,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673245f"
+                        },
+                        {
+                            "value": 458,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732460"
+                        },
+                        {
+                            "value": 476,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732461"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "679a1e0b3de456b61673243c",
+                    "order": 5,
+                    "level": 2
+                },
+                {
+                    "_id": "679a1e0c3de456b616732468",
+                    "cells": [
+                        {
+                            "value": "Automotive Leasing (10K)",
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732469"
+                        }
+                    ],
+                    "children": [
+                        {
+                            "_id": "679a1e0c3de456b616732470",
+                            "cells": [
+                                {
+                                    "value": "Direct Vehicle Operating Leasing Revenue (10K)",
+                                    "comments": [
+                                        "======\nID#AAABcEuvLQ4\n    (2025-01-20 08:27:57)\nQualifying customers are permitted to lease a vehicle directly from Tesla for up to 48 months."
+                                    ],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732471"
+                                },
+                                {
+                                    "value": 1186,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732472"
+                                },
+                                {
+                                    "value": 1277,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732473"
+                                },
+                                {
+                                    "value": 1374,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732474"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0c3de456b616732468",
+                            "order": 7,
+                            "level": 3
+                        },
+                        {
+                            "_id": "679a1e0c3de456b616732478",
+                            "cells": [
+                                {
+                                    "value": "Direct Sales-Type Leasing Revenue (10K)",
+                                    "comments": [
+                                        "======\nID#AAABcEuvLTI\n    (2025-01-20 08:27:57)\nDirect leases and vehicles financed by us under loan arrangements accounted for as sales-type leases.\nOur arrangements under these programs can have terms for up to 72 months."
+                                    ],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732479"
+                                },
+                                {
+                                    "value": 1186,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673247a"
+                                },
+                                {
+                                    "value": 1277,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673247b"
+                                },
+                                {
+                                    "value": 1374,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b61673247c"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0c3de456b616732468",
+                            "order": 8,
+                            "level": 3
+                        },
+                        {
+                            "_id": "679a1e0c3de456b616732480",
+                            "cells": [
+                                {
+                                    "value": "Other (10K)",
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732481"
+                                },
+                                {
+                                    "value": 1186,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732482"
+                                },
+                                {
+                                    "value": 1277,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732483"
+                                },
+                                {
+                                    "value": 1374,
+                                    "comments": [],
+                                    "links": null,
+                                    "_id": "679a1e0c3de456b616732484"
+                                }
+                            ],
+                            "children": [],
+                            "parent": "679a1e0c3de456b616732468",
+                            "order": 9,
+                            "level": 3
+                        }
+                    ],
+                    "parent": "679a1e0b3de456b61673243c",
+                    "order": 6,
+                    "level": 2
+                },
+                {
+                    "_id": "679a1e0c3de456b616732488",
+                    "cells": [
+                        {
+                            "value": "Energy Generation And Storage",
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732489"
+                        },
+                        {
+                            "value": 2376,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673248a"
+                        },
+                        {
+                            "value": 3014,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673248b"
+                        },
+                        {
+                            "value": 1635,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b61673248c"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "679a1e0b3de456b61673243c",
+                    "order": 10,
+                    "level": 2
+                },
+                {
+                    "_id": "679a1e0c3de456b616732493",
+                    "cells": [
+                        {
+                            "value": "Services And Other",
+                            "comments": [
+                                "======\nID#AAABcEuvLV8\n    (2025-01-20 08:27:57)\nServices and other revenue consists of sales of used vehicles, non-warranty after-sales vehicle services, body shop and parts, paid Supercharging, vehicle insurance revenue and retail merchandise."
+                            ],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732494"
+                        },
+                        {
+                            "value": 2790,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732495"
+                        },
+                        {
+                            "value": 2608,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732496"
+                        },
+                        {
+                            "value": 2288,
+                            "comments": [],
+                            "links": null,
+                            "_id": "679a1e0c3de456b616732497"
+                        }
+                    ],
+                    "children": [],
+                    "parent": "679a1e0b3de456b61673243c",
+                    "order": 11,
+                    "level": 2
+                }
+            ],
+            "parent": "679a1e0b3de456b616732436",
+            "order": 2,
+            "level": 1
+        },
+        {
+            "_id": "679a1e0c3de456b616732447",
+            "cells": [
+                {
+                    "value": "Automotive Sales",
+                    "comments": [
+                        "======\nID#AAABcEuvLVs\n    (2025-01-20 08:27:57)\nRevenues related to cash and financing deliveries of new Model S, Model X, Semi, Model 3, Model Y, and Cybertruck vehicles, including access to our FSD Capability features and their ongoing maintenance, internet connectivity, free Supercharging programs and over-the-air software updates. These deliveries are vehicles that are not subject to lease accounting."
+                    ],
+                    "links": null,
+                    "_id": "679a1e0c3de456b616732448"
+                },
+                {
+                    "value": 18831,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0c3de456b616732449"
+                },
+                {
+                    "value": 18530,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0c3de456b61673244a"
+                },
+                {
+                    "value": 16460,
+                    "comments": [],
+                    "links": null,
+                    "_id": "679a1e0c3de456b61673244b"
+                }
+            ],
+            "children": [],
+            "parent": "679a1e0b3de456b61673243c",
+            "order": 3,
+            "level": 2
+        }
+    ]
+}
