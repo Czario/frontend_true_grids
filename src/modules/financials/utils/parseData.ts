@@ -26,24 +26,26 @@ const buildHierarchy = (
 export const parseData = (data: DataItem[]): ParsedData => {
   if (!data?.length) return { columns: [], rows: [] };
 
-  // Create map for quick lookups
   const itemMap = new Map(data.map(item => [item._id, item]));
   
-  // Find header row (first row with level 0 and parent null)
+  // Find header row (first row with level 0 and all string values)
   const headerRow = data.find(item => 
     item.level === 0 && 
     item.parent === null &&
-    item.cells.some(cell => typeof cell.value === 'string')
+    item.cells.every(cell => typeof cell.value === 'string')
   );
 
-  // Create columns from header row
+  // Filter out header row from data
+  const filteredData = headerRow ? data.filter(item => item._id !== headerRow._id) : data;
+
+  // Create columns from header row or default
   const columns = headerRow?.cells.map((cell, index) => ({
     header: cell.value?.toString() || `Column ${index + 1}`,
     accessorKey: `col${index}`
   })) || [];
 
-  // Build hierarchy starting from root items (parent === null)
-  const rows = buildHierarchy(data, null, itemMap);
+  // Build hierarchy without header row
+  const rows = buildHierarchy(filteredData, null, itemMap);
 
   return { columns, rows };
 };
