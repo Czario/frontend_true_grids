@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, memo, forwardRef } from 'react';
+import React, { useMemo, useRef, memo, forwardRef, useEffect } from 'react';
 import { useReactTable, getCoreRowModel, getExpandedRowModel, flexRender, ColumnDef, Row } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Box, styled } from '@mui/material';
@@ -14,14 +14,15 @@ const COLUMN_CONFIG = [
 ];
 
 interface StyledTableCellProps {
+  $isFirstColumn: boolean;
   level: number;
   $width?: number;
 }
 
 const StyledTableCell = styled(TableCell, {
-  shouldForwardProp: (prop) => !['level', '$width'].includes(prop.toString()),
-})<StyledTableCellProps>(({ theme, level, $width }) => ({
-  paddingLeft: `${level * 32 + 16}px !important`,
+  shouldForwardProp: (prop) => !['$isFirstColumn', 'level', '$width'].includes(prop.toString()),
+})<StyledTableCellProps>(({ theme, $isFirstColumn, level, $width }) => ({
+  paddingLeft: $isFirstColumn ? `${level * 24 + 8}px !important` : '16px !important', // Reduce indentation
   width: `${$width}px !important`,
   minWidth: `${$width}px !important`,
   maxWidth: `${$width}px !important`,
@@ -29,15 +30,17 @@ const StyledTableCell = styled(TableCell, {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   boxSizing: 'border-box',
+  position: 'relative',
 }));
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, { 
     row: Row<ParsedRow>;
     start: number;
-    measure: (element: HTMLElement) => void 
+    measure: (element: HTMLElement) => void;
+    isExpanded: boolean;
   }>(
-    ({ row, start, measure }, ref) => {
+    ({ row, start, measure, isExpanded }, ref) => {
       const rowRef = useRef<HTMLTableRowElement>(null);
       const virtualStyle = useMemo(() => ({
         position: 'absolute',
@@ -47,9 +50,9 @@ const MemoizedRow = memo(
         transform: `translateY(${start}px)`,
       }), [start]);
 
-      React.useEffect(() => {
+      useEffect(() => {
         if (rowRef.current) measure(rowRef.current);
-      }, [measure]);
+      }, [measure, isExpanded]);
 
       return (
         <TableRow ref={ref} hover style={virtualStyle as React.CSSProperties}>
@@ -57,8 +60,9 @@ const MemoizedRow = memo(
             const isFirstColumn = cell.column.id === 'col0';
             return (
               <StyledTableCell 
-                key={cell.id} 
-                level={row.original.level} 
+                key={cell.id}
+                $isFirstColumn={isFirstColumn}
+                level={row.original.level}
                 $width={COLUMN_CONFIG[index]?.width || 200}
               >
                 {isFirstColumn && (
@@ -72,7 +76,8 @@ const MemoizedRow = memo(
                       transform: row.getIsExpanded() ? 'rotate(0deg)' : 'rotate(-90deg)',
                       transition: 'transform 0.2s ease',
                       position: 'absolute',
-                      left: `${row.original.level * 32}px`,
+                      left: `${row.original.level * 24}px`, // Reduced from 32px
+                      zIndex: 1,
                     }}
                   >
                     {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
@@ -80,9 +85,10 @@ const MemoizedRow = memo(
                 )}
                 <Box
                   sx={{
-                    marginLeft: isFirstColumn ? '48px' : 0,
+                    marginLeft: isFirstColumn ? '32px' : 0, // Reduced from 48px
                     display: 'inline-block',
-                    width: `calc(100% - ${isFirstColumn ? '48px' : '0px'})`,
+                    width: `calc(100% - ${isFirstColumn ? '32px' : '0px'})`, // Reduced from 48px
+                    verticalAlign: 'middle',
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -120,13 +126,18 @@ const StatementTable: React.FC<{ data: DataItem[] }> = ({ data }) => {
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const rowVirtualizer = useVirtualizer({
-    count: rows.length,
+    count: table.getRowModel().rows.length, // Use actual visible rows count
     estimateSize: () => 53,
     getScrollElement: () => tableContainerRef.current,
     overscan: 10,
   });
 
   const virtualItems = rowVirtualizer.getVirtualItems();
+
+  // Reset scroll when data changes
+  useEffect(() => {
+    rowVirtualizer.scrollToIndex(0);
+  }, [data]);
 
   return (
     <TableContainer
@@ -182,6 +193,7 @@ const StatementTable: React.FC<{ data: DataItem[] }> = ({ data }) => {
                 row={row}
                 start={virtualRow.start}
                 measure={rowVirtualizer.measureElement}
+                isExpanded={row.getIsExpanded()}
               />
             );
           })}

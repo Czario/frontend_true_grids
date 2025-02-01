@@ -26,3 +26,7 @@ export interface ParsedData {
   columns: Array<{ header: string; accessorKey: string }>;
   rows: ParsedRow[];
 }
+
+export interface ApiResponse {
+  data: DataItem[];
+}
