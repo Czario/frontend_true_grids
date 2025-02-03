@@ -1,0 +1,41 @@
+Optimization Strategies while fetching data :
+
+    Data Caching (useRef for cacheRef)
+        Prevents redundant API calls by storing previously fetched data.
+
+    Request Cancellation (AbortController with useRef)
+        Cancels ongoing API requests when switching statement types, avoiding race conditions and memory leaks.
+
+    Memoized Fetch Function (useCallback)
+        Prevents unnecessary re-creation of the fetch function, reducing re-renders.
+
+    Effect Cleanup (useEffect Cleanup Function)
+        Ensures API calls are aborted when the component unmounts.
+
+    Conditional Rendering (loading, error, data.length)
+        Optimizes UI updates by rendering only relevant content based on state.
+
+    Efficient Component Re-Renders (key={statementType} in StatementTable)
+        Forces re-mounting only when necessary, avoiding unnecessary updates.
+
+
+
+Optimization Strategies on Data Grid:
+
+    Virtualized Rendering (useVirtualizer)
+        Efficiently renders only visible rows, improving performance for large datasets.
+
+    Memoization (useMemo for Columns & Rows)
+        Prevents unnecessary recalculations when data changes.
+
+    Table Row Memoization (MemoizedRow with memo & forwardRef)
+        Optimizes individual row rendering by preventing re-renders when not needed.
+
+    Ref-based Scroll Handling (useRef for tableContainerRef)
+        Avoids excessive re-renders when handling scrolling.
+
+    Effect Cleanup (useEffect for Scrolling)
+        Resets scroll position efficiently when data updates.
+
+    Sticky Column & Header Optimization (StyledTableHeadCell)
+        Keeps headers and the first column in place for better UX and performance.
