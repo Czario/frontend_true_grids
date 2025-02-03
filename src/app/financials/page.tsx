@@ -35,7 +35,7 @@ const StatementButton = styled(Button)<StatementButtonProps>(({ theme, selected 
 }));
 
 const Home: React.FC = () => {
-  const [statementType, setStatementType] = useState<string>("incomeStatement");
+  const [statementType, setStatementType] = useState<string>("Income Statement");
   const [data, setData] = useState<DataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -117,20 +117,20 @@ const Home: React.FC = () => {
 
         <ButtonGroup variant="outlined" aria-label="financial statements switch">
           <StatementButton
-            onClick={() => setStatementType("incomeStatement")}
-            selected={statementType === "incomeStatement"}
+            onClick={() => setStatementType("Income Statement")}
+            selected={statementType === "Income Statement"}
           >
             📈 Income Statement
           </StatementButton>
           <StatementButton
-            onClick={() => setStatementType("cashFlow")}
-            selected={statementType === "cashFlow"}
+            onClick={() => setStatementType("Cash Flow")}
+            selected={statementType === "Cash Flow"}
           >
             💰 Cashflow Statement
           </StatementButton>
           <StatementButton
-            onClick={() => setStatementType("balanceSheet")}
-            selected={statementType === "balanceSheet"}
+            onClick={() => setStatementType("Balance Sheet")}
+            selected={statementType === "Balance Sheet"}
           >
             🏦 Balance Sheet
           </StatementButton>
