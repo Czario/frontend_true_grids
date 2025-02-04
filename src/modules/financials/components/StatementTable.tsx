@@ -1,116 +1,151 @@
-import React, { useMemo, useRef, memo, forwardRef } from 'react';
-import { useReactTable, getCoreRowModel, getExpandedRowModel, flexRender, ColumnDef, Row } from '@tanstack/react-table';
+import React, { useMemo, useRef, memo, forwardRef, useEffect } from 'react';
+import {
+  useReactTable,
+  getCoreRowModel,
+  getExpandedRowModel,
+  flexRender,
+  ColumnDef,
+  Row,
+} from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Box, styled } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Box,
+  styled,
+  Theme,
+} from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { parseData } from '../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
 
-const COLUMN_CONFIG = [
-  { width: 400 },
-  { width: 200 },
-  { width: 200 },
-  { width: 200 },
-];
+const FIRST_COLUMN_WIDTH = 400;
+const DEFAULT_COLUMN_WIDTH = 200;
 
-interface StyledTableCellProps {
-  level: number;
-  $width?: number;
-}
-
-const StyledTableCell = styled(TableCell, {
-  shouldForwardProp: (prop) => !['level', '$width'].includes(prop.toString()),
-})<StyledTableCellProps>(({ theme, level, $width }) => ({
-  paddingLeft: `${level * 32 + 16}px !important`,
-  width: `${$width}px !important`,
-  minWidth: `${$width}px !important`,
-  maxWidth: `${$width}px !important`,
+const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
+  boxSizing: 'border-box',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  boxSizing: 'border-box',
+  padding: theme.spacing(1),
+  borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const MemoizedRow = memo(
-  forwardRef<HTMLTableRowElement, { 
-    row: Row<ParsedRow>;
-    start: number;
-    measure: (element: HTMLElement) => void 
-  }>(
-    ({ row, start, measure }, ref) => {
-      const rowRef = useRef<HTMLTableRowElement>(null);
-      const virtualStyle = useMemo(() => ({
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        transform: `translateY(${start}px)`,
-      }), [start]);
+const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:hover': {
+    backgroundColor: theme.palette.action.selected,
+  },
+}));
 
-      React.useEffect(() => {
-        if (rowRef.current) measure(rowRef.current);
-      }, [measure]);
+const StyledTableHeadCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
+  fontWeight: 'bold',
+}));
+
+const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
+  fontWeight: 'bold',
+}));
+
+interface MemoizedRowProps {
+  row: Row<ParsedRow>;
+  isExpanded: boolean;
+  measure: (el: HTMLElement) => void;
+}
+
+const MemoizedRow = memo(
+  forwardRef<HTMLTableRowElement, MemoizedRowProps>(
+    ({ row, isExpanded, measure }, ref) => {
+      const rowRef = useRef<HTMLTableRowElement>(null);
+
+      useEffect(() => {
+        if (rowRef.current) {
+          measure(rowRef.current);
+        }
+      }, [measure, isExpanded]);
 
       return (
-        <TableRow ref={ref} hover style={virtualStyle as React.CSSProperties}>
-          {row.getVisibleCells().map((cell, index) => {
-            const isFirstColumn = cell.column.id === 'col0';
-            return (
-              <StyledTableCell 
-                key={cell.id} 
-                level={row.original.level} 
-                $width={COLUMN_CONFIG[index]?.width || 200}
+        <StyledTableRow ref={ref} hover role="row" sx={{ height: '40px' }}>
+          <StyledFirstColumnCell
+            sx={{
+              position: 'sticky',
+              left: 0,
+              zIndex: 2,
+              backgroundColor: 'background.paper',
+              borderRight: '1px solid',
+              borderColor: 'divider',
+              width: FIRST_COLUMN_WIDTH,
+              minWidth: FIRST_COLUMN_WIDTH,
+              paddingLeft: `${row.depth * 0.75}rem`, // Reduced indentation
+              textAlign: 'left',
+            }}
+            role="cell"
+          >
+            <Box display="flex" alignItems="center">
+              <IconButton
+                size="small"
+                onClick={row.getToggleExpandedHandler()}
+                disabled={!row.original.hasChildren}
+                aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
+                sx={{
+                  visibility: row.original.hasChildren ? 'visible' : 'hidden',
+                  transform: row.getIsExpanded() ? 'rotate(0deg)' : 'rotate(-90deg)',
+                  transition: 'transform 0.2s ease',
+                }}
               >
-                {isFirstColumn && (
-                  <IconButton
-                    size="small"
-                    onClick={row.getToggleExpandedHandler()}
-                    disabled={!row.original.hasChildren}
-                    sx={{
-                      visibility: row.original.hasChildren ? 'visible' : 'hidden',
-                      marginRight: 2,
-                      transform: row.getIsExpanded() ? 'rotate(0deg)' : 'rotate(-90deg)',
-                      transition: 'transform 0.2s ease',
-                      position: 'absolute',
-                      left: `${row.original.level * 32}px`,
-                    }}
-                  >
-                    {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
-                  </IconButton>
+                {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+              <Box ml={1}>
+                {flexRender(
+                  row.getVisibleCells()[0].column.columnDef.cell,
+                  row.getVisibleCells()[0].getContext()
                 )}
-                <Box
-                  sx={{
-                    marginLeft: isFirstColumn ? '48px' : 0,
-                    display: 'inline-block',
-                    width: `calc(100% - ${isFirstColumn ? '48px' : '0px'})`,
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Box>
-              </StyledTableCell>
-            );
-          })}
-        </TableRow>
+              </Box>
+            </Box>
+          </StyledFirstColumnCell>
+
+          {row.getVisibleCells().slice(1).map((cell) => (
+            <StyledTableCell
+              key={cell.id}
+              sx={{
+                width: DEFAULT_COLUMN_WIDTH,
+                minWidth: DEFAULT_COLUMN_WIDTH,
+                textAlign: 'right',
+              }}
+              role="cell"
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </StyledTableCell>
+          ))}
+        </StyledTableRow>
       );
     }
   )
 );
 
-const StatementTable: React.FC<{ data: DataItem[] }> = ({ data }) => {
+interface StatementTableProps {
+  data: DataItem[];
+}
+
+const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const { columns, rows } = useMemo(() => {
     const parsedData = parseData(data);
-    return {
-      columns: parsedData.columns.map((col, index) => ({
-        id: col.accessorKey,
-        header: col.header,
-        accessorFn: (row: ParsedRow) => row[`col${index}`],
-        size: COLUMN_CONFIG[index]?.width || 200,
-      })),
-      rows: parsedData.rows,
-    };
+    const cols: ColumnDef<ParsedRow>[] = parsedData.columns.map((col, index) => ({
+      id: `col${index}`,
+      header: col.header,
+      accessorFn: (row: ParsedRow) => row[`col${index}`],
+      size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
+    }));
+    return { columns: cols, rows: parsedData.rows };
   }, [data]);
 
-  const table = useReactTable({
+  const table = useReactTable<ParsedRow>({
     data: rows,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -119,68 +154,92 @@ const StatementTable: React.FC<{ data: DataItem[] }> = ({ data }) => {
   });
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    estimateSize: () => 53,
+
+  const rowVirtualizer = useVirtualizer<HTMLDivElement, Element>({
+    count: table.getRowModel().rows.length,
+    estimateSize: () => 40,
     getScrollElement: () => tableContainerRef.current,
     overscan: 10,
+    scrollToFn: (offset, { behavior }) => {
+      tableContainerRef.current?.scrollTo({
+        top: offset,
+        behavior,
+      });
+    },
   });
 
-  const virtualItems = rowVirtualizer.getVirtualItems();
+  const virtualRows = rowVirtualizer.getVirtualItems();
+
+  useEffect(() => {
+    rowVirtualizer.scrollToIndex(0);
+  }, [data, rowVirtualizer]);
 
   return (
     <TableContainer
       ref={tableContainerRef}
-      component={Box}
       sx={{
-        maxHeight: '80vh',
+        maxHeight: '60vh',
         overflow: 'auto',
         position: 'relative',
-        '& .MuiTableCell-root': { boxSizing: 'border-box' },
+        backgroundColor: 'background.paper',
       }}
+      role="table"
     >
       <Table
         stickyHeader
         sx={{
           tableLayout: 'fixed',
-          minWidth: COLUMN_CONFIG.reduce((sum, col) => sum + col.width, 0),
+          minWidth: FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
         }}
       >
         <TableHead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header, index) => (
-                <TableCell
-                  key={header.id}
-                  sx={{
-                    fontWeight: 'bold',
-                    width: `${COLUMN_CONFIG[index]?.width || 200}px`,
-                    minWidth: `${COLUMN_CONFIG[index]?.width || 200}px`,
-                    maxWidth: `${COLUMN_CONFIG[index]?.width || 200}px`,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          <TableRow role="rowgroup">
+            <StyledTableHeadCell
+              sx={{
+                position: 'sticky',
+                left: 0,
+                zIndex: 3,
+                backgroundColor: 'background.paper',
+                borderRight: '1px solid',
+                borderColor: 'divider',
+                width: FIRST_COLUMN_WIDTH,
+                minWidth: FIRST_COLUMN_WIDTH,
+                textAlign: 'left',
+              }}
+              role="columnheader"
+            >
+              {flexRender(
+                table.getHeaderGroups()[0].headers[0].column.columnDef.header,
+                table.getHeaderGroups()[0].headers[0].getContext()
+              )}
+            </StyledTableHeadCell>
+            {table.getHeaderGroups()[0].headers.slice(1).map((header) => (
+              <StyledTableHeadCell
+                key={header.id}
+                sx={{
+                  width: DEFAULT_COLUMN_WIDTH,
+                  minWidth: DEFAULT_COLUMN_WIDTH,
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 2,
+                  backgroundColor: 'background.paper',
+                  textAlign: 'right',
+                }}
+                role="columnheader"
+              >
+                {flexRender(header.column.columnDef.header, header.getContext())}
+              </StyledTableHeadCell>
+            ))}
+          </TableRow>
         </TableHead>
-
-        <TableBody
-          sx={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            position: 'relative',
-          }}
-        >
-          {virtualItems.map((virtualRow) => {
+        <TableBody sx={{ height: `${rowVirtualizer.getTotalSize()}px` }} role="rowgroup">
+          {virtualRows.map((virtualRow) => {
             const row = table.getRowModel().rows[virtualRow.index];
             return (
               <MemoizedRow
                 key={row.id}
                 row={row}
-                start={virtualRow.start}
+                isExpanded={row.getIsExpanded()}
                 measure={rowVirtualizer.measureElement}
               />
             );
