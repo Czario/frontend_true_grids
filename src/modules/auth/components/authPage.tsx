@@ -10,7 +10,7 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { Google, Twitter } from "@mui/icons-material";
+import { Google } from "@mui/icons-material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { loginService, signUpService } from "../services/authService";

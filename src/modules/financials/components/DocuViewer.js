@@ -1,35 +1,27 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { fetchFinancialsDoc } from "./../services/apiStatementService";
-
-interface Match {
-  start: number;
-  length: number;
-  node: HTMLElement | null;
-}
+import { fetchFinancialsDoc } from "../services/apiStatementService";
 
 const XMLRenderer = () => {
-  const [xmlData, setXmlData] = useState<string>("");
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [searchText, setSearchText] = useState<string>("");
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [currentIndex, setCurrentIndex] = useState<number>(-1);
-  const [popupSearch, setPopupSearch] = useState<string>("");
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [xmlData, setXmlData] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [matches, setMatches] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [popupSearch, setPopupSearch] = useState("");
+  const containerRef = useRef(null);
+  const handleChange = (event) => {
     setSearchText(event.target.value);
   };
 
-  const escapeRegExp = (str: string): string => {
-    return str.replace(/[-/\\^$?()|[\]{}]/g, "\\$&");
+  const escapeRegExp = (string) => {
+    return string.replace(/[-/\\^$?()|[\]{}]/g, "\\$&");
   };
 
   const fetchAndHighlightXML = async () => {
     if (searchText.length < 3) return;
     try {
       const response = await fetchFinancialsDoc();
-      // console.log(response);
       let updatedData = await response.text();
 
       // Parse as HTML while keeping styles intact
@@ -54,7 +46,7 @@ const XMLRenderer = () => {
     if (showPopup) {
       highlightMatches();
     }
-  }, [showPopup]);
+  }, [showPopup, xmlData, searchText]);
 
   useEffect(() => {
     if (matches.length > 0) {
@@ -62,7 +54,7 @@ const XMLRenderer = () => {
     }
   }, [matches]);
 
-  const scrollToMatch = (index: number) => {
+  const scrollToMatch = (index) => {
     if (matches.length === 0) return;
     const match = matches[index];
 
@@ -94,7 +86,7 @@ const XMLRenderer = () => {
     }
 
     // Step 2: Find matches in the combined text
-    let matchList: Match[] = [];
+    let matchList = [];
     let matches = [...fullText.matchAll(regex)];
 
     matches.forEach((match) => {
@@ -125,7 +117,7 @@ const XMLRenderer = () => {
         return;
       }
 
-      let text = node.textContent || "";
+      let text = node.textContent;
       let nodeEnd = start + text.length;
       let newNodeContent = [];
       let localOffset = 0;
@@ -191,7 +183,7 @@ const XMLRenderer = () => {
     scrollToMatch(newIndex);
   };
 
-  const goToMatch = (index: number) => {
+  const goToMatch = (index) => {
     setCurrentIndex(index);
     scrollToMatch(index);
   };
