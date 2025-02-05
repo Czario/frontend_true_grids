@@ -2,19 +2,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
+interface Match {
+  start: number;
+  length: number;
+  node: HTMLElement | null;
+}
+
+interface TextNodeData {
+  node: Node;
+  start: number;
+}
+
+interface NewNodeData {
+  oldNode: Node;
+  newContent: (Node | HTMLElement)[];
+}
+
 const XMLRenderer = () => {
-  const [xmlData, setXmlData] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [matches, setMatches] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [popupSearch, setPopupSearch] = useState("");
-  const containerRef = useRef(null);
-  const handleChange = (event) => {
+  const [xmlData, setXmlData] = useState<string>("");
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(-1);
+  const [popupSearch, setPopupSearch] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
   };
 
-  const escapeRegExp = (string) => {
+  const escapeRegExp = (string: string): string => {
     return string.replace(/[-/\\^$?()|[\]{}]/g, "\\$&");
   };
 
@@ -25,7 +42,7 @@ const XMLRenderer = () => {
       containerRef.current.querySelectorAll(".highlighted-text");
     highlightedElements.forEach((span) => {
       const parent = span.parentNode;
-      if (parent) {
+      if (parent && span.textContent) {
         parent.replaceChild(document.createTextNode(span.textContent), span);
       }
     });
@@ -37,18 +54,14 @@ const XMLRenderer = () => {
       const response = await axios.get("http://localhost:8100/sec-link1");
       let updatedData = response.data;
 
-      // Parse as HTML while keeping styles intact
       const parser = new DOMParser();
       const doc = parser.parseFromString(updatedData, "text/html");
       if (doc.body) {
         updatedData = doc.body.innerHTML;
       }
 
-      // Replace &nbsp; while keeping styles
       updatedData = updatedData.replace(/&nbsp;/g, " ").replace(/\u00A0/g, " ");
-
       setXmlData(updatedData);
-
       setShowPopup(true);
     } catch (error) {
       console.error("Error fetching XML data:", error);
@@ -56,6 +69,7 @@ const XMLRenderer = () => {
   };
 
   useEffect(() => {
+    setPopupSearch(searchText);
     if (showPopup) {
       highlightMatches();
     }
@@ -67,7 +81,7 @@ const XMLRenderer = () => {
     }
   }, [matches]);
 
-  const scrollToMatch = (index) => {
+  const scrollToMatch = (index: number) => {
     if (matches.length === 0) return;
     const match = matches[index];
     if (match?.node) {
@@ -75,7 +89,7 @@ const XMLRenderer = () => {
     }
   };
 
-  const highlightMatches = () => {
+  const highlightMatches = (): void => {
     if (!searchText || searchText.length < 3 || !containerRef.current) return;
 
     removeHighlights();
@@ -89,11 +103,11 @@ const XMLRenderer = () => {
       false
     );
 
-    let textNodes = [];
+    let textNodes: TextNodeData[] = [];
     let fullText = "";
 
     while (walker.nextNode()) {
-      let node = walker.currentNode;
+      let node = walker.currentNode as Text;
       let parent = node.parentElement;
 
       // Check if the parent or any ancestor has display: none
@@ -109,19 +123,21 @@ const XMLRenderer = () => {
       if (isHidden) continue; // Skip this node if it's inside a hidden element
 
       textNodes.push({ node, start: fullText.length });
-      fullText += node.textContent;
+      fullText += node.textContent ?? "";
     }
 
     // Step 2: Find matches in the combined text
-    let matchList = [];
+    let matchList: Match[] = [];
     let matches = [...fullText.matchAll(regex)];
 
     matches.forEach((match) => {
-      matchList.push({
-        start: match.index,
-        length: match[0].length,
-        node: null, // Will store later
-      });
+      if (match.index !== undefined) {
+        matchList.push({
+          start: match.index,
+          length: match[0].length,
+          node: null, // Will store later
+        });
+      }
     });
 
     if (matchList.length === 0) {
@@ -131,7 +147,7 @@ const XMLRenderer = () => {
     }
 
     // Step 3: Reconstruct text nodes with highlights
-    let newNodes = [];
+    let newNodes: NewNodeData[] = [];
     let matchIndex = 0;
     let currentMatch = matchList[matchIndex];
 
@@ -139,14 +155,14 @@ const XMLRenderer = () => {
       if (!currentMatch) {
         newNodes.push({
           oldNode: node,
-          newContent: [document.createTextNode(node.textContent)],
+          newContent: [document.createTextNode(node.textContent ?? "")],
         });
         return;
       }
 
-      let text = node.textContent;
+      let text: string = node.textContent ?? "";
       let nodeEnd = start + text.length;
-      let newNodeContent = [];
+      let newNodeContent: (Node | HTMLElement)[] = [];
       let localOffset = 0;
 
       while (currentMatch && currentMatch.start < nodeEnd) {
@@ -212,7 +228,7 @@ const XMLRenderer = () => {
     scrollToMatch(newIndex);
   };
 
-  const goToMatch = (index) => {
+  const goToMatch = (index: number) => {
     setCurrentIndex(index);
     scrollToMatch(index);
   };
@@ -228,7 +244,6 @@ const XMLRenderer = () => {
     setSearchText(popupSearch);
     highlightMatches();
   };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <input
