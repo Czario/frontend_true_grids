@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p $PORT",
+    "dev": "next dev --turbopack -p 4000",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "next start -p 4000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "@tanstack/react-table": "^8.20.6",
     "@tanstack/react-virtual": "^3.11.3",
     "@types/styled-components": "^5.1.34",
+    "axios": "^1.7.9",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

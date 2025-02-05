@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { fetchFinancialsDoc } from "../services/apiStatementService";
+import axios from "axios";
 
 const XMLRenderer = () => {
   const [xmlData, setXmlData] = useState("");
@@ -18,11 +18,24 @@ const XMLRenderer = () => {
     return string.replace(/[-/\\^$?()|[\]{}]/g, "\\$&");
   };
 
+  const removeHighlights = () => {
+    if (!containerRef.current) return;
+
+    const highlightedElements =
+      containerRef.current.querySelectorAll(".highlighted-text");
+    highlightedElements.forEach((span) => {
+      const parent = span.parentNode;
+      if (parent) {
+        parent.replaceChild(document.createTextNode(span.textContent), span);
+      }
+    });
+  };
+
   const fetchAndHighlightXML = async () => {
     if (searchText.length < 3) return;
     try {
-      const response = await fetchFinancialsDoc();
-      let updatedData = await response.text();
+      const response = await axios.get("http://localhost:8100/sec-link1");
+      let updatedData = response.data;
 
       // Parse as HTML while keeping styles intact
       const parser = new DOMParser();
@@ -57,7 +70,6 @@ const XMLRenderer = () => {
   const scrollToMatch = (index) => {
     if (matches.length === 0) return;
     const match = matches[index];
-
     if (match?.node) {
       match.node.scrollIntoView({ behavior: "smooth", block: "center" });
     }
@@ -66,9 +78,10 @@ const XMLRenderer = () => {
   const highlightMatches = () => {
     if (!searchText || searchText.length < 3 || !containerRef.current) return;
 
+    removeHighlights();
     const regex = new RegExp(escapeRegExp(searchText), "gi");
 
-    // Step 1: Gather all text nodes
+    // Step 1: Gather all text nodes while ignoring hidden elements
     const walker = document.createTreeWalker(
       containerRef.current,
       NodeFilter.SHOW_TEXT,
@@ -81,6 +94,20 @@ const XMLRenderer = () => {
 
     while (walker.nextNode()) {
       let node = walker.currentNode;
+      let parent = node.parentElement;
+
+      // Check if the parent or any ancestor has display: none
+      let isHidden = false;
+      while (parent) {
+        if (window.getComputedStyle(parent).display === "none") {
+          isHidden = true;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+
+      if (isHidden) continue; // Skip this node if it's inside a hidden element
+
       textNodes.push({ node, start: fullText.length });
       fullText += node.textContent;
     }
@@ -164,6 +191,8 @@ const XMLRenderer = () => {
     // Step 4: Replace old text nodes with new highlighted structure
     newNodes.forEach(({ oldNode, newContent }) => {
       let parent = oldNode.parentNode;
+      if (!parent) return; // Safety check
+
       newContent.forEach((newNode) => parent.insertBefore(newNode, oldNode));
       parent.removeChild(oldNode);
     });
