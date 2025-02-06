@@ -64,7 +64,7 @@ const XMLRenderer = () => {
     if (showPopup) {
       highlightMatches();
     }
-  }, [showPopup]);
+  }, [showPopup, searchText]);
 
   useEffect(() => {
     if (matches.length > 0) {
@@ -256,7 +256,6 @@ const XMLRenderer = () => {
 
   const handleSearch = () => {
     setSearchText(popupSearch);
-    highlightMatches();
   };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
