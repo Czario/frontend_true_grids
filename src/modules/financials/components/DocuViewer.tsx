@@ -19,7 +19,7 @@ interface NewNodeData {
 }
 
 const XMLRenderer = () => {
-  const [xmlData, setXmlData] = useState<string>("");
+  const [xmlData, setXmlData] = useState<Document | null>(null);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
   const [matches, setMatches] = useState<Match[]>([]);
@@ -40,7 +40,16 @@ const XMLRenderer = () => {
     if (searchText.length < 3) return;
     try {
       const response = await axios.get("http://localhost:8100/sec-link1");
-      setXmlData(response.data);
+      // Parse XML string into a virtual DOM
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(response.data, "text/html");
+
+      if (doc.body) {
+        doc.body.innerHTML = doc.body.innerHTML
+          .replace(/&nbsp;/g, " ")
+          .replace(/\u00A0/g, " ");
+      }
+      setXmlData(doc);
       setShowPopup(true);
     } catch (error) {
       console.error("Error fetching XML data:", error);
@@ -73,15 +82,20 @@ const XMLRenderer = () => {
 
     const regex = new RegExp(escapeRegExp(searchText), "gi");
 
-    // Parse XML string into a virtual DOM
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlData, "text/html");
-
-    if (doc.body) {
-      doc.body.innerHTML = doc.body.innerHTML
-        .replace(/&nbsp;/g, " ")
-        .replace(/\u00A0/g, " ");
+    const doc: Document | null = xmlData;
+    if (!doc) {
+      return;
     }
+
+    // Remove the Highlighted Elements from virtual DOM
+    const highlightedElements = doc.body.querySelectorAll(".highlighted-text");
+    highlightedElements.forEach((span) => {
+      const parent = span.parentNode;
+      if (parent && span.textContent) {
+        const textNode = document.createTextNode(span.textContent);
+        parent.replaceChild(textNode, span); // Replaces the span with a text node
+      }
+    });
 
     // Step 1: Gather all text nodes while ignoring hidden elements
     const walker = document.createTreeWalker(
