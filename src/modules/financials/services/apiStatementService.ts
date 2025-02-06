@@ -6,7 +6,7 @@ export async function fetchStatement(
 ): Promise<ApiResponse> {
   const local_url = `/temp_data/${statementType}.json`;
   const url = `http://localhost:3000/stock-serve/statement/TSLA/${statementType}`;
-  const response = await fetch(url, {
+  const response = await fetch(local_url, {
     ...options, 
   });
 
