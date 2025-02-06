@@ -52,16 +52,7 @@ const XMLRenderer = () => {
     if (searchText.length < 3) return;
     try {
       const response = await axios.get("http://localhost:8100/sec-link1");
-      let updatedData = response.data;
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(updatedData, "text/html");
-      if (doc.body) {
-        updatedData = doc.body.innerHTML;
-      }
-
-      updatedData = updatedData.replace(/&nbsp;/g, " ").replace(/\u00A0/g, " ");
-      setXmlData(updatedData);
+      setXmlData(response.data);
       setShowPopup(true);
     } catch (error) {
       console.error("Error fetching XML data:", error);
@@ -73,7 +64,7 @@ const XMLRenderer = () => {
     if (showPopup) {
       highlightMatches();
     }
-  }, [showPopup, xmlData, searchText]);
+  }, [showPopup]);
 
   useEffect(() => {
     if (matches.length > 0) {
@@ -90,17 +81,26 @@ const XMLRenderer = () => {
   };
 
   const highlightMatches = (): void => {
-    if (!searchText || searchText.length < 3 || !containerRef.current) return;
+    if (!searchText || searchText.length < 3) return;
 
     removeHighlights();
     const regex = new RegExp(escapeRegExp(searchText), "gi");
 
+    // Parse XML string into a virtual DOM
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlData, "text/html");
+
+    if (doc.body) {
+      doc.body.innerHTML = doc.body.innerHTML
+        .replace(/&nbsp;/g, " ")
+        .replace(/\u00A0/g, " ");
+    }
+
     // Step 1: Gather all text nodes while ignoring hidden elements
     const walker = document.createTreeWalker(
-      containerRef.current,
+      doc.body,
       NodeFilter.SHOW_TEXT,
-      null,
-      false
+      null
     );
 
     let textNodes: TextNodeData[] = [];
@@ -113,7 +113,7 @@ const XMLRenderer = () => {
       // Check if the parent or any ancestor has display: none
       let isHidden = false;
       while (parent) {
-        if (window.getComputedStyle(parent).display === "none") {
+        if (parent.style.display === "none") {
           isHidden = true;
           break;
         }
@@ -213,12 +213,26 @@ const XMLRenderer = () => {
       parent.removeChild(oldNode);
     });
 
-    setMatches(matchList);
-    setCurrentIndex(0);
+    if (containerRef.current) {
+      containerRef.current.innerHTML = doc.body.innerHTML;
 
-    if (matchList.length > 0) {
-      setTimeout(() => scrollToMatch(0), 50);
+      requestAnimationFrame(() => {
+        setMatches(
+          matchList.map((match, index) => {
+            const highlightedElements =
+              containerRef.current?.querySelectorAll(".highlighted-text");
+
+            if (!highlightedElements || index >= highlightedElements.length) {
+              return match;
+            }
+
+            const span = highlightedElements[index] as HTMLElement;
+            return { ...match, node: span };
+          })
+        );
+      });
     }
+    setCurrentIndex(0);
   };
 
   const nextMatch = () => {
@@ -326,7 +340,6 @@ const XMLRenderer = () => {
               <div
                 ref={containerRef}
                 className="mt-2 text-sm max-h-[80vh] overflow-y-auto"
-                dangerouslySetInnerHTML={{ __html: xmlData }}
               />
             </div>
           </div>
