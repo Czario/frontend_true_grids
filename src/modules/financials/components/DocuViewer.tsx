@@ -26,6 +26,7 @@ const XMLRenderer = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [popupSearch, setPopupSearch] = useState<string>("");
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [htmlContent, setHtmlContent] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
@@ -74,9 +75,9 @@ const XMLRenderer = () => {
 
   const scrollToMatch = (index: number) => {
     if (matches.length === 0) return;
-    const match = matches[index];
-    if (match?.node) {
-      match.node.scrollIntoView({ behavior: "smooth", block: "center" });
+    const element = document.querySelector(`.highlighted-${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 
@@ -182,7 +183,8 @@ const XMLRenderer = () => {
         let matchedText = text.slice(localStart, localEnd);
         if (matchedText.length > 0) {
           let span = document.createElement("span");
-          span.className = "highlighted-text";
+          span.className = `highlighted-text highlighted-${matchIndex}`;
+          span.setAttribute("data-highlight-id", `${matchIndex}`);
           span.textContent = matchedText;
           newNodeContent.push(span);
 
@@ -212,26 +214,8 @@ const XMLRenderer = () => {
       newContent.forEach((newNode) => parent.insertBefore(newNode, oldNode));
       parent.removeChild(oldNode);
     });
-
-    if (containerRef.current) {
-      containerRef.current.innerHTML = doc.body.innerHTML;
-
-      requestAnimationFrame(() => {
-        setMatches(
-          matchList.map((match, index) => {
-            const highlightedElements =
-              containerRef.current?.querySelectorAll(".highlighted-text");
-
-            if (!highlightedElements || index >= highlightedElements.length) {
-              return match;
-            }
-
-            const span = highlightedElements[index] as HTMLElement;
-            return { ...match, node: span };
-          })
-        );
-      });
-    }
+    setMatches(matchList);
+    setHtmlContent(doc.body.innerHTML);
     setCurrentIndex(0);
   };
 
@@ -339,6 +323,7 @@ const XMLRenderer = () => {
               <div
                 ref={containerRef}
                 className="mt-2 text-sm max-h-[80vh] overflow-y-auto"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
             </div>
           </div>
