@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import PdfContent from "./PdfContent";
 
 interface Match {
   start: number;
@@ -25,7 +26,6 @@ const XMLRenderer = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [popupSearch, setPopupSearch] = useState<string>("");
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const [htmlContent, setHtmlContent] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,11 +321,7 @@ const XMLRenderer = () => {
                   Close
                 </button>
               </div>
-              <div
-                ref={containerRef}
-                className="mt-2 text-sm max-h-[80vh] overflow-y-auto"
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
-              />
+              <PdfContent htmlContent={htmlContent} />
             </div>
           </div>
         </div>
