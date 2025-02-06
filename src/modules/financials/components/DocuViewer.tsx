@@ -36,19 +36,6 @@ const XMLRenderer = () => {
     return string.replace(/[-/\\^$?()|[\]{}]/g, "\\$&");
   };
 
-  const removeHighlights = () => {
-    if (!containerRef.current) return;
-
-    const highlightedElements =
-      containerRef.current.querySelectorAll(".highlighted-text");
-    highlightedElements.forEach((span) => {
-      const parent = span.parentNode;
-      if (parent && span.textContent) {
-        parent.replaceChild(document.createTextNode(span.textContent), span);
-      }
-    });
-  };
-
   const fetchAndHighlightXML = async () => {
     if (searchText.length < 3) return;
     try {
@@ -84,7 +71,6 @@ const XMLRenderer = () => {
   const highlightMatches = (): void => {
     if (!searchText || searchText.length < 3) return;
 
-    removeHighlights();
     const regex = new RegExp(escapeRegExp(searchText), "gi");
 
     // Parse XML string into a virtual DOM
@@ -144,6 +130,7 @@ const XMLRenderer = () => {
     if (matchList.length === 0) {
       setMatches([]);
       setCurrentIndex(-1);
+      setHtmlContent(doc.body.innerHTML);
       return;
     }
 
