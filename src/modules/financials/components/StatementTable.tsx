@@ -218,15 +218,21 @@ interface StatementTableProps {
 
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [years, setYears] = useState(3);
+  const [maxYears, setMaxYears] = useState(false);
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    setYears(newValue as number);
+    if (newValue === 11) {
+      setMaxYears(true);
+    } else {
+      setYears(newValue as number);
+      setMaxYears(false);
+    }
   };
 
   const { columns, rows } = useMemo(() => {
     const parsedData = parseData(data);
     const cols: ColumnDef<ParsedRow>[] = parsedData.columns
-      .filter((_, index) => index < years * 4) // Show columns based on the number of years
+      .filter((_, index) => maxYears || index < years * 4) // Show columns based on the number of years or max
       .map((col, index) => ({
         id: `col${index}`,
         header: col.header,
@@ -234,7 +240,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
       }));
     return { columns: cols, rows: parsedData.rows };
-  }, [data, years]);
+  }, [data, years, maxYears]);
 
   const table = useReactTable<ParsedRow>({
     data: rows,
@@ -244,25 +250,28 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     getSubRows: (row) => row.children,
   });
 
-  const marks = Array.from({ length: 10 }, (_, i) => ({
+  const marks = Array.from({ length: 11 }, (_, i) => ({
     value: i + 1,
-    label: `${i + 1}Y`,
+    label: i === 10 ? 'Max' : `${i + 1}Y`,
   }));
 
   return (
     <>
       <Box sx={{ padding: 2 }}>
         <Typography gutterBottom>Years</Typography>
-        <StyledSlider
-          value={years}
-          onChange={handleSliderChange}
-          aria-labelledby="years-slider"
-          valueLabelDisplay="auto"
-          step={1}
-          marks={marks}
-          min={1}
-          max={10}
-        />
+        <Box display="flex" alignItems="center">
+          <StyledSlider
+            value={maxYears ? 11 : years}
+            onChange={handleSliderChange}
+            aria-labelledby="years-slider"
+            valueLabelDisplay="auto"
+            step={1}
+            marks={marks}
+            min={1}
+            max={11}
+            sx={{ flexGrow: 1, marginRight: 2 }}
+          />
+        </Box>
       </Box>
       <TableContainer
         sx={{
