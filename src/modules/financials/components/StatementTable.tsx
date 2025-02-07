@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, memo, forwardRef } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,6 +18,8 @@ import {
   Box,
   styled,
   Theme,
+  Slider,
+  Typography,
 } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { parseData } from '../utils/parseData';
@@ -52,13 +54,77 @@ const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme
   fontWeight: 'bold',
 }));
 
+const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
+  width: '100%',
+  '& .MuiSlider-thumb': {
+    width: 10,
+    height: 10,
+    borderRadius: 0, // Square thumb
+    backgroundColor: theme.palette.primary.main,
+  },
+  '& .MuiSlider-track': {
+    backgroundColor: 'transparent',
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: '50%',
+      height: '30px',
+      background: '#ccc',
+      zIndex: 1,
+    },
+  },
+  '& .MuiSlider-rail': {
+    backgroundColor: 'transparent',
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: '50%',
+      height: '2px',
+      background: '#ccc',
+      zIndex: 1,
+    },
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: '50%',
+      height: '2px',
+      background: 'linear-gradient(to right, #000 1px, transparent 1px)',
+      backgroundSize: '10% 100%',
+      zIndex: 2,
+    },
+  },
+  '& .MuiSlider-mark': {
+    backgroundColor: '#000',
+    height: '8px',
+    width: '2px',
+    marginTop: '-3px',
+  },
+  '& .MuiSlider-markLabel': {
+    fontSize: '0.75rem',
+    top: '20px',
+  },
+  '& .MuiSlider-root': {
+    backgroundColor: theme.palette.background.paper, // Rectangular background
+    padding: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius,
+  },
+}));
+
 interface MemoizedRowProps {
   row: Row<ParsedRow>;
   isExpanded: boolean;
 }
 
-const MemoizedRow = React.memo(
-  React.forwardRef<HTMLTableRowElement, MemoizedRowProps>(
+const MemoizedRow = memo(
+  forwardRef<HTMLTableRowElement, MemoizedRowProps>(
     ({ row, isExpanded }, ref) => {
       return (
         <StyledTableRow ref={ref} hover role="row" sx={{ height: '40px' }}>
@@ -72,7 +138,7 @@ const MemoizedRow = React.memo(
               borderColor: 'divider',
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
-              paddingLeft: `${row.depth * 0.75}rem`,
+              paddingLeft: `${row.depth * 0.75}rem`, // Reduced indentation
               textAlign: 'left',
             }}
             role="cell"
@@ -124,18 +190,24 @@ interface StatementTableProps {
 }
 
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
-  const [visibleRows, setVisibleRows] = useState(10);
+  const [years, setYears] = useState(3);
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setYears(newValue as number);
+  };
 
   const { columns, rows } = useMemo(() => {
     const parsedData = parseData(data);
-    const cols: ColumnDef<ParsedRow>[] = parsedData.columns.map((col, index) => ({
-      id: `col${index}`,
-      header: col.header,
-      accessorFn: (row: ParsedRow) => row[`col${index}`],
-      size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
-    }));
+    const cols: ColumnDef<ParsedRow>[] = parsedData.columns
+      .filter((_, index) => index < years * 4) // Show columns based on the number of years
+      .map((col, index) => ({
+        id: `col${index}`,
+        header: col.header,
+        accessorFn: (row: ParsedRow) => row[`col${index}`],
+        size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
+      }));
     return { columns: cols, rows: parsedData.rows };
-  }, [data]);
+  }, [data, years]);
 
   const table = useReactTable<ParsedRow>({
     data: rows,
@@ -145,85 +217,94 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     getSubRows: (row) => row.children,
   });
 
-  const handleLoadMore = () => {
-    setVisibleRows((prev) => prev + 10);
-  };
+  const marks = Array.from({ length: 10 }, (_, i) => ({
+    value: i + 1,
+    label: `${i + 1}Y`,
+  }));
 
   return (
-    <TableContainer
-      sx={{
-        maxHeight: '60vh',
-        overflow: 'auto',
-        position: 'relative',
-        backgroundColor: 'background.paper',
-      }}
-      role="table"
-    >
-      <Table
-        stickyHeader
+    <>
+      <Box sx={{ padding: 2 }}>
+        <Typography gutterBottom>Years</Typography>
+        <StyledSlider
+          value={years}
+          onChange={handleSliderChange}
+          aria-labelledby="years-slider"
+          valueLabelDisplay="auto"
+          step={1}
+          marks={marks}
+          min={1}
+          max={10}
+        />
+      </Box>
+      <TableContainer
         sx={{
-          tableLayout: 'fixed',
-          minWidth: FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
+          maxHeight: '60vh',
+          overflow: 'auto',
+          position: 'relative',
+          backgroundColor: 'background.paper',
         }}
+        role="table"
       >
-        <TableHead>
-          <TableRow role="rowgroup">
-            <StyledTableHeadCell
-              sx={{
-                position: 'sticky',
-                left: 0,
-                zIndex: 3,
-                backgroundColor: 'background.paper',
-                borderRight: '1px solid',
-                borderColor: 'divider',
-                width: FIRST_COLUMN_WIDTH,
-                minWidth: FIRST_COLUMN_WIDTH,
-                textAlign: 'left',
-              }}
-              role="columnheader"
-            >
-              {flexRender(
-                table.getHeaderGroups()[0].headers[0].column.columnDef.header,
-                table.getHeaderGroups()[0].headers[0].getContext()
-              )}
-            </StyledTableHeadCell>
-            {table.getHeaderGroups()[0].headers.slice(1).map((header) => (
+        <Table
+          stickyHeader
+          sx={{
+            tableLayout: 'fixed',
+            minWidth: FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
+          }}
+        >
+          <TableHead>
+            <TableRow role="rowgroup">
               <StyledTableHeadCell
-                key={header.id}
                 sx={{
-                  width: DEFAULT_COLUMN_WIDTH,
-                  minWidth: DEFAULT_COLUMN_WIDTH,
                   position: 'sticky',
-                  top: 0,
-                  zIndex: 2,
+                  left: 0,
+                  zIndex: 3,
                   backgroundColor: 'background.paper',
-                  textAlign: 'right',
+                  borderRight: '1px solid',
+                  borderColor: 'divider',
+                  width: FIRST_COLUMN_WIDTH,
+                  minWidth: FIRST_COLUMN_WIDTH,
+                  textAlign: 'left',
                 }}
                 role="columnheader"
               >
-                {flexRender(header.column.columnDef.header, header.getContext())}
+                {flexRender(
+                  table.getHeaderGroups()[0].headers[0].column.columnDef.header,
+                  table.getHeaderGroups()[0].headers[0].getContext()
+                )}
               </StyledTableHeadCell>
+              {table.getHeaderGroups()[0].headers.slice(1).map((header) => (
+                <StyledTableHeadCell
+                  key={header.id}
+                  sx={{
+                    width: DEFAULT_COLUMN_WIDTH,
+                    minWidth: DEFAULT_COLUMN_WIDTH,
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 2,
+                    backgroundColor: 'background.paper',
+                    textAlign: 'right',
+                  }}
+                  role="columnheader"
+                >
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                </StyledTableHeadCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody role="rowgroup">
+            {table.getRowModel().rows.map((row) => (
+              <MemoizedRow
+                key={row.id}
+                row={row}
+                isExpanded={row.getIsExpanded()}
+              />
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody role="rowgroup">
-          {table.getRowModel().rows.slice(0, visibleRows).map((row) => (
-            <MemoizedRow
-              key={row.id}
-              row={row}
-              isExpanded={row.getIsExpanded()}
-            />
-          ))}
-        </TableBody>
-      </Table>
-      {visibleRows < table.getRowModel().rows.length && (
-        <Box textAlign="center" mt={2}>
-          <IconButton onClick={handleLoadMore}>
-            Load More
-          </IconButton>
-        </Box>
-      )}
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 
