@@ -20,6 +20,8 @@ import {
   Theme,
   Slider,
   Typography,
+  Tooltip,
+  tooltipClasses,
 } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { parseData } from '../utils/parseData';
@@ -118,6 +120,21 @@ const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
   },
 }));
 
+const CustomTooltip = styled(({ className, ...props }: any) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }: { theme: Theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: 'white',
+    boxShadow: theme.shadows[1],
+    fontSize: 14,
+    maxWidth: 300,
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black,
+  },
+}));
+
 interface MemoizedRowProps {
   row: Row<ParsedRow>;
   isExpanded: boolean;
@@ -157,12 +174,22 @@ const MemoizedRow = memo(
               >
                 {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
-              <Box ml={1}>
-                {flexRender(
-                  row.getVisibleCells()[0].column.columnDef.cell,
-                  row.getVisibleCells()[0].getContext()
-                )}
-              </Box>
+              <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow>
+                <Box
+                  ml={1}
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: 'calc(100% - 24px)', // Adjust to fit within the cell
+                  }}
+                >
+                  {flexRender(
+                    row.getVisibleCells()[0].column.columnDef.cell,
+                    row.getVisibleCells()[0].getContext()
+                  )}
+                </Box>
+              </CustomTooltip>
             </Box>
           </StyledFirstColumnCell>
 
