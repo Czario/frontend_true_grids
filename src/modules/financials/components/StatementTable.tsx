@@ -229,6 +229,10 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     }
   };
 
+  const valueLabelFormat = (value: number) => {
+    return value === 11 ? 'Max' : `${value}Y`;
+  };
+
   const { columns, rows } = useMemo(() => {
     const parsedData = parseData(data);
     const cols: ColumnDef<ParsedRow>[] = parsedData.columns
@@ -265,6 +269,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             onChange={handleSliderChange}
             aria-labelledby="years-slider"
             valueLabelDisplay="auto"
+            valueLabelFormat={valueLabelFormat}
             step={1}
             marks={marks}
             min={1}
