@@ -16,24 +16,15 @@ import { Google } from "@mui/icons-material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { signUpService } from "../services/authService";
-
-interface FormData {
-  email: string;
-  password: string;
-}
-
-interface signupResponse {
-  message?: string;
-  success: boolean;
-}
+import { signupForm, signupResponse } from "@/modules/auth/interfaces/Signup";
 
 export default function SignupPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<signupForm>({
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<Partial<signupForm>>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -45,7 +36,7 @@ export default function SignupPage() {
   if (!isClient) return null; // Prevents SSR mismatch
 
   const validateForm = (): boolean => {
-    let newErrors: Partial<FormData> = {};
+    let newErrors: Partial<signupForm> = {};
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -82,7 +73,7 @@ export default function SignupPage() {
         alert("Registration successful!");
         router.replace("/login");
       } else {
-        setErrorMessage(result.message);
+        setErrorMessage(result.message || null);
       }
     } catch (err: any) {
       setErrorMessage(err.message);

@@ -1,18 +1,11 @@
 import axios from "axios";
-interface FormData {
-    email: string;
-    password: string;
-}
+import { LoginForm, LoginResponse } from "@/modules/auth/interfaces/Login";
+import { signupForm, signupResponse} from "@/modules/auth/interfaces/Signup";
 
-interface signupResponse {
-  message?: string;
-  success: boolean;
-}
-
-  export const loginService = async (formData: FormData) => {
+  export const loginService = async (formData: LoginForm) : Promise<LoginResponse> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve({ success: false, message: "Email or Password Mismatch" });
+        resolve({ success: true, message: "Email or Password Mismatch" });
       }, 2000);
     });
     // try {
@@ -24,7 +17,7 @@ interface signupResponse {
     // }
   };
 
-export const signUpService = async (formData: FormData) : Promise<signupResponse> => {
+export const signUpService = async (formData: signupForm) : Promise<signupResponse> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ success: true, message: "email id already exists" });

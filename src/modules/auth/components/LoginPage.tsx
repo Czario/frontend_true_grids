@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { LoginForm, LoginResponse } from "@/modules/auth/interfaces/Login";
 
 import {
   Button,
@@ -15,25 +16,15 @@ import {
 import { Google } from "@mui/icons-material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { loginService, signUpService } from "../services/authService";
-
-interface FormData {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  message: string;
-  success: boolean;
-}
+import { loginService } from "../services/authService";
 
 export default function AuthPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<LoginForm>({
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<Partial<LoginForm>>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -59,7 +50,7 @@ export default function AuthPage() {
       if (result.success) {
         router.replace("/financials");
       } else {
-        setErrorMessage(result.message);
+        setErrorMessage(result.message || null);
       }
     } catch (err: any) {
       setErrorMessage(err.message);
