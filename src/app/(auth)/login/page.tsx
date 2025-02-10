@@ -1,9 +1,9 @@
-import AuthPage from "@/modules/auth/components/authPage";
+import LoginPage from "@/modules/auth/components/LoginPage";
 
 const Login = () => {
   return (
     <>
-      <AuthPage isLogin={true} />
+      <LoginPage />
     </>
   );
 };

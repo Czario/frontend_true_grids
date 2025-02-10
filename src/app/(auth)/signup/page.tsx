@@ -1,9 +1,9 @@
-import AuthPage from "@/modules/auth/components/authPage";
+import SignupPage from "@/modules/auth/components/RegisterPage";
 
 const Signup = () => {
   return (
     <>
-      <AuthPage isLogin={false} />
+      <SignupPage />
     </>
   );
 };

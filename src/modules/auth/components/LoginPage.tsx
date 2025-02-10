@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import {
   Button,
   TextField,
@@ -20,7 +22,13 @@ interface FormData {
   password: string;
 }
 
-export default function AuthPage({ isLogin }: { isLogin: boolean }) {
+interface LoginResponse {
+  message: string;
+  success: boolean;
+}
+
+export default function AuthPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -29,46 +37,30 @@ export default function AuthPage({ isLogin }: { isLogin: boolean }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  // Ensure rendering happens only on the client
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   if (!isClient) return null; // Prevents SSR mismatch
 
-  const validateForm = (): boolean => {
-    let newErrors: Partial<FormData> = {};
-    if (!formData.email.includes("@"))
-      newErrors.email = "Invalid email address";
-    if (formData.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // Clear error on change
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
     setLoading(true);
     setErrorMessage(null);
 
     try {
-      const response = isLogin
-        ? loginService(formData)
-        : signUpService(formData);
-
-      const result = await response.json();
-      if (!response.ok)
-        throw new Error(result.message || "Something went wrong");
-
-      alert(isLogin ? "Login successful!" : "Registration successful!");
+      const result: LoginResponse = await loginService(formData);
+      if (result.success) {
+        router.replace("/financials");
+      } else {
+        setErrorMessage(result.message);
+      }
     } catch (err: any) {
       setErrorMessage(err.message);
     } finally {
@@ -80,7 +72,7 @@ export default function AuthPage({ isLogin }: { isLogin: boolean }) {
     <Container maxWidth="xs">
       <Paper elevation={6} sx={{ p: 4, textAlign: "center", mt: 5 }}>
         <Typography variant="h5" gutterBottom>
-          {isLogin ? "Sign In" : "Sign Up"}
+          "Sign In"
         </Typography>
 
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
@@ -121,36 +113,22 @@ export default function AuthPage({ isLogin }: { isLogin: boolean }) {
           >
             {loading ? (
               <CircularProgress size={24} sx={{ color: "white" }} />
-            ) : isLogin ? (
-              "Sign In"
             ) : (
-              "Sign Up"
+              "Sign In"
             )}
           </Button>
         </Box>
 
         <Typography variant="body2" sx={{ mt: 2 }}>
-          {isLogin ? (
-            <span>
-              Don't have an account?{" "}
-              <Link
-                href="/signup"
-                style={{ textDecoration: "none", color: "#1976d2" }}
-              >
-                Sign up
-              </Link>
-            </span>
-          ) : (
-            <span>
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                style={{ textDecoration: "none", color: "#1976d2" }}
-              >
-                Sign in
-              </Link>
-            </span>
-          )}
+          <span>
+            Don't have an account?{" "}
+            <Link
+              href="/signup"
+              style={{ textDecoration: "none", color: "#1976d2" }}
+            >
+              Sign up
+            </Link>
+          </span>
         </Typography>
 
         <Box sx={{ mt: 3 }}>
