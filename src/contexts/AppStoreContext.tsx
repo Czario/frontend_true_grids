@@ -2,14 +2,9 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-interface User {
-  name: string;
-}
-
 interface AppStoreContextType {
-  user: User | null;
-  login: (userData: User) => void;
-  logout: () => void;
+  login: boolean;
+  setUserlogin: (value: boolean) => void;
 }
 
 const AppStoreContext = createContext<AppStoreContextType | undefined>(
@@ -17,13 +12,11 @@ const AppStoreContext = createContext<AppStoreContextType | undefined>(
 );
 
 export function AppStoreProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-
-  const login = (userData: User) => setUser(userData);
-  const logout = () => setUser(null);
+  const [login, setLogin] = useState<boolean>(false);
+  const setUserlogin = (value: boolean) => setLogin(value);
 
   return (
-    <AppStoreContext.Provider value={{ user, login, logout }}>
+    <AppStoreContext.Provider value={{ login, setUserlogin }}>
       {children}
     </AppStoreContext.Provider>
   );
