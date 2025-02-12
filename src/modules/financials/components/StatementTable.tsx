@@ -1,4 +1,5 @@
 import React, { useMemo, useState, memo, forwardRef } from 'react';
+import dynamic from 'next/dynamic';
 import {
   useReactTable,
   getCoreRowModel,
@@ -26,6 +27,12 @@ import {
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { parseData } from '../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
+const pdfUrl="/doc_files/tesla_doc_1.pdf"
+
+// Dynamically import the CellValueModal so that it only loads on the client.
+const EnhancedDocViewer = dynamic(() => import('./CellValueModal'), {
+  ssr: false,
+});
 
 const FIRST_COLUMN_WIDTH = 400;
 const DEFAULT_COLUMN_WIDTH = 200;
@@ -61,7 +68,7 @@ const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
   '& .MuiSlider-thumb': {
     width: 10,
     height: 10,
-    borderRadius: 0, // Square thumb
+    borderRadius: 0,
     backgroundColor: theme.palette.primary.main,
   },
   '& .MuiSlider-track': {
@@ -114,7 +121,7 @@ const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
     top: '20px',
   },
   '& .MuiSlider-root': {
-    backgroundColor: theme.palette.background.paper, // Rectangular background
+    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
   },
@@ -138,11 +145,12 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
 interface MemoizedRowProps {
   row: Row<ParsedRow>;
   isExpanded: boolean;
+  onCellClick: (value: string) => void;
 }
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
-    ({ row, isExpanded }, ref) => {
+    ({ row, isExpanded, onCellClick }, ref) => {
       return (
         <StyledTableRow ref={ref} hover role="row" sx={{ height: '40px' }}>
           <StyledFirstColumnCell
@@ -155,7 +163,7 @@ const MemoizedRow = memo(
               borderColor: 'divider',
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
-              paddingLeft: `${row.depth * 0.75}rem`, // Reduced indentation
+              paddingLeft: `${row.depth * 0.75}rem`,
               textAlign: 'left',
             }}
             role="cell"
@@ -168,20 +176,25 @@ const MemoizedRow = memo(
                 aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
                 sx={{
                   visibility: row.original.hasChildren ? 'visible' : 'hidden',
-                  transform: row.getIsExpanded() ? 'rotate(0deg)' : 'rotate(-90deg)',
+                  transform: row.getIsExpanded()
+                    ? 'rotate(0deg)'
+                    : 'rotate(-90deg)',
                   transition: 'transform 0.2s ease',
                 }}
               >
                 {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
-              <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow>
+              <CustomTooltip
+                title={row.getVisibleCells()[0].getValue() as string}
+                arrow
+              >
                 <Box
                   ml={1}
                   sx={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    maxWidth: 'calc(100% - 24px)', // Adjust to fit within the cell
+                    maxWidth: 'calc(100% - 24px)',
                   }}
                 >
                   {flexRender(
@@ -202,6 +215,7 @@ const MemoizedRow = memo(
                 textAlign: 'right',
               }}
               role="cell"
+              onClick={() => onCellClick(cell.getValue() as string)}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </StyledTableCell>
@@ -219,6 +233,8 @@ interface StatementTableProps {
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [years, setYears] = useState(3);
   const [maxYears, setMaxYears] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedCellValue, setSelectedCellValue] = useState<string | null>(null);
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     if (newValue === 11) {
@@ -236,11 +252,14 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const { columns, rows } = useMemo(() => {
     const parsedData = parseData(data);
     const cols: ColumnDef<ParsedRow>[] = parsedData.columns
-      .filter((_, index) => maxYears || index < years * 4) // Show columns based on the number of years or max
+      .filter((_, index) => maxYears || index < years * 4)
       .map((col, index) => ({
         id: `col${index}`,
         header: col.header,
-        accessorFn: (row: ParsedRow) => row[`col${index}`],
+        accessorFn: (row: ParsedRow) => {
+          const value = row[`col${index}`];
+          return typeof value === 'number' ? value.toLocaleString() : value;
+        },
         size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
       }));
     return { columns: cols, rows: parsedData.rows };
@@ -254,27 +273,40 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     getSubRows: (row) => row.children,
   });
 
-  const marks = Array.from({ length: 11 }, (_, i) => ({
-    value: i + 1,
-    label: i === 10 ? 'Max' : `${i + 1}Y`,
-  }));
+  const marks = [
+    { value: 1, label: '1Y' },
+    { value: 3, label: '3Y' },
+    { value: 5, label: '5Y' },
+    { value: 7, label: '7Y' },
+    { value: 11, label: 'Max' },
+  ];
+
+  const handleCellClick = (value: string) => {
+    setSelectedCellValue(value);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedCellValue(null);
+  };
 
   return (
     <>
       <Box sx={{ padding: 2 }}>
-        <Typography gutterBottom>Years</Typography>
-        <Box display="flex" alignItems="center">
+        
+        <Box display="flex" alignItems="center" justifyContent="center">
           <StyledSlider
             value={maxYears ? 11 : years}
             onChange={handleSliderChange}
             aria-labelledby="years-slider"
             valueLabelDisplay="auto"
             valueLabelFormat={valueLabelFormat}
-            step={1}
             marks={marks}
             min={1}
             max={11}
-            sx={{ flexGrow: 1, marginRight: 2 }}
+            step={null}
+            sx={{ width: '50%' }}
           />
         </Box>
       </Box>
@@ -340,11 +372,19 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                 key={row.id}
                 row={row}
                 isExpanded={row.getIsExpanded()}
+                onCellClick={handleCellClick}
               />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <EnhancedDocViewer
+        open={modalOpen}
+        onClose={handleCloseModal}
+        searchTerm={selectedCellValue || ''}
+        pdfUrl={pdfUrl}
+      />
     </>
   );
 };
