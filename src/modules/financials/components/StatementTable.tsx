@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useMemo, useState, memo, forwardRef } from 'react';
 import dynamic from 'next/dynamic';
 import {
@@ -27,9 +29,10 @@ import {
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { parseData } from '../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
-const pdfUrl="/doc_files/tesla_doc_1.pdf"
 
-// Dynamically import the CellValueModal so that it only loads on the client.
+const pdfUrl = "/doc_files/tesla_doc_1.pdf";
+
+// Dynamically import the PdfHighlighterModal so that it only loads on the client.
 const EnhancedDocViewer = dynamic(() => import('./CellValueModal'), {
   ssr: false,
 });
@@ -234,6 +237,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [years, setYears] = useState(3);
   const [maxYears, setMaxYears] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  // The cell's value will be used as the search term for the PDF modal.
   const [selectedCellValue, setSelectedCellValue] = useState<string | null>(null);
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
@@ -281,6 +285,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     { value: 11, label: 'Max' },
   ];
 
+  // Clicking a cell opens the PDF modal with the cell's value as the search term.
   const handleCellClick = (value: string) => {
     setSelectedCellValue(value);
     setModalOpen(true);
@@ -294,7 +299,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   return (
     <>
       <Box sx={{ padding: 2 }}>
-        
         <Box display="flex" alignItems="center" justifyContent="center">
           <StyledSlider
             value={maxYears ? 11 : years}
@@ -379,6 +383,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         </Table>
       </TableContainer>
 
+      {/* Open the modal using the dynamically imported PDF highlighter modal */}
       <EnhancedDocViewer
         open={modalOpen}
         onClose={handleCloseModal}

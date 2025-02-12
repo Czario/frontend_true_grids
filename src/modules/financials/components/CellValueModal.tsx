@@ -1,24 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Box,
-  ListItem,
-  ListItemText,
-  Typography,
-  List,
-  ButtonBase,
-} from '@mui/material';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Dialog, DialogContent, DialogTitle, IconButton, Box, ListItem, ListItemText, Typography, List, ButtonBase, LinearProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.mjs`;
-}
+// Configure pdf.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `./pdf.worker.min.js`;
 
 interface CellValueModalProps {
   open: boolean;
@@ -29,122 +18,155 @@ interface CellValueModalProps {
 
 interface Match {
   page: number;
-  matchText: string;
-  index: number;
+  preview: string;
+  count: number;
+  positions: number[];
 }
 
-const escapeRegExp = (str: string): string => {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-};
+const PDF_SEARCH_CHUNK_SIZE = 5; // Pages per processing chunk
+const PREVIEW_LENGTH = 35;
 
-const CellValueModal: React.FC<CellValueModalProps> = ({
-  open,
-  onClose,
-  searchTerm,
-  pdfUrl,
-}) => {
+const CellValueModal: React.FC<CellValueModalProps> = ({ open, onClose, searchTerm, pdfUrl }) => {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [visiblePages, setVisiblePages] = useState(new Set<number>());
   const pdfDocRef = useRef<pdfjs.PDFDocumentProxy | null>(null);
-  const [version, setVersion] = useState(0); // Force re-render when search changes
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const searchControllerRef = useRef<AbortController | null>(null);
 
-  const onDocumentLoadSuccess = (pdf: pdfjs.PDFDocumentProxy) => {
-    if (!pdfDocRef.current) {
-      setNumPages(pdf.numPages);
-      pdfDocRef.current = pdf;
-      setError(null);
-    }
-  };
-
-  const onDocumentLoadError = (err: Error) => {
-    console.error('Error loading PDF document:', err);
-    setError(err);
-  };
-
+  // Reset state when PDF URL changes
   useEffect(() => {
-    if (!pdfDocRef.current) return;
+    const cleanup = () => {
+      pdfDocRef.current = null;
+      setNumPages(null);
+      setMatches([]);
+      setVisiblePages(new Set());
+      setIsLoading(false);
+      searchControllerRef.current?.abort();
+    };
 
-    // Reset matches when search term changes
-    if (!searchTerm) {
+    return cleanup;
+  }, [pdfUrl]);
+
+  // Handle document load
+  const onDocumentLoadSuccess = useCallback((pdf: pdfjs.PDFDocumentProxy) => {
+    pdfDocRef.current = pdf;
+    setNumPages(pdf.numPages);
+    setError(null);
+  }, []);
+
+  // Setup intersection observer for lazy loading
+  useEffect(() => {
+    if (!open || !numPages) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const newVisiblePages = new Set(visiblePages);
+        entries.forEach(entry => {
+          const pageNumber = parseInt(entry.target.getAttribute('data-page') || '0');
+          if (entry.isIntersecting) {
+            newVisiblePages.add(pageNumber);
+          } else {
+            newVisiblePages.delete(pageNumber);
+          }
+        });
+        setVisiblePages(newVisiblePages);
+      },
+      { threshold: 0.1, root: document.querySelector('.pdf-pages-container') }
+    );
+
+    return () => observerRef.current?.disconnect();
+  }, [open, numPages, visiblePages]);
+
+  // Search processing with chunking
+  const processSearch = useCallback(async (searchTerm: string, pdfDoc: pdfjs.PDFDocumentProxy) => {
+    const normalizedSearch = searchTerm.toLowerCase().trim();
+    if (!normalizedSearch) {
       setMatches([]);
       return;
     }
 
-    let isMounted = true;
-    const cancelTokens: AbortController[] = [];
+    setIsLoading(true);
+    searchControllerRef.current?.abort();
+    const controller = new AbortController();
+    searchControllerRef.current = controller;
 
-    const performSearch = async () => {
-      const regex = new RegExp(escapeRegExp(searchTerm), 'gi');
+    try {
+      const matchesMap = new Map<number, Match>();
+      const totalPages = pdfDoc.numPages;
       
-      const pagePromises = Array.from({ length: pdfDocRef.current!.numPages }, (_, i) => {
-        const controller = new AbortController();
-        cancelTokens.push(controller);
+      // Process pages in chunks
+      for (let chunkStart = 1; chunkStart <= totalPages; chunkStart += PDF_SEARCH_CHUNK_SIZE) {
+        if (controller.signal.aborted) break;
 
-        return pdfDocRef.current!
-          .getPage(i + 1)
-          .then((page) => page.getTextContent())
-          .then((textContent) => {
-            const pageText = textContent.items.map((item: any) => item.str).join(' ');
-            const pageMatches: Match[] = [];
-            let match;
-            while ((match = regex.exec(pageText)) !== null) {
-              pageMatches.push({
-                page: i + 1,
-                matchText: match[0],
-                index: match.index,
-              });
-            }
-            return pageMatches;
-          })
-          .catch((error) => {
-            if (error.name === 'AbortError') {
-              console.log('TextLayer task cancelled');
-            } else {
-              throw error;
-            }
-          });
-      });
-
-      const results = await Promise.all(pagePromises);
-      if (isMounted) {
-        const allMatches = results.flat().filter((match): match is Match => match !== undefined);
-        setMatches(allMatches);
-        setVersion(v => v + 1); // Update version for re-render
-      }
-    };
-
-    performSearch();
-    return () => {
-      isMounted = false;
-      cancelTokens.forEach((controller) => controller.abort());
-    };
-  }, [searchTerm, numPages]);
-
-  const handleMatchClick = (pageNumber: number) => {
-    const element = document.getElementById(`page_${pageNumber}`);
-    element?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const customTextRenderer = useCallback(
-    (textItem: any) => {
-      if (!searchTerm) return textItem.str;
-      const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'i');
-      const parts = textItem.str.split(regex);
-      
-      return (
-        <span>
-          {parts.map((part: string, index: number) =>
-            index % 2 === 1 ? (
-              <span key={index} style={{ backgroundColor: 'yellow' }}>
-                {part}
-              </span>
-            ) : (
-              part
+        const chunkEnd = Math.min(chunkStart + PDF_SEARCH_CHUNK_SIZE - 1, totalPages);
+        const pagePromises = [];
+        
+        for (let pageNum = chunkStart; pageNum <= chunkEnd; pageNum++) {
+          pagePromises.push(
+            pdfDoc.getPage(pageNum).then(page => 
+              page.getTextContent().then(textContent => {
+                const pageText = textContent.items.map(item => (item as TextItem).str).join(' ');
+                return { pageNum, pageText };
+              })
             )
-          )}
-        </span>
-      );
+          );
+        }
+
+        const chunkResults = await Promise.all(pagePromises);
+        chunkResults.forEach(({ pageNum, pageText }) => {
+          const regex = new RegExp(`(${escapeRegExp(normalizedSearch)})`, 'gi');
+          const positions: number[] = [];
+          let match;
+          let preview = '';
+
+          while ((match = regex.exec(pageText)) !== null) {
+            positions.push(match.index);
+            if (!preview) {
+              const start = Math.max(0, match.index - PREVIEW_LENGTH);
+              preview = pageText.slice(start, start + PREVIEW_LENGTH * 2);
+            }
+          }
+
+          if (positions.length > 0) {
+            matchesMap.set(pageNum, {
+              page: pageNum,
+              preview,
+              count: positions.length,
+              positions
+            });
+          }
+        });
+      }
+
+      if (!controller.signal.aborted) {
+        setMatches(Array.from(matchesMap.values()));
+      }
+    } catch (err) {
+      if (!controller.signal.aborted) {
+        setError(err instanceof Error ? err : new Error('Search failed'));
+      }
+    } finally {
+      if (!controller.signal.aborted) setIsLoading(false);
+    }
+  }, []);
+
+  // Trigger search when term changes
+  useEffect(() => {
+    if (!pdfDocRef.current || !open) return;
+    processSearch(searchTerm, pdfDocRef.current);
+  }, [searchTerm, open, processSearch]);
+
+  // Highlight text with context awareness
+  const customTextRenderer = useCallback(
+    (textItem: { str: string }) => {
+      if (!searchTerm) return textItem.str;
+      const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+      return textItem.str.split(regex).map((part, i) =>
+        i % 2 === 1 ? `<mark style="background-color: rgba(255,255,0,0.5); padding: 2px 0;">${part}</mark>` : part
+      ).join('');
     },
     [searchTerm]
   );
@@ -153,79 +175,74 @@ const CellValueModal: React.FC<CellValueModalProps> = ({
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle sx={{ m: 0, p: 2 }}>
         PDF Viewer
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-        >
+        <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
+      
       <DialogContent dividers sx={{ display: 'flex', height: '80vh', p: 0 }}>
-        <Box
-          sx={{
-            width: '25%',
-            borderRight: '1px solid #ccc',
-            p: 2,
-            overflowY: 'auto',
-            backgroundColor: '#f5f5f5',
-          }}
-        >
-          <List>
-            {matches.length > 0 ? (
-              matches.map((match, index) => (
-                <ButtonBase
-                  key={`${match.page}_${index}`}
-                  onClick={() => handleMatchClick(match.page)}
-                  sx={{
-                    display: 'block',
-                    width: '100%',
-                    textAlign: 'left',
-                    '&:hover': { backgroundColor: '#e0e0e0' },
-                  }}
-                >
-                  <ListItem component="div">
-                    <ListItemText
-                      primary={`Page ${match.page}`}
-                      secondary={match.matchText}
-                    />
-                  </ListItem>
-                </ButtonBase>
-              ))
-            ) : (
+        {/* Search Results Panel */}
+        <Box sx={{ width: '300px', borderRight: '1px solid #eee', overflowY: 'auto' }}>
+          {isLoading && <LinearProgress />}
+          <List dense>
+            {matches.map((match) => (
+              <ButtonBase
+                key={match.page}
+                onClick={() => document.getElementById(`page-${match.page}`)?.scrollIntoView({ behavior: 'smooth' })}
+                sx={{ width: '100%', textAlign: 'left' }}
+              >
+                <ListItem>
+                  <ListItemText
+                    primary={`Page ${match.page} (${match.count} matches)`}
+                    secondary={match.preview}
+                    secondaryTypographyProps={{ noWrap: true }}
+                  />
+                </ListItem>
+              </ButtonBase>
+            ))}
+            {!isLoading && matches.length === 0 && searchTerm && (
               <ListItem>
-                <ListItemText
-                  primary={searchTerm ? "No matches found" : "Enter a search term"}
-                />
+                <ListItemText primary="No matches found" />
               </ListItem>
             )}
           </List>
         </Box>
 
-        <Box sx={{ width: '75%', overflowY: 'auto', p: 2 }}>
+        {/* PDF Viewer */}
+        <Box sx={{ flex: 1, overflowY: 'auto', position: 'relative' }} className="pdf-pages-container">
           {error ? (
-            <Typography color="error">
-              Error loading PDF: {error.message || 'Unknown error'}
-            </Typography>
+            <Box p={2}>
+              <Typography color="error">Error loading PDF: {error.message}</Typography>
+            </Box>
           ) : (
             <Document
-              key={pdfUrl}
               file={pdfUrl}
               onLoadSuccess={onDocumentLoadSuccess}
-              onLoadError={onDocumentLoadError}
+              onLoadError={setError}
+              loading={<LinearProgress />}
             >
-              {Array.from({ length: numPages || 0 }, (_, index) => (
-                <div key={`page_${index + 1}`} id={`page_${index + 1}`}>
-                  <Page
-                    key={`page_${index + 1}_${version}`}
-                    pageNumber={index + 1}
-                    width={800}
-                    renderTextLayer
-                    renderAnnotationLayer
-                    customTextRenderer={customTextRenderer}
-                  />
-                </div>
-              ))}
+              {Array.from({ length: numPages || 0 }, (_, i) => {
+                const pageNumber = i + 1;
+                return (
+                  <Box
+                    key={pageNumber}
+                    id={`page-${pageNumber}`}
+                    data-page={pageNumber}
+                    ref={(el: HTMLDivElement) => el && observerRef.current?.observe(el)}
+                    sx={{ mb: 2 }}
+                  >
+                    {visiblePages.has(pageNumber) && (
+                      <Page
+                        pageNumber={pageNumber}
+                        width={800}
+                        renderTextLayer
+                        customTextRenderer={customTextRenderer}
+                        loading={<LinearProgress />}
+                      />
+                    )}
+                  </Box>
+                );
+              })}
             </Document>
           )}
         </Box>
@@ -233,5 +250,8 @@ const CellValueModal: React.FC<CellValueModalProps> = ({
     </Dialog>
   );
 };
+
+// Helper function
+const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export default CellValueModal;
