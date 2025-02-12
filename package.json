@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p $PORT",
+    "dev": "next dev --turbopack -p 4000",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "next start -p 4000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "@visx/responsive": "^3.12.0",
     "@visx/scale": "^3.12.0",
     "@visx/shape": "^3.12.0",
+    "@visx/text": "^3.12.0",
     "@visx/tooltip": "^3.12.0",
     "@visx/vendor": "^3.12.0",
     "next": "15.1.6",
