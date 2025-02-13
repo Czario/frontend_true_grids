@@ -1,5 +1,13 @@
 {
   "nodes": [
+    { "name": "Revenues" },
+    { "name": "Total automotive revenues" },
+    { "name": "Automotive sales" },
+    { "name": "Automotive regulatory credits" },
+    { "name": "Automotive leasing" },
+    { "name": "Energy generation and storage" },
+    { "name": "Services and other" },
+
     { "name": "Interest Expenses" },
     { "name": "Other income, net" },
     { "name": "Income Tax" },
@@ -8,23 +16,18 @@
     { "name": "Selling, general and administrative expenses" },
     { "name": "Research and development" },
     { "name": "Restructuring and other" },
-    { "name": "Automotive sales" },
-    { "name": "Automotive regulatory credits" },
-    { "name": "Automotive leasing" },
-    { "name": "Total automotive revenues" },
-    { "name": "Energy generation and storage" },
-    { "name": "Services and other" },
-    { "name": "Revenues" },
-    { "name": "Cost of automotive sales" },
-    { "name": "Cost of automotive leasing" },
+
     { "name": "Gross Profit" },
     { "name": "Operating Income" },
-    { "name": "Operating Expenses" },
     { "name": "Interest Income" },
-    { "name": "Total automotive cost of revenues" },
+    { "name": "Operating Expenses" },
+    { "name": "Cost of Revenues (COGS)" },
+
     { "name": "Cost of energy generation and storage" },
     { "name": "Cost of services and other" },
-    { "name": "Cost of Revenues (COGS)" }
+    { "name": "Cost of automotive sales" },
+    { "name": "Cost of automotive leasing" },
+    { "name": "Total automotive cost of revenues" }
   ],
   "links": [
     {

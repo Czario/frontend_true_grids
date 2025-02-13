@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   Sankey,
   sankeyCenter,
@@ -11,11 +11,13 @@ import { Group } from "@visx/group";
 import { BarRounded, LinkHorizontal } from "@visx/shape";
 import { useTooltip, TooltipWithBounds } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
+import { Text } from "@visx/text";
+import energy from "./../../../../public/temp_data/energy.json";
 
-import energy from "./energy.json";
-
-export const background = "#84dccf";
-export const color = "#392f5a";
+export const background = "#f7f9fc";
+export const nodeColor = "#4A90E2";
+export const linkColor = "rgba(74, 144, 226, 0.5)";
+export const textColor = "#ffffff";
 
 type NodeDatum = { name: string };
 type LinkDatum = {};
@@ -27,7 +29,7 @@ const nodeAlignments = {
   sankeyRight,
 } as const;
 
-const defaultMargin = { top: 10, left: 10, right: 10, bottom: 10 };
+const defaultMargin = { top: 50, left: 50, right: 50, bottom: 50 };
 
 export type SankeyDemoProps = {
   width: number;
@@ -39,7 +41,6 @@ export type SankeyDemoProps = {
 export default function SankeyDemo({
   width,
   height,
-  showControls = true,
   margin = defaultMargin,
 }: SankeyDemoProps) {
   const {
@@ -50,27 +51,28 @@ export default function SankeyDemo({
     showTooltip,
     hideTooltip,
   } = useTooltip();
+
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  const nodesData = () => {
-    const links = energy.links.map((item) => {
-      return {
-        ...item,
-        source: energy.nodes.findIndex((field) => item.source === field.name),
-        target: energy.nodes.findIndex((field) => item.target === field.name),
-      };
-    });
-    return {
-      ...energy,
-      links,
-    };
+  const processData = () => {
+    let links = energy.links.map((item) => ({
+      ...item,
+      source: energy.nodes.findIndex((node) => node.name === item.source),
+      target: energy.nodes.findIndex((node) => node.name === item.target),
+    }));
+
+    let nodes = [...energy.nodes].map((node, index) => ({ ...node, index }));
+
+    nodes.sort((a, b) => a.index - b.index); // Sort by index before passing to Sankey
+
+    return { nodes, links };
   };
 
   const [nodeAlignment, setTileMethod] =
     useState<keyof typeof nodeAlignments>("sankeyCenter");
-  const [nodePadding, setNodePadding] = useState(10);
-  const [nodeWidth, setNodeWidth] = useState(10);
+  const [nodePadding, setNodePadding] = useState(40);
+  const [nodeWidth, setNodeWidth] = useState(20);
 
   if (width < 10) return null;
 
@@ -78,7 +80,7 @@ export default function SankeyDemo({
     <div>
       <style>{`
         .visx-sankey-link:hover {
-          stroke-opacity: 0.7; 
+          stroke-opacity: 0.7;
         }
         .visx-sankey-node:hover {
           filter: brightness(1.3);
@@ -89,57 +91,20 @@ export default function SankeyDemo({
           border-radius: 5px;
           position: relative;
         }
-        .visx-sankey-demo-controls {
-          font-size: 12px;
-        }
       `}</style>
-      {showControls && (
-        <div className="visx-sankey-demo-controls">
-          <label>
-            node alignment{" "}
-            <select
-              onClick={(e) => e.stopPropagation()}
-              onChange={(e) =>
-                setTileMethod(e.target.value as keyof typeof nodeAlignments)
-              }
-              value={nodeAlignment}
-            >
-              {Object.keys(nodeAlignments).map((alignment) => (
-                <option key={alignment} value={alignment}>
-                  {alignment}
-                </option>
-              ))}
-            </select>
-          </label>{" "}
-          <label>
-            node padding{" "}
-            <input
-              type="number"
-              value={nodePadding}
-              onChange={(e) => setNodePadding(Number(e.target.value))}
-            />
-          </label>{" "}
-          <label>
-            node width{" "}
-            <input
-              type="number"
-              value={nodeWidth}
-              onChange={(e) => setNodeWidth(Number(e.target.value))}
-            />
-          </label>
-        </div>
-      )}
       <div className="visx-sankey-demo-container">
         <svg width={xMax} height={yMax}>
           <Sankey<NodeDatum, LinkDatum>
-            root={nodesData()}
+            root={processData()}
             nodeWidth={nodeWidth}
             size={[xMax, yMax]}
             nodePadding={nodePadding}
             nodeAlign={nodeAlignments[nodeAlignment]}
+            nodeSort={(a, b) => (a.index ?? 0) - (b.index ?? 0)}
           >
             {({ graph, createPath }) => (
               <>
+                {/* Links */}
                 <Group>
                   {graph.links.map((link, i) => (
                     <LinkHorizontal
@@ -148,7 +113,7 @@ export default function SankeyDemo({
                       data={link}
                       path={createPath}
                       fill="transparent"
-                      stroke={color}
+                      stroke={linkColor}
                       strokeWidth={link.width}
                       strokeOpacity={0.5}
                       onPointerMove={(event) => {
@@ -172,37 +137,63 @@ export default function SankeyDemo({
                     />
                   ))}
                 </Group>
+
+                {/* Nodes */}
                 <Group>
-                  {graph.nodes.map(({ y0, y1, x0, x1, name }, i) => (
-                    <BarRounded
-                      key={i}
-                      className="visx-sankey-node"
-                      width={x1 - x0}
-                      height={y1 - y0}
-                      x={x0}
-                      y={y0}
-                      radius={3}
-                      all
-                      fill={color}
-                      onPointerMove={(event) => {
-                        const coords = localPoint(
-                          (event.target as SVGElement).ownerSVGElement,
-                          event
-                        );
-                        showTooltip({
-                          tooltipData: name,
-                          tooltipTop: (coords?.y ?? 0) + 10,
-                          tooltipLeft: (coords?.x ?? 0) + 10,
-                        });
-                      }}
-                      onMouseOut={hideTooltip}
-                    />
-                  ))}
+                  {graph.nodes.map(({ y0, y1, x0, x1, name }, i) => {
+                    const nodeHeight = y1 - y0;
+                    const isNearTop = false;
+                    const textY = y1 + 15;
+                    const textAnchor = "middle";
+
+                    return (
+                      <Group key={i}>
+                        {/* Node Bar */}
+                        <BarRounded
+                          key={i}
+                          className="visx-sankey-node"
+                          width={x1 - x0}
+                          height={nodeHeight}
+                          x={x0}
+                          y={y0}
+                          radius={3}
+                          all
+                          fill={nodeColor}
+                          onPointerMove={(event) => {
+                            const coords = localPoint(
+                              (event.target as SVGElement).ownerSVGElement,
+                              event
+                            );
+                            showTooltip({
+                              tooltipData: name,
+                              tooltipTop: (coords?.y ?? 0) + 10,
+                              tooltipLeft: (coords?.x ?? 0) + 10,
+                            });
+                          }}
+                          onMouseOut={hideTooltip}
+                        />
+
+                        {/* Node Label */}
+                        <Text
+                          x={(x0 + x1) / 2}
+                          y={textY}
+                          fill="red"
+                          fontSize={12}
+                          textAnchor={textAnchor}
+                          dy={isNearTop ? 0 : -5}
+                        >
+                          {name}
+                        </Text>
+                      </Group>
+                    );
+                  })}
                 </Group>
               </>
             )}
           </Sankey>
         </svg>
+
+        {/* Tooltip */}
         {tooltipOpen && (
           <TooltipWithBounds
             key={Math.random()}

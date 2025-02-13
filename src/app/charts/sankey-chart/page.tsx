@@ -4,7 +4,7 @@ import SankeyChart from "@/modules/charts/components/SankeyChart";
 
 function SankeyChartComp() {
   return (
-    <div className="max-w-[1500px] h-[500px]">
+    <div className="max-w-[1500px] h-[700px]">
       <ParentSize>
         {({ width, height }) => <SankeyChart width={width} height={height} />}
       </ParentSize>
