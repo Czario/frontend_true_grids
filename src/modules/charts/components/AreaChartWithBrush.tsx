@@ -16,10 +16,10 @@ import { BrushHandleRenderProps } from "@visx/brush/lib/BrushHandle";
 import AreaChart from "./AreaChart";
 import { Tooltip, defaultStyles } from "@visx/tooltip";
 import {
-  EventMarker,
   AreaTooltipMarker,
   BrushProps,
   StockDataItem,
+  EventTooltipMarker,
 } from "@/modules/charts/interfaces/areaChart";
 
 // Initialize some variables
@@ -45,7 +45,7 @@ function BrushChart({
   width,
   height,
   margin = {
-    top: 20,
+    top: 75,
     left: 0,
     bottom: 20,
     right: 0,
@@ -55,17 +55,14 @@ function BrushChart({
   const [filteredStock, setFilteredStock] = useState(stock);
 
   // flag Tooltip state
-  const [tooltipData, setTooltipData] = useState<EventMarker | null>(null);
-  const [tooltipLeft, setTooltipLeft] = useState<number | null>(null);
-  const [tooltipTop, setTooltipTop] = useState<number | null>(null);
+  const [tooltipData, setTooltipData] = useState<EventTooltipMarker | null>(
+    null
+  );
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   // area Tooltip state
   const [areaTooltipData, setAreaTooltipData] =
     useState<AreaTooltipMarker | null>(null);
-  const [areaTooltipLeft, setAreaTooltipLeft] = useState<number | null>(null);
-  const [areaTooltipTop, setAreaTooltipTop] = useState<number | null>(null);
-  const [areaTooltipVisible, setAreaTooltipVisible] = useState(false);
 
   const onBrushChange = (domain: Bounds | null) => {
     if (!domain) return;
@@ -201,17 +198,20 @@ function BrushChart({
           yScale={stockScale}
           gradientColor={background2}
           events={[
-            { date: new Date("2011-05-25"), label: "Event A" },
-            { date: new Date("2011-05-5"), label: "Event B" },
+            { date: new Date("2010-11-15"), label: "Earnings Q4 2010" },
+            { date: new Date("2011-02-20"), label: "Product Launch" },
+            { date: new Date("2011-05-05"), label: "Stock Split" },
+            { date: new Date("2011-05-25"), label: "Earnings Q2 2011" },
+            { date: new Date("2011-08-12"), label: "New CEO Announcement" },
+            { date: new Date("2011-10-01"), label: "Market Dip" },
+            { date: new Date("2012-01-05"), label: "Earnings Q4 2011" },
+            { date: new Date("2012-04-18"), label: "Major Acquisition" },
+            { date: new Date("2012-07-07"), label: "Dividend Increase" },
+            { date: new Date("2012-10-15"), label: "Stock Buyback Program" },
           ]}
           setTooltipData={setTooltipData}
-          setTooltipLeft={setTooltipLeft}
-          setTooltipTop={setTooltipTop}
           setTooltipVisible={setTooltipVisible}
           setAreaTooltipData={setAreaTooltipData}
-          setAreaTooltipLeft={setAreaTooltipLeft}
-          setAreaTooltipTop={setAreaTooltipTop}
-          setAreaTooltipVisible={setAreaTooltipVisible}
         />
         <AreaChart
           hideBottomAxis
@@ -253,37 +253,68 @@ function BrushChart({
         </AreaChart>
       </svg>
       {tooltipVisible && tooltipData && (
-        <Tooltip
-          left={tooltipLeft ?? 0}
-          top={tooltipTop ?? 0}
+        <div
           style={{
-            ...defaultStyles,
-            backgroundColor: "black",
-            color: "white",
-            padding: "6px 10px",
-            borderRadius: "4px",
-            fontSize: "12px",
+            position: "absolute",
+            top: 0,
+            transform: `translate(${tooltipData.left ?? 0}px, ${
+              tooltipData.top - 50
+            }px)`,
           }}
         >
-          {tooltipData.label}
-        </Tooltip>
+          <Tooltip
+            style={{
+              ...defaultStyles,
+              backgroundColor: "black",
+              color: "white",
+              padding: "6px 10px",
+              borderRadius: "4px",
+              fontSize: "12px",
+              left: "-50%",
+              position: "relative",
+            }}
+          >
+            {tooltipData.label}
+          </Tooltip>
+        </div>
       )}
-      {areaTooltipVisible && areaTooltipData && (
-        <Tooltip
-          left={areaTooltipLeft ?? 0}
-          top={areaTooltipTop ?? 0}
+      {areaTooltipData && (
+        <div
           style={{
-            ...defaultStyles,
-            backgroundColor: "black",
-            color: "white",
-            padding: "6px 10px",
-            borderRadius: "4px",
-            fontSize: "12px",
+            transform: `translateX(${areaTooltipData.left ?? 0}px)`,
+            position: "absolute",
+            top: "25px",
           }}
         >
-          <div>{areaTooltipData.date.toLocaleDateString()}</div>
-          <div>{areaTooltipData.value}</div>
-        </Tooltip>
+          <Tooltip
+            style={{
+              ...defaultStyles,
+              left: areaTooltipData.isHoveredOnLeft ? 0 : "auto",
+              right: areaTooltipData.isHoveredOnLeft ? "auto" : 0,
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              color: "#fff",
+              padding: "8px 12px",
+              borderRadius: "6px",
+              fontSize: "13px",
+              fontFamily: "Arial, sans-serif",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+              whiteSpace: "nowrap",
+              pointerEvents: "none",
+            }}
+          >
+            <div style={{ fontWeight: "bold" }}>
+              {new Intl.DateTimeFormat("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              }).format(areaTooltipData.date)}
+            </div>
+            <div style={{ marginTop: "4px", fontSize: "14px" }}>
+              Value: <strong>{areaTooltipData.value}</strong>
+            </div>
+          </Tooltip>
+        </div>
       )}
       <button
         className="mt-1 px-2 py-1 text-white text-[0.875rem] bg-blue-500 rounded hover:bg-blue-600 transition"

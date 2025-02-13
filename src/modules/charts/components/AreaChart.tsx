@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Group } from "@visx/group";
 import { AreaClosed } from "@visx/shape";
 import { AxisLeft, AxisBottom } from "@visx/axis";
@@ -49,16 +49,69 @@ export default function AreaChart({
   children,
   events = [],
   setTooltipData,
-  setTooltipLeft,
-  setTooltipTop,
   setTooltipVisible,
   showHoverLines = false,
   setAreaTooltipData,
-  setAreaTooltipLeft,
-  setAreaTooltipTop,
-  setAreaTooltipVisible,
 }: AreaChartComp) {
   const [hoverPoint, setHoverPoint] = useState<HoverPoint | null>(null);
+
+  const updateTooltipData = (dataPoint: StockDataItem) => {
+    const x = xScale(getDate(dataPoint)) || 0;
+    const y = yScale(getStockValue(dataPoint)) || 0;
+
+    const chartWidth = xScale.range()[1];
+    const isHoveredOnLeft = x < chartWidth / 2;
+
+    setHoverPoint({
+      x,
+      y,
+      date: new Date(getDate(dataPoint)),
+      value: getStockValue(dataPoint),
+    });
+
+    setAreaTooltipData &&
+      setAreaTooltipData({
+        date: new Date(getDate(dataPoint)),
+        value: getStockValue(dataPoint),
+        isHoveredOnLeft,
+        left: x,
+      });
+  };
+
+  const handleAreaTooltip = () => {
+    if (data.length > 0) {
+      updateTooltipData(data[data.length - 1]); // Use latest data point
+    }
+  };
+
+  const handleAreaTooltipOnMouseOver = (
+    event: React.MouseEvent<SVGRectElement, MouseEvent>
+  ) => {
+    const { offsetX } = event.nativeEvent;
+    const hoveredDate = xScale.invert(offsetX);
+
+    // Find closest data point
+    const index = bisectDate(data, hoveredDate);
+    const d0 = data[index - 1];
+    const d1 = data[index];
+
+    const closestData =
+      !d0 ||
+      (d1 &&
+        Math.abs(getDate(d1).getTime() - hoveredDate) <
+          Math.abs(getDate(d0).getTime() - hoveredDate))
+        ? d1
+        : d0;
+
+    if (!closestData) return;
+
+    updateTooltipData(closestData);
+  };
+
+  useEffect(() => {
+    handleAreaTooltip();
+  }, [data, xScale, yScale]);
+
   if (width < 10) return null;
   // D3 Bisector to find closest data point
 
@@ -69,9 +122,10 @@ export default function AreaChart({
     x: number,
     y: number
   ) => {
-    setTooltipData && setTooltipData(currentEvent);
-    setTooltipLeft && setTooltipLeft(x);
-    setTooltipTop && setTooltipTop(y);
+    const chartWidth = xScale.range()[1];
+    const isHoveredOnLeft = x < chartWidth / 2;
+    setTooltipData &&
+      setTooltipData({ ...currentEvent, isHoveredOnLeft, left: x, top: y });
     setTooltipVisible && setTooltipVisible(true);
   };
 
@@ -120,41 +174,7 @@ export default function AreaChart({
         height={yMax}
         fill="transparent"
         onMouseMove={(event) => {
-          const { offsetX } = event.nativeEvent;
-          const hoveredDate = xScale.invert(offsetX);
-
-          // Find closest data point
-          const index = bisectDate(data, hoveredDate);
-          const d0 = data[index - 1];
-          const d1 = data[index];
-
-          const closestData =
-            !d0 ||
-            (d1 &&
-              Math.abs(getDate(d1).getTime() - hoveredDate) <
-                Math.abs(getDate(d0).getTime() - hoveredDate))
-              ? d1
-              : d0;
-
-          if (!closestData) return;
-
-          const x = xScale(getDate(closestData)) || 0;
-          const y = yScale(getStockValue(closestData)) || 0;
-
-          setHoverPoint({
-            x,
-            y,
-            date: new Date(getDate(closestData)),
-            value: getStockValue(closestData),
-          });
-          setAreaTooltipData &&
-            setAreaTooltipData({
-              date: new Date(getDate(closestData)),
-              value: getStockValue(closestData),
-            });
-          setAreaTooltipLeft && setAreaTooltipLeft(x);
-          setAreaTooltipTop && setAreaTooltipTop(y);
-          setAreaTooltipVisible && setAreaTooltipVisible(true);
+          handleAreaTooltipOnMouseOver(event);
         }}
       />
 
@@ -166,7 +186,7 @@ export default function AreaChart({
             x1={hoverPoint.x}
             x2={hoverPoint.x}
             y1={0}
-            y2={yMax}
+            y2={yScale.range()[0]}
             strokeWidth={0.5}
             stroke="white"
             strokeDasharray="4"
@@ -175,7 +195,7 @@ export default function AreaChart({
           {/* Horizontal Line to Y-Axis */}
           <line
             x1={0}
-            x2={hoverPoint.x}
+            x2={xScale.range()[1]}
             y1={hoverPoint.y}
             y2={hoverPoint.y}
             strokeWidth={0.5}
@@ -208,10 +228,10 @@ export default function AreaChart({
             left={x}
             top={y}
             onMouseEnter={(e) => {
-              handleEventTooltip(event, x, y);
+              handleEventTooltip(event, x, y + margin.top);
             }}
             onMouseMove={(e) => {
-              handleEventTooltip(event, x, y);
+              handleEventTooltip(event, x, y + margin.top);
             }}
             onMouseLeave={() => {
               setTooltipVisible && setTooltipVisible(false);

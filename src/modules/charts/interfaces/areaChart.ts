@@ -7,6 +7,15 @@ export interface EventMarker {
     label?: string;
 };
 
+// Event Tooltip marker
+export interface EventTooltipMarker {
+    date: Date;
+    label?: string;
+    isHoveredOnLeft: boolean
+    left: number
+    top: number
+};
+
 export interface StockDataItem {
     date: string; // or Date if you parse it into a Date object
     close: number;
@@ -31,6 +40,8 @@ export interface BrushProps {
 export interface AreaTooltipMarker {
     date: Date;
     value?: number;
+    isHoveredOnLeft: boolean
+    left: number
 };
 
 export interface AreaChartComp {
@@ -47,13 +58,8 @@ export interface AreaChartComp {
     left?: number;
     children?: React.ReactNode;
     events?: EventMarker[];
-    setTooltipData?: (data: EventMarker | null) => void;
-    setTooltipLeft?: (left: number | null) => void;
-    setTooltipTop?: (top: number | null) => void;
-    setTooltipVisible?: (value: boolean | false) => void;
     showHoverLines?: boolean;
+    setTooltipData?: (data: EventTooltipMarker | null) => void;
+    setTooltipVisible?: (value: boolean | false) => void;
     setAreaTooltipData?: (data: AreaTooltipMarker | null) => void;
-    setAreaTooltipLeft?: (left: number | null) => void;
-    setAreaTooltipTop?: (top: number | null) => void;
-    setAreaTooltipVisible?: (value: boolean | false) => void;
 }

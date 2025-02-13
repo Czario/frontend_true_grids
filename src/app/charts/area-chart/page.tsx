@@ -8,7 +8,7 @@ export default function Home() {
     <div className="relative p-8">
       <ParentSize>
         {({ width, height }) => (
-          <AreaChartWithBrush width={width} height={500} />
+          <AreaChartWithBrush width={width} height={400} />
         )}
       </ParentSize>
     </div>
