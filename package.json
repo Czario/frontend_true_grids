@@ -18,7 +18,6 @@
     "@types/react-pdf": "^7.0.0",
     "@types/styled-components": "^5.1.34",
     "@visx/axis": "^3.12.0",
-    "@visx/axis": "^3.12.0",
     "@visx/brush": "^3.12.0",
     "@visx/curve": "^3.12.0",
     "@visx/event": "^3.12.0",
