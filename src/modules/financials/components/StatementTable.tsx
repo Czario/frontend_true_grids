@@ -78,7 +78,7 @@ const StyledTableHeadCell = styled(StyledTableCell)(() => ({
   margin: 0,
 }));
 
-// Update the StyledFirstColumnCell to include hover effect
+// Update the StyledFirstColumnCell to include hover effect.
 const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
   fontWeight: 'bold',
   padding: cellPadding,
@@ -118,7 +118,7 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
   MemoizedRow:
   - The first column cell is always sticky horizontally (left: 0).
   - For parent rows that are “active” (sticky vertically), the top offset is set to the measured header bottom.
-  - We explicitly set a right border and add an inset box-shadow (using the theme divider color) so the border appears intact.
+  - Now, sticky behavior is extended to all cells in the parent row.
 */
 interface MemoizedRowProps {
   row: Row<ParsedRow>;
@@ -142,22 +142,22 @@ const MemoizedRow = memo(
           data-row-id={row.id}
           sx={{ height: '40px' }}
         >
+          {/* First Column Cell */}
           <StyledFirstColumnCell
             sx={(theme) => ({
               position: 'sticky',
               left: 0,
               top: isSticky ? headerHeight : 'auto',
               zIndex: isSticky ? 10 : 2,
-              // Removed inline backgroundColor to allow hover styling from StyledFirstColumnCell.
               borderRight: `1px solid ${theme.palette.divider}`,
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
               paddingLeft: `${row.depth * 0.75}rem`,
               textAlign: 'left',
-              // Add an inset box-shadow to ensure the border remains visible during scroll.
               boxShadow: isSticky
                 ? `inset -1px 0 0 0 ${theme.palette.divider}`
                 : undefined,
+              ...(isSticky && { backgroundColor: theme.palette.background.paper }),
             })}
             role="cell"
           >
@@ -194,14 +194,22 @@ const MemoizedRow = memo(
             </Box>
           </StyledFirstColumnCell>
 
+          {/* Other Cells */}
           {row.getVisibleCells().slice(1).map((cell) => (
             <StyledTableCell
               key={cell.id}
-              sx={{
+              sx={(theme) => ({
                 width: DEFAULT_COLUMN_WIDTH,
                 minWidth: DEFAULT_COLUMN_WIDTH,
                 textAlign: 'right',
-              }}
+                // If the row is sticky, make this cell sticky too.
+                ...(isSticky && {
+                  position: 'sticky',
+                  top: headerHeight,
+                  zIndex: 9, // lower than first column's zIndex
+                  backgroundColor: theme.palette.background.paper,
+                }),
+              })}
               role="cell"
               onClick={() => onCellClick(cell.getValue() as string)}
             >
