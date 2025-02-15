@@ -12,6 +12,10 @@ interface ChartModalProps {
 }
 
 const ChartModal: React.FC<ChartModalProps> = ({ open, onClose, rowData }) => {
+  if (!rowData) {
+    return null;
+  }
+
   const width = 500;
   const height = 400;
   const margin = { top: 40, right: 30, bottom: 50, left: 40 };

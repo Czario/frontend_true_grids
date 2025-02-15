@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   useMemo,
   useState,
@@ -32,10 +34,9 @@ import {
   Tooltip,
   tooltipClasses,
 } from '@mui/material';
-import { ExpandMore, ExpandLess, BarChart } from '@mui/icons-material';
+import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { parseData } from '../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
-import ChartModal from './ChartModal';
 
 const pdfUrl = "/doc_files/tesla_doc_1.pdf";
 
@@ -122,7 +123,6 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
 interface MemoizedRowProps {
   row: Row<ParsedRow>;
   onCellClick: (value: string) => void;
-  onBarChartClick: (rowData: any) => void;
   isSticky?: boolean; // true if this parent row should stick vertically.
   headerHeight: number; // measured header bottom offset relative to container.
   setRowRef?: RefCallback<HTMLTableRowElement>;
@@ -130,7 +130,7 @@ interface MemoizedRowProps {
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
-    ({ row, onCellClick, onBarChartClick, isSticky, headerHeight, setRowRef }, ref) => {
+    ({ row, onCellClick, isSticky, headerHeight, setRowRef }, ref) => {
       return (
         <StyledTableRow
           ref={(node) => {
@@ -208,23 +208,6 @@ const MemoizedRow = memo(
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </StyledTableCell>
           ))}
-
-          <StyledTableCell
-            sx={{
-              width: DEFAULT_COLUMN_WIDTH,
-              minWidth: DEFAULT_COLUMN_WIDTH,
-              textAlign: 'center',
-            }}
-            role="cell"
-          >
-            <IconButton
-              size="small"
-              onClick={() => onBarChartClick(row.original)}
-              aria-label="Show bar chart"
-            >
-              <BarChart />
-            </IconButton>
-          </StyledTableCell>
         </StyledTableRow>
       );
     }
@@ -241,8 +224,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCellValue, setSelectedCellValue] = useState<string | null>(null);
   const [stickyRowId, setStickyRowId] = useState<string | null>(null);
-  const [chartModalOpen, setChartModalOpen] = useState(false);
-  const [selectedRowData, setSelectedRowData] = useState<any>(null);
   // headerHeight represents the header row's bottom offset (from container top)
   const [headerHeight, setHeaderHeight] = useState(DEFAULT_HEADER_HEIGHT);
 
@@ -289,13 +270,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         },
         size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
       }));
-    // Add a new column for the bar chart icon
-    cols.push({
-      id: 'barChart',
-      header: '',
-      accessorFn: () => '',
-      size: DEFAULT_COLUMN_WIDTH,
-    });
     return { columns: cols, rows: parsedData.rows };
   }, [data, years, maxYears]);
 
@@ -323,16 +297,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedCellValue(null);
-  };
-
-  const handleBarChartClick = (rowData: any) => {
-    setSelectedRowData(rowData);
-    setChartModalOpen(true);
-  };
-
-  const handleCloseChartModal = () => {
-    setChartModalOpen(false);
-    setSelectedRowData(null);
   };
 
   // Capture each parent row (depth 0) element.
@@ -447,20 +411,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   {flexRender(header.column.columnDef.header, header.getContext())}
                 </StyledTableHeadCell>
               ))}
-              <StyledTableHeadCell
-                sx={{
-                  width: DEFAULT_COLUMN_WIDTH,
-                  minWidth: DEFAULT_COLUMN_WIDTH,
-                  position: 'sticky',
-                  top: 0,
-                  zIndex: 2,
-                  backgroundColor: 'background.paper',
-                  textAlign: 'center',
-                }}
-                role="columnheader"
-              >
-                Actions
-              </StyledTableHeadCell>
             </TableRow>
           </TableHead>
           <TableBody role="rowgroup">
@@ -472,7 +422,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   key={row.id}
                   row={row}
                   onCellClick={handleCellClick}
-                  onBarChartClick={handleBarChartClick}
                   isSticky={isSticky}
                   headerHeight={headerHeight}
                   setRowRef={isParent ? setParentRowRef(row.id) : undefined}
@@ -488,12 +437,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         onClose={handleCloseModal}
         searchTerm={selectedCellValue || ''}
         pdfUrl={pdfUrl}
-      />
-
-      <ChartModal
-        open={chartModalOpen}
-        onClose={handleCloseChartModal}
-        rowData={selectedRowData}
       />
     </>
   );
