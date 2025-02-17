@@ -12,7 +12,10 @@ import { BarRounded, LinkHorizontal } from "@visx/shape";
 import { useTooltip, Tooltip } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
 import { Text } from "@visx/text";
-import energy from "./../../../../public/temp_data/SankeyMock.json";
+// import energy from "./../../../../public/temp_data/SankeyMock.json";
+// import energy from "./../../../../public/temp_data/RevenuesSankeyMock.json";
+// import energy from "./../../../../public/temp_data/CostOfRevenuesSankeyMock.json";
+import energy from "./../../../../public/temp_data/GrossProfitSankeyMock.json";
 
 export const background = "#f7f9fc";
 export const nodeColor = "#4A90E2";
@@ -71,7 +74,7 @@ export default function SankeyDemo({
 
   const [nodeAlignment, setTileMethod] =
     useState<keyof typeof nodeAlignments>("sankeyCenter");
-  const [nodePadding, setNodePadding] = useState(40);
+  const [nodePadding, setNodePadding] = useState(50);
   const [nodeWidth, setNodeWidth] = useState(20);
 
   if (width < 10) return null;
@@ -100,6 +103,7 @@ export default function SankeyDemo({
             size={[xMax, yMax]}
             nodePadding={nodePadding}
             nodeAlign={nodeAlignments[nodeAlignment]}
+            nodeSort={(a, b) => a.index - b.index}
           >
             {({ graph, createPath }) => (
               <>

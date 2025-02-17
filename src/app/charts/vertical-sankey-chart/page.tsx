@@ -1,12 +1,12 @@
 "use client";
 import { ParentSize } from "@visx/responsive";
-import SankeyChart from "@/modules/charts/components/SankeyChart";
+import SankeyChart from "@/modules/charts/components/VerticalSankeyChart";
 
 function SankeyChartComp() {
   return (
     <div>
       <ParentSize>
-        {({ width, height }) => <SankeyChart width={1000} height={700} />}
+        {({ width, height }) => <SankeyChart width={700} height={700} />}
       </ParentSize>
     </div>
   );

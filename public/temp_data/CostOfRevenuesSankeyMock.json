@@ -1,0 +1,37 @@
+{
+  "nodes": [
+    { "name": "Cost of Revenues (COGS)" },
+    { "name": "Cost of energy generation and storage" },
+    { "name": "Cost of services and other" },
+    { "name": "Cost of automotive sales" },
+    { "name": "Cost of automotive leasing" },
+    { "name": "Total automotive cost of revenues" }
+  ],
+  "links": [
+    {
+      "source": "Total automotive cost of revenues",
+      "target": "Cost of automotive sales",
+      "value": 15743
+    },
+    {
+      "source": "Total automotive cost of revenues",
+      "target": "Cost of automotive leasing",
+      "value": 247
+    },
+    {
+      "source": "Cost of Revenues (COGS)",
+      "target": "Total automotive cost of revenues",
+      "value": 15990
+    },
+    {
+      "source": "Cost of Revenues (COGS)",
+      "target": "Cost of energy generation and storage",
+      "value": 1651
+    },
+    {
+      "source": "Cost of Revenues (COGS)",
+      "target": "Cost of services and other",
+      "value": 2544
+    }
+  ]
+}

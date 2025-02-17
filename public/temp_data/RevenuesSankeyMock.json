@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    { "name": "Revenues" },
+    { "name": "Total automotive revenues" },
+    { "name": "Automotive sales" },
+    { "name": "Automotive regulatory credits" },
+    { "name": "Automotive leasing" },
+    { "name": "Energy generation and storage" },
+    { "name": "Services and other" },
+    { "name": "Gross Profit" },
+    { "name": "Cost of Revenues (COGS)" }
+  ],
+  "links": [
+    {
+      "source": "Automotive sales",
+      "target": "Total automotive revenues",
+      "value": 18831
+    },
+    {
+      "source": "Automotive regulatory credits",
+      "target": "Total automotive revenues",
+      "value": 739
+    },
+    {
+      "source": "Automotive leasing",
+      "target": "Total automotive revenues",
+      "value": 446
+    },
+    {
+      "source": "Total automotive revenues",
+      "target": "Revenues",
+      "value": 20016
+    },
+    {
+      "source": "Energy generation and storage",
+      "target": "Revenues",
+      "value": 2376
+    },
+    { "source": "Services and other", "target": "Revenues", "value": 2790 },
+    { "source": "Revenues", "target": "Gross Profit", "value": 4997 },
+    {
+      "source": "Revenues",
+      "target": "Cost of Revenues (COGS)",
+      "value": 20185
+    }
+  ]
+}
