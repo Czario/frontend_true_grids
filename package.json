@@ -34,12 +34,12 @@
     "@visx/tooltip": "^3.12.0",
     "@visx/vendor": "^3.12.0",
     "axios": "^1.7.9",
-    "canvas": "^2.11.2",
     "next": "15.1.6",
     "pdfjs-dist": "^4.10.38",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-pdf": "9.2.1",
+    "react-pdf-highlighter": "^8.0.0-rc.0",
     "styled-components": "^6.1.14",
     "styled-system": "^5.1.5",
     "xml2js": "^0.6.2"

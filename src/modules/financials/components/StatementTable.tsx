@@ -1,6 +1,15 @@
 'use client';
 
-import React, { useMemo, useState, memo, forwardRef } from 'react';
+import React, {
+  useMemo,
+  useState,
+  memo,
+  forwardRef,
+  useRef,
+  useLayoutEffect,
+  useEffect,
+  RefCallback,
+} from 'react';
 import dynamic from 'next/dynamic';
 import {
   useReactTable,
@@ -22,7 +31,6 @@ import {
   styled,
   Theme,
   Slider,
-  Typography,
   Tooltip,
   tooltipClasses,
 } from '@mui/material';
@@ -33,20 +41,26 @@ import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials'
 const pdfUrl = "/doc_files/tesla_doc_1.pdf";
 
 // Dynamically import the PdfHighlighterModal so that it only loads on the client.
-const EnhancedDocViewer = dynamic(() => import('./CellValueModal'), {
+const EnhancedDocViewer = dynamic(() => import('./DocViewerModal'), {
   ssr: false,
 });
 
+// Default header height (in px) if measurement fails.
+const DEFAULT_HEADER_HEIGHT = 56;
 const FIRST_COLUMN_WIDTH = 400;
 const DEFAULT_COLUMN_WIDTH = 200;
+
+// Use consistent padding and no extra margins.
+const cellPadding = 8;
 
 const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
   boxSizing: 'border-box',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  padding: theme.spacing(1),
+  padding: cellPadding,
   borderBottom: `1px solid ${theme.palette.divider}`,
+  margin: 0,
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
@@ -58,12 +72,21 @@ const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
   },
 }));
 
-const StyledTableHeadCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
+const StyledTableHeadCell = styled(StyledTableCell)(() => ({
   fontWeight: 'bold',
+  padding: cellPadding,
+  margin: 0,
 }));
 
+// Update the StyledFirstColumnCell to include hover effect.
 const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
   fontWeight: 'bold',
+  padding: cellPadding,
+  margin: 0,
+  backgroundColor: theme.palette.background.paper,
+  '&:hover': {
+    backgroundColor: theme.palette.action.selected,
+  },
 }));
 
 const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
@@ -73,60 +96,6 @@ const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
     height: 10,
     borderRadius: 0,
     backgroundColor: theme.palette.primary.main,
-  },
-  '& .MuiSlider-track': {
-    backgroundColor: 'transparent',
-    position: 'relative',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: '50%',
-      height: '30px',
-      background: '#ccc',
-      zIndex: 1,
-    },
-  },
-  '& .MuiSlider-rail': {
-    backgroundColor: 'transparent',
-    position: 'relative',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: '50%',
-      height: '2px',
-      background: '#ccc',
-      zIndex: 1,
-    },
-    '&::after': {
-      content: '""',
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: '50%',
-      height: '2px',
-      background: 'linear-gradient(to right, #000 1px, transparent 1px)',
-      backgroundSize: '10% 100%',
-      zIndex: 2,
-    },
-  },
-  '& .MuiSlider-mark': {
-    backgroundColor: '#000',
-    height: '8px',
-    width: '2px',
-    marginTop: '-3px',
-  },
-  '& .MuiSlider-markLabel': {
-    fontSize: '0.75rem',
-    top: '20px',
-  },
-  '& .MuiSlider-root': {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(1),
-    borderRadius: theme.shape.borderRadius,
   },
 }));
 
@@ -145,30 +114,51 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
   },
 }));
 
+/*
+  MemoizedRow:
+  - The first column cell is always sticky horizontally (left: 0).
+  - For parent rows that are “active” (sticky vertically), the top offset is set to the measured header bottom.
+  - Now, sticky behavior is extended to all cells in the parent row.
+*/
 interface MemoizedRowProps {
   row: Row<ParsedRow>;
-  isExpanded: boolean;
   onCellClick: (value: string) => void;
+  isSticky?: boolean; // true if this parent row should stick vertically.
+  headerHeight: number; // measured header bottom offset relative to container.
+  setRowRef?: RefCallback<HTMLTableRowElement>;
 }
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
-    ({ row, isExpanded, onCellClick }, ref) => {
+    ({ row, onCellClick, isSticky, headerHeight, setRowRef }, ref) => {
       return (
-        <StyledTableRow ref={ref} hover role="row" sx={{ height: '40px' }}>
+        <StyledTableRow
+          ref={(node) => {
+            if (setRowRef) setRowRef(node);
+            if (typeof ref === 'function') ref(node);
+          }}
+          hover
+          role="row"
+          data-row-id={row.id}
+          sx={{ height: '40px' }}
+        >
+          {/* First Column Cell */}
           <StyledFirstColumnCell
-            sx={{
+            sx={(theme) => ({
               position: 'sticky',
               left: 0,
-              zIndex: 2,
-              backgroundColor: 'background.paper',
-              borderRight: '1px solid',
-              borderColor: 'divider',
+              top: isSticky ? headerHeight : 'auto',
+              zIndex: isSticky ? 10 : 2,
+              borderRight: `1px solid ${theme.palette.divider}`,
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
               paddingLeft: `${row.depth * 0.75}rem`,
               textAlign: 'left',
-            }}
+              boxShadow: isSticky
+                ? `inset -1px 0 0 0 ${theme.palette.divider}`
+                : undefined,
+              ...(isSticky && { backgroundColor: theme.palette.background.paper }),
+            })}
             role="cell"
           >
             <Box display="flex" alignItems="center">
@@ -179,18 +169,13 @@ const MemoizedRow = memo(
                 aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
                 sx={{
                   visibility: row.original.hasChildren ? 'visible' : 'hidden',
-                  transform: row.getIsExpanded()
-                    ? 'rotate(0deg)'
-                    : 'rotate(-90deg)',
+                  transform: row.getIsExpanded() ? 'rotate(0deg)' : 'rotate(-90deg)',
                   transition: 'transform 0.2s ease',
                 }}
               >
                 {row.getIsExpanded() ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
-              <CustomTooltip
-                title={row.getVisibleCells()[0].getValue() as string}
-                arrow
-              >
+              <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow>
                 <Box
                   ml={1}
                   sx={{
@@ -209,14 +194,22 @@ const MemoizedRow = memo(
             </Box>
           </StyledFirstColumnCell>
 
+          {/* Other Cells */}
           {row.getVisibleCells().slice(1).map((cell) => (
             <StyledTableCell
               key={cell.id}
-              sx={{
+              sx={(theme) => ({
                 width: DEFAULT_COLUMN_WIDTH,
                 minWidth: DEFAULT_COLUMN_WIDTH,
                 textAlign: 'right',
-              }}
+                // If the row is sticky, make this cell sticky too.
+                ...(isSticky && {
+                  position: 'sticky',
+                  top: headerHeight,
+                  zIndex: 9, // lower than first column's zIndex
+                  backgroundColor: theme.palette.background.paper,
+                }),
+              })}
               role="cell"
               onClick={() => onCellClick(cell.getValue() as string)}
             >
@@ -237,10 +230,31 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [years, setYears] = useState(3);
   const [maxYears, setMaxYears] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  // The cell's value will be used as the search term for the PDF modal.
   const [selectedCellValue, setSelectedCellValue] = useState<string | null>(null);
+  const [stickyRowId, setStickyRowId] = useState<string | null>(null);
+  // headerHeight represents the header row's bottom offset (from container top)
+  const [headerHeight, setHeaderHeight] = useState(DEFAULT_HEADER_HEIGHT);
 
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+  // Refs for the scrollable container, header row, and parent rows.
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const headerRowRef = useRef<HTMLTableRowElement>(null);
+  const parentRowRefs = useRef<{ [key: string]: HTMLTableRowElement | null }>({});
+
+  // Measure the header's bottom offset relative to the container.
+  useLayoutEffect(() => {
+    const measureHeaderOffset = () => {
+      if (headerRowRef.current && tableContainerRef.current) {
+        const headerRect = headerRowRef.current.getBoundingClientRect();
+        const containerRect = tableContainerRef.current.getBoundingClientRect();
+        setHeaderHeight(headerRect.bottom - containerRect.top);
+      }
+    };
+    measureHeaderOffset();
+    window.addEventListener('resize', measureHeaderOffset);
+    return () => window.removeEventListener('resize', measureHeaderOffset);
+  }, []);
+
+  const handleSliderChange = (_: Event, newValue: number | number[]) => {
     if (newValue === 11) {
       setMaxYears(true);
     } else {
@@ -249,9 +263,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     }
   };
 
-  const valueLabelFormat = (value: number) => {
-    return value === 11 ? 'Max' : `${value}Y`;
-  };
+  const valueLabelFormat = (value: number) => (value === 11 ? 'Max' : `${value}Y`);
 
   const { columns, rows } = useMemo(() => {
     const parsedData = parseData(data);
@@ -285,7 +297,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     { value: 11, label: 'Max' },
   ];
 
-  // Clicking a cell opens the PDF modal with the cell's value as the search term.
   const handleCellClick = (value: string) => {
     setSelectedCellValue(value);
     setModalOpen(true);
@@ -295,6 +306,42 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     setModalOpen(false);
     setSelectedCellValue(null);
   };
+
+  // Capture each parent row (depth 0) element.
+  const setParentRowRef = (rowId: string) => (el: HTMLTableRowElement | null) => {
+    parentRowRefs.current[rowId] = el;
+  };
+
+  // Throttled scroll listener (using requestAnimationFrame) to determine which parent row is sticky.
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    if (!container) return;
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = container.scrollTop;
+          let currentStickyId: string | null = null;
+          let maxOffset = -Infinity;
+          Object.entries(parentRowRefs.current).forEach(([rowId, el]) => {
+            if (el) {
+              const offset = el.offsetTop;
+              if (offset <= scrollTop + headerHeight && offset > maxOffset) {
+                maxOffset = offset;
+                currentStickyId = rowId;
+              }
+            }
+          });
+          setStickyRowId(currentStickyId);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [rows, headerHeight]);
 
   return (
     <>
@@ -315,6 +362,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         </Box>
       </Box>
       <TableContainer
+        ref={tableContainerRef}
         sx={{
           maxHeight: '60vh',
           overflow: 'auto',
@@ -327,14 +375,17 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
           stickyHeader
           sx={{
             tableLayout: 'fixed',
-            minWidth: FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
+            minWidth:
+              FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
+            borderCollapse: 'collapse',
           }}
         >
           <TableHead>
-            <TableRow role="rowgroup">
+            <TableRow ref={headerRowRef} role="rowgroup">
               <StyledTableHeadCell
                 sx={{
                   position: 'sticky',
+                  top: 0,
                   left: 0,
                   zIndex: 3,
                   backgroundColor: 'background.paper',
@@ -371,19 +422,24 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             </TableRow>
           </TableHead>
           <TableBody role="rowgroup">
-            {table.getRowModel().rows.map((row) => (
-              <MemoizedRow
-                key={row.id}
-                row={row}
-                isExpanded={row.getIsExpanded()}
-                onCellClick={handleCellClick}
-              />
-            ))}
+            {table.getRowModel().rows.map((row) => {
+              const isParent = row.depth === 0;
+              const isSticky = isParent && row.id === stickyRowId;
+              return (
+                <MemoizedRow
+                  key={row.id}
+                  row={row}
+                  onCellClick={handleCellClick}
+                  isSticky={isSticky}
+                  headerHeight={headerHeight}
+                  setRowRef={isParent ? setParentRowRef(row.id) : undefined}
+                />
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* Open the modal using the dynamically imported PDF highlighter modal */}
       <EnhancedDocViewer
         open={modalOpen}
         onClose={handleCloseModal}
