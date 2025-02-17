@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useAppStore } from "@/contexts/AppStoreContext";
 import { LoginForm, LoginResponse } from "@/modules/auth/interfaces/Login";
 
 import {
@@ -27,6 +28,7 @@ export default function AuthPage() {
   const [errors, setErrors] = useState<Partial<LoginForm>>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { setUserlogin } = useAppStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -41,8 +43,10 @@ export default function AuthPage() {
     try {
       const result: LoginResponse = await loginService(formData);
       if (result.success) {
+        setUserlogin(true);
         router.replace("/financials");
       } else {
+        setUserlogin(false);
         setErrorMessage(result.message || null);
       }
     } catch (err: any) {
@@ -56,7 +60,7 @@ export default function AuthPage() {
     <Container maxWidth="xs">
       <Paper elevation={6} sx={{ p: 4, textAlign: "center", mt: 5 }}>
         <Typography variant="h5" gutterBottom>
-          "Sign In"
+          Sign In
         </Typography>
 
         {errorMessage && <Alert severity="error">{errorMessage}</Alert>}

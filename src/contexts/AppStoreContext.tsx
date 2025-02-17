@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+
+import { getCookie } from "@/modules/auth/utils/cookies";
 
 interface AppStoreContextType {
   login: boolean;
@@ -13,7 +21,14 @@ const AppStoreContext = createContext<AppStoreContextType | undefined>(
 
 export function AppStoreProvider({ children }: { children: ReactNode }) {
   const [login, setLogin] = useState<boolean>(false);
-  const setUserlogin = (value: boolean) => setLogin(value);
+  const setUserlogin = (value: boolean) => {
+    setLogin(value);
+    document.cookie = `login=${value}; path=/`;
+  };
+
+  useEffect(() => {
+    setLogin(getCookie("login") === "true");
+  }, []);
 
   return (
     <AppStoreContext.Provider value={{ login, setUserlogin }}>

@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { getCookie } from "@/modules/auth/utils/cookies";
+import { useRouter } from "next/navigation";
+import { useAppStore } from "@/contexts/AppStoreContext";
+
 import { fetchStatement } from "@/modules/financials/services/apiStatementService";
 import StatementTable from "@/modules/financials/components/StatementTable";
 import {
@@ -17,28 +21,44 @@ interface StatementButtonProps {
   selected: boolean;
 }
 
-const StatementButton = styled(Button)<StatementButtonProps>(({ theme, selected }) => ({
-  fontWeight: selected ? 300 : 200,
-  textTransform: "capitalize",
-  fontSize: "1rem",
-  transition: "all 0.3s ease",
-  border: selected ? `2px solid ${theme.palette.primary.main}` : "2px solid transparent",
-  backgroundColor: selected ? theme.palette.primary.dark : "transparent",
-  color: selected ? "white" : theme.palette.text.primary,
-  "&:hover": {
-    transform: "translateY(-2px)",
-    backgroundColor: selected ? theme.palette.primary.light : theme.palette.action.hover,
-  },
-  padding: "4px 6px",
-  borderRadius: "8px",
-  margin: "0 4px",
-}));
+const StatementButton = styled(Button)<StatementButtonProps>(
+  ({ theme, selected }) => ({
+    fontWeight: selected ? 300 : 200,
+    textTransform: "capitalize",
+    fontSize: "1rem",
+    transition: "all 0.3s ease",
+    border: selected
+      ? `2px solid ${theme.palette.primary.main}`
+      : "2px solid transparent",
+    backgroundColor: selected ? theme.palette.primary.dark : "transparent",
+    color: selected ? "white" : theme.palette.text.primary,
+    "&:hover": {
+      transform: "translateY(-2px)",
+      backgroundColor: selected
+        ? theme.palette.primary.light
+        : theme.palette.action.hover,
+    },
+    padding: "4px 6px",
+    borderRadius: "8px",
+    margin: "0 4px",
+  })
+);
 
 const Home: React.FC = () => {
-  const [statementType, setStatementType] = useState<string>("Income Statement");
+  const [statementType, setStatementType] =
+    useState<string>("Income Statement");
   const [data, setData] = useState<DataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { setUserlogin } = useAppStore();
+
+  useEffect(() => {
+    console.log(getCookie("login"));
+    if (getCookie("login") !== "true") {
+      router.replace("/login");
+    }
+  }, []);
 
   // Cache for storing data by statement type.
   const cacheRef = useRef<Record<string, DataItem[]>>({});
@@ -65,7 +85,13 @@ const Home: React.FC = () => {
 
     try {
       // Pass the abort signal through the options parameter.
-      const response = await fetchStatement(type, { signal: controller.signal });
+      const response = await fetchStatement(
+        type,
+        {
+          signal: controller.signal,
+        },
+        setUserlogin
+      );
       // Cache the fetched data.
       cacheRef.current[type] = response.data;
       setData(response.data);
@@ -115,7 +141,10 @@ const Home: React.FC = () => {
           TrueGrids Financials
         </Typography>
 
-        <ButtonGroup variant="outlined" aria-label="financial statements switch">
+        <ButtonGroup
+          variant="outlined"
+          aria-label="financial statements switch"
+        >
           <StatementButton
             onClick={() => setStatementType("Income Statement")}
             selected={statementType === "Income Statement"}
@@ -156,7 +185,10 @@ const Home: React.FC = () => {
       )}
 
       {!loading && !error && data.length === 0 && (
-        <Typography variant="h6" sx={{ textAlign: "center", color: "text.secondary" }}>
+        <Typography
+          variant="h6"
+          sx={{ textAlign: "center", color: "text.secondary" }}
+        >
           📭 No data available for the selected statement type
         </Typography>
       )}
