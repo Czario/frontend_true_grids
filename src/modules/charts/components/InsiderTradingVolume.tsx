@@ -1,33 +1,18 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Bar } from "@visx/shape";
 import { Group } from "@visx/group";
 import { AxisLeft } from "@visx/axis";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { Text } from "@visx/text";
+import data from "./../../../../public/temp_data/InsiderTradingVolume.json";
 
 export type HorizontalBarChartProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
-  events?: boolean;
 };
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 100 };
-
-// Updated dataset with stacked values
-const data = [
-  { category: "q1", value1: 20, value2: 10 },
-  { category: "q2", value1: 30, value2: 20 },
-  { category: "q3", value1: 50, value2: 30 },
-  { category: "q4", value1: 25, value2: 15 },
-];
-
-const data1 = [
-  { category: "q1", value1: 15, value2: 15 },
-  { category: "q2", value1: 25, value2: 25 },
-  { category: "q3", value1: 40, value2: 40 },
-  { category: "q4", value1: 20, value2: 20 },
-];
 
 // Map categories to y-axis labels
 const yAxisLabels: Record<string, string> = {
@@ -37,45 +22,66 @@ const yAxisLabels: Record<string, string> = {
   q4: "9-12 months",
 };
 
-// Scales
-const yScale = scaleBand({
-  domain: data.map((d) => d.category),
-  padding: 0.5,
-});
-
-const xScale = scaleLinear<number>({
-  domain: [
-    0,
-    Math.max(...[...data, ...data1].flatMap((d) => [d.value1 + d.value2])),
-  ],
-});
+const leftData = data.leftData;
+const rightData = data.rightData;
 
 export default function HorizontalBarChart({
   width,
   height,
   margin = defaultMargin,
-  events = false,
 }: HorizontalBarChartProps) {
-  // Bounds
-  const xMax = (width - margin.left - margin.right) / 2; // Half width
+  if (width < 10) return null;
+
+  const xMax = (width - margin.left - margin.right) / 2;
   const yMax = height - margin.top - margin.bottom;
   const centerX = xMax; // Centerline of the chart
   const gap = 10;
 
-  // Update scale output dimensions
+  const yScale = useMemo(
+    () =>
+      scaleBand<string>({
+        domain: rightData.map((d) => d.category),
+        padding: 0.5,
+      }).rangeRound([0, yMax]),
+    [yMax]
+  );
+
+  const maxValue = useMemo(
+    () =>
+      Math.max(...[...rightData, ...leftData].map((d) => d.value1 + d.value2)),
+    []
+  );
+
+  const xScale = useMemo(
+    () =>
+      scaleLinear<number>({
+        domain: [0, maxValue],
+      }).rangeRound([0, xMax]),
+    [maxValue, xMax]
+  );
   yScale.rangeRound([0, yMax]);
   xScale.rangeRound([0, xMax]);
 
-  return width < 10 ? null : (
+  // Colors for dynamic keys
+  const leftColors: Record<string, string> = {
+    value1: "#FF6B6B",
+    value2: "#C44D58",
+  };
+
+  const rightColors: Record<string, string> = {
+    value1: "#4C9F70",
+    value2: "#2C6E49",
+  };
+
+  return (
     <svg width={width} height={height}>
       <Group top={margin.top} left={margin.left}>
-        {/* Y-Axis with custom labels */}
         <AxisLeft
           scale={yScale}
           stroke="black"
           tickStroke="transparent"
           hideAxisLine
-          tickFormat={(value) => yAxisLabels[value] || value} // Use custom labels
+          tickFormat={(value) => yAxisLabels[value] || value}
           tickLabelProps={{
             fill: "black",
             fontSize: 12,
@@ -84,7 +90,8 @@ export default function HorizontalBarChart({
             dx: -15,
           }}
         />
-        {/* Labels */}
+
+        {/* Left-Side */}
         <Group>
           <rect
             x={-2 * gap}
@@ -104,42 +111,38 @@ export default function HorizontalBarChart({
           >
             Shares Sold
           </Text>
-          {/* Left-Side Stacked Bars (Shares Bought) */}
-          {data1.map((d) => {
+          {leftData.map((d) => {
             const barHeight = yScale.bandwidth();
-            const value1Width = xScale(d.value1);
-            const value2Width = xScale(d.value2);
             const yPos = yScale(d.category);
+            let xOffset = centerX - gap;
+
+            // Reverse the key order so the first key ends up nearest the center
+            const stackKeys = Object.entries(d)
+              .filter(([key]) => key !== "category")
+              .reverse();
 
             return (
               <Group key={`left-${d.category}`}>
-                {/* Bottom Stack (First value) */}
-                <Bar
-                  x={centerX - gap - value1Width} // Move to the left side
-                  y={yPos}
-                  width={value1Width}
-                  height={barHeight}
-                  fill="#FF6B6B"
-                  onClick={() => {
-                    if (events)
-                      alert(`Left Bottom: ${d.category}: ${d.value1}`);
-                  }}
-                />
-                {/* Top Stack (Second value) */}
-                <Bar
-                  x={centerX - gap - value1Width - value2Width} // Stack it further left
-                  y={yPos}
-                  width={value2Width}
-                  height={barHeight}
-                  fill="#C44D58"
-                  onClick={() => {
-                    if (events) alert(`Left Top: ${d.category}: ${d.value2}`);
-                  }}
-                />
+                {stackKeys.map(([key, value]) => {
+                  const barWidth = xScale(value as number);
+                  xOffset -= barWidth;
+                  return (
+                    <Bar
+                      key={`${d.category}-${key}`}
+                      x={xOffset}
+                      y={yPos}
+                      width={barWidth}
+                      height={barHeight}
+                      fill={leftColors[key] || "#FF6B6B"}
+                    />
+                  );
+                })}
               </Group>
             );
           })}
         </Group>
+
+        {/* Right-Side */}
         <Group>
           <rect
             x={centerX}
@@ -159,39 +162,30 @@ export default function HorizontalBarChart({
           >
             Shares Bought
           </Text>
-
-          {/* Right-Side Stacked Bars (Shares Sold) */}
-          {data.map((d) => {
+          {rightData.map((d) => {
             const barHeight = yScale.bandwidth();
-            const value1Width = xScale(d.value1);
-            const value2Width = xScale(d.value2);
             const yPos = yScale(d.category);
+            let xOffset = centerX + gap; // Start stacking from the center
 
             return (
               <Group key={`right-${d.category}`}>
-                {/* Bottom Stack (First value) */}
-                <Bar
-                  x={centerX + gap}
-                  y={yPos}
-                  width={value1Width}
-                  height={barHeight}
-                  fill="#4C9F70"
-                  onClick={() => {
-                    if (events)
-                      alert(`Right Bottom: ${d.category}: ${d.value1}`);
-                  }}
-                />
-                {/* Top Stack (Second value) */}
-                <Bar
-                  x={centerX + gap + value1Width} // Stack it on the right
-                  y={yPos}
-                  width={value2Width}
-                  height={barHeight}
-                  fill="#2C6E49"
-                  onClick={() => {
-                    if (events) alert(`Right Top: ${d.category}: ${d.value2}`);
-                  }}
-                />
+                {Object.entries(d)
+                  .filter(([key]) => key !== "category")
+                  .map(([key, value]) => {
+                    const barWidth = xScale(value as number);
+                    const bar = (
+                      <Bar
+                        key={`${d.category}-${key}`}
+                        x={xOffset}
+                        y={yPos}
+                        width={barWidth}
+                        height={barHeight}
+                        fill={rightColors[key] || "#4C9F70"}
+                      />
+                    );
+                    xOffset += barWidth;
+                    return bar;
+                  })}
               </Group>
             );
           })}
