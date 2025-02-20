@@ -1,0 +1,112 @@
+[
+  {
+    "date": "2024 Q4",
+    "nodes": [
+      { "name": "Revenue", "label": 65585 },
+      {
+        "name": "Productivity & Business Processes Revenue",
+        "label": 28317
+      },
+      {
+        "name": "Microsoft 365 Commercial Products and Cloud Services Revenue",
+        "label": 20449
+      },
+      { "name": "LinkedIn Revenue", "label": 4292 },
+      {
+        "name": "Dynamics Products and Cloud Services Revenue",
+        "label": 1849
+      },
+      {
+        "name": "Microsoft 365 Consumer Products and Cloud Services Revenue",
+        "label": 1727
+      },
+      {
+        "name": "Intelligent Cloud Revenue",
+        "label": 24092
+      },
+      {
+        "name": "Server Products and Cloud Services Revenue",
+        "label": 22155
+      },
+      {
+        "name": "Enterprise and Partner Services Revenue",
+        "label": 1928
+      },
+      {
+        "name": "More Personal Computing Revenue",
+        "label": 13176
+      },
+      { "name": "Gaming Revenue", "label": 5621 },
+      {
+        "name": "Windows and Devices Revenue",
+        "label": 4329
+      },
+      {
+        "name": "Search and News Advertising Revenue",
+        "label": 3225
+      }
+    ],
+    "links": [
+      {
+        "source": "Productivity & Business Processes Revenue",
+        "target": "Revenue",
+        "value": 28317
+      },
+      {
+        "source": "Intelligent Cloud Revenue",
+        "target": "Revenue",
+        "value": 24092
+      },
+      {
+        "source": "More Personal Computing Revenue",
+        "target": "Revenue",
+        "value": 13176
+      },
+      {
+        "source": "Microsoft 365 Commercial Products and Cloud Services Revenue",
+        "target": "Productivity & Business Processes Revenue",
+        "value": 20449
+      },
+      {
+        "source": "LinkedIn Revenue",
+        "target": "Productivity & Business Processes Revenue",
+        "value": 4292
+      },
+      {
+        "source": "Dynamics Products and Cloud Services Revenue",
+        "target": "Productivity & Business Processes Revenue",
+        "value": 1849
+      },
+      {
+        "source": "Microsoft 365 Consumer Products and Cloud Services Revenue",
+        "target": "Productivity & Business Processes Revenue",
+        "value": 1727
+      },
+      {
+        "source": "Server Products and Cloud Services Revenue",
+        "target": "Intelligent Cloud Revenue",
+        "value": 22155
+      },
+      {
+        "source": "Enterprise and Partner Services Revenue",
+        "target": "Intelligent Cloud Revenue",
+        "value": 1928
+      },
+      {
+        "source": "Gaming Revenue",
+        "target": "More Personal Computing Revenue",
+        "value": 5621
+      },
+      {
+        "source": "Windows and Devices Revenue",
+        "target": "More Personal Computing Revenue",
+        "value": 4329
+      },
+      {
+        "source": "Search and News Advertising Revenue",
+        "target": "More Personal Computing Revenue",
+        "value": 3225
+      }
+    ]
+  }
+]
