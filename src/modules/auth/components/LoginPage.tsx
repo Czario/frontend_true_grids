@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/contexts/AppStoreContext";
-import { LoginForm, LoginResponse } from "@/modules/auth/interfaces/Login";
+import { LoginForm, LoginResponse } from "@/modules/auth/interfaces/LoginSignup";
 
 import {
   Button,
@@ -18,8 +18,13 @@ import { Google } from "@mui/icons-material";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { loginService } from "../services/authService";
+import GoogleLoginButton from "./GoogleLoginButton";
 
-export default function AuthPage() {
+interface LoginPageProps {
+  onLogin: () => void;
+}
+
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const router = useRouter();
   const [formData, setFormData] = useState<LoginForm>({
     email: "",
@@ -42,9 +47,10 @@ export default function AuthPage() {
 
     try {
       const result: LoginResponse = await loginService(formData);
+      console.log(result);
       if (result.success) {
         setUserlogin(true);
-        router.replace("/financials");
+        onLogin(); // Call the onLogin prop
       } else {
         setUserlogin(false);
         setErrorMessage(result.message || null);
@@ -120,22 +126,11 @@ export default function AuthPage() {
         </Typography>
 
         <Box sx={{ mt: 3 }}>
-          <Button
-            variant="contained"
-            fullWidth
-            startIcon={<Google />}
-            sx={{
-              mb: 1,
-              backgroundColor: "#DB4437",
-              color: "white",
-              "&:hover": { backgroundColor: "#c1351d" },
-            }}
-            onClick={() => console.log("Google Sign-In")}
-          >
-            Sign in with Google
-          </Button>
+        <GoogleLoginButton />
         </Box>
       </Paper>
     </Container>
   );
-}
+};
+
+export default LoginPage;

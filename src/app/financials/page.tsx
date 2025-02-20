@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getCookie } from "@/modules/auth/utils/cookies";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/contexts/AppStoreContext";
-
 import { fetchStatement } from "@/modules/financials/services/apiStatementService";
+import { logoutService } from "@/modules/auth/services/authService";
 import StatementTable from "@/modules/financials/components/StatementTable";
+import Navbar from "@/components/Navbar";
 import {
   Box,
   Button,
@@ -16,6 +16,7 @@ import {
   styled,
 } from "@mui/material";
 import { DataItem } from "@/modules/financials/interfaces/financials";
+import withAuth from "@/hocs/withAuth";
 
 interface StatementButtonProps {
   selected: boolean;
@@ -50,15 +51,8 @@ const Home: React.FC = () => {
   const [data, setData] = useState<DataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const { setUserlogin } = useAppStore();
-
-  useEffect(() => {
-    console.log(getCookie("login"));
-    if (getCookie("login") !== "true") {
-      router.replace("/login");
-    }
-  }, []);
+  const router = useRouter();
 
   // Cache for storing data by statement type.
   const cacheRef = useRef<Record<string, DataItem[]>>({});
@@ -118,6 +112,7 @@ const Home: React.FC = () => {
 
   return (
     <div style={{ padding: "5px" }}>
+      <Navbar />
       <Box
         sx={{
           display: "flex",
@@ -203,4 +198,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default withAuth(Home);

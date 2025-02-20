@@ -1,4 +1,9 @@
-import SignupPage from "@/modules/auth/components/RegisterPage";
+"use client";
+import dynamic from "next/dynamic";
+
+const SignupPage = dynamic(() => import("@/modules/auth/components/RegisterPage"), {
+  ssr: false,
+});
 
 const Signup = () => {
   return (
@@ -7,4 +12,5 @@ const Signup = () => {
     </>
   );
 };
+
 export default Signup;

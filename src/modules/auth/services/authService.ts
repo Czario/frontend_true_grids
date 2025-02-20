@@ -1,33 +1,47 @@
-import axios from "axios";
-import { LoginForm, LoginResponse } from "@/modules/auth/interfaces/Login";
-import { signupForm, signupResponse } from "@/modules/auth/interfaces/Signup";
+import axios from 'axios';
+import { LoginForm, LoginResponse, SignupForm, SignupResponse } from '../interfaces/LoginSignup';
+
+const API_URL = 'http://127.0.0.1:3001'; // Replace with your backend API URL
+
+
 
 export const loginService = async (formData: LoginForm): Promise<LoginResponse> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({ success: true, message: "Email or Password Mismatch" });
-        }, 2000);
-    });
-    // try {
-    //   const response = await axios.post("/api/auth/login", formData);
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("Signup failed:", error);
-    //   throw error;
-    // }
+  try {
+    const response = await axios.post(`${API_URL}/auth/login`, formData);
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message || 'Login failed',
+    };
+  }
 };
 
-export const signUpService = async (formData: signupForm): Promise<signupResponse> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({ success: true, message: "email id already exists" });
-        }, 2000);
-    });
-    // try {
-    //   const response = await axios.post("/api/auth/register", formData);
-    //   return response.data;
-    // } catch (error) {
-    //   console.error("Signup failed:", error);
-    //   throw error;
-    // }
+export const signupService = async (formData: SignupForm): Promise<SignupResponse> => {
+  try {
+    const response = await axios.post(`${API_URL}/users`, formData);
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message || 'Signup failed',
+    };
+  }
 };
+
+export const googleLoginService = async (): Promise<LoginResponse> => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/google`);
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: (error as any).response?.data?.message || 'Google login failed',
+    };
+  }
+};
+
+export const logoutService = () => {
+    document.cookie = "login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  };
+

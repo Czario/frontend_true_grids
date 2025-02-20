@@ -1,84 +1,68 @@
-import React from 'react';
-import { Modal, Box, Typography } from '@mui/material';
-import { BarGroup } from '@visx/shape';
-import { Group } from '@visx/group';
-import { scaleBand, scaleLinear } from '@visx/scale';
-import { AxisBottom, AxisLeft } from '@visx/axis';
+import React, { useState } from 'react';
+import { Modal, Box, IconButton, Typography, Divider, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BarChart from './BarChart';
 
 interface ChartModalProps {
   open: boolean;
   onClose: () => void;
-  rowData: any;
+  rowData: Record<string, number>;
 }
 
 const ChartModal: React.FC<ChartModalProps> = ({ open, onClose, rowData }) => {
+  const [selectedChart, setSelectedChart] = useState('Bar Chart');
+
+  const handleSelectChart = (chartType: string) => {
+    setSelectedChart(chartType);
+  };
+
   if (!rowData) {
     return null;
   }
 
   const width = 500;
   const height = 400;
-  const margin = { top: 40, right: 30, bottom: 50, left: 40 };
-
-  const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - margin.bottom;
-
-  const data = Object.entries(rowData).map(([key, value]) => ({
-    label: key,
-    value: Number(value),
-  }));
-
-  const xScale = scaleBand<string>({
-    domain: data.map(d => d.label),
-    padding: 0.2,
-  });
-
-  const yScale = scaleLinear<number>({
-    domain: [0, Math.max(...data.map(d => d.value))],
-  });
-
-  xScale.rangeRound([0, xMax]);
-  yScale.range([yMax, 0]);
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={{ padding: 4, backgroundColor: 'white', margin: 'auto', maxWidth: 600 }}>
-        <Typography variant="h6" gutterBottom>
-          Bar Chart
-        </Typography>
-        <svg width={width} height={height}>
-          <Group top={margin.top} left={margin.left}>
-            <BarGroup
-              data={data}
-              keys={['value']}
-              height={yMax}
-              x0={d => d.label}
-              x0Scale={xScale}
-              x1Scale={scaleBand<string>({ domain: ['value'], padding: 0.1 })}
-              yScale={yScale}
-              color={() => 'rgba(75, 192, 192, 0.6)'}
-            >
-              {barGroups =>
-                barGroups.map(barGroup => (
-                  <Group key={`bar-group-${barGroup.index}`} left={barGroup.x0}>
-                    {barGroup.bars.map(bar => (
-                      <rect
-                        key={`bar-group-bar-${barGroup.index}-${bar.index}`}
-                        x={bar.x}
-                        y={bar.y}
-                        width={bar.width}
-                        height={bar.height}
-                        fill={bar.color}
-                      />
-                    ))}
-                  </Group>
-                ))
-              }
-            </BarGroup>
-            <AxisLeft scale={yScale} />
-            <AxisBottom top={yMax} scale={xScale} />
-          </Group>
-        </svg>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '80%',
+          height: '80%',
+          margin: 'auto',
+          backgroundColor: 'background.paper',
+          boxShadow: 24,
+          borderRadius: 2,
+          overflow: 'hidden',
+        }}
+      >
+        <Box sx={{ width: '20%', borderRight: '1px solid', borderColor: 'divider', backgroundColor: 'background.default' }}>
+          <List component="nav">
+            {['Bar Chart', 'Line Chart', 'Pie Chart'].map((chartType) => (
+              <React.Fragment key={chartType}>
+                <ListItemButton onClick={() => handleSelectChart(chartType)}>
+                  <ListItemText primary={chartType} />
+                </ListItemButton>
+                <Divider />
+              </React.Fragment>
+            ))}
+          </List>
+        </Box>
+        <Box sx={{ flex: 1, p: 2, position: 'relative' }}>
+          <IconButton
+            onClick={onClose}
+            sx={{ position: 'absolute', top: 8, right: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" gutterBottom>
+            {selectedChart}
+          </Typography>
+          {selectedChart === 'Bar Chart' && <BarChart data={rowData} width={width} height={height} />}
+          {/* Add other chart components here based on selectedChart */}
+        </Box>
       </Box>
     </Modal>
   );
