@@ -15,7 +15,7 @@ const GoogleLoginButton: React.FC = () => {
         "&:hover": { backgroundColor: "#c1351d" },
       }}
       onClick={() => {
-        const response = window.location.href = "http://127.0.0.1:3001/auth/google";
+        window.location.href = "http://127.0.0.1:3001/auth/google";
     }}
     >
       Sign in with Google

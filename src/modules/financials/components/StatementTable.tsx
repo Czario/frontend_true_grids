@@ -10,7 +10,21 @@ import React, {
 } from 'react';
 import dynamic from 'next/dynamic';
 import { useReactTable, getCoreRowModel, getExpandedRowModel, flexRender, ColumnDef } from '@tanstack/react-table';
-import { Table, TableBody, TableContainer, TableHead, TableRow, Box, styled, Theme, Slider, IconButton } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Box,
+  styled,
+  Theme,
+  Slider,
+  IconButton,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from '@mui/material';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { parseData } from '../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
@@ -63,11 +77,37 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
 
   // State for the Bar Chart Modal.
   const [ChartModalOpen, setChartModalOpen] = useState(false);
-  const [chartRowData, setChartRowData] = useState<Record<string, number> | null>(null);
+  const [clickedRowId, setClickedRowId] = useState<string | null>(null);
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const headerRowRef = useRef<HTMLTableRowElement>(null);
   const parentRowRefs = useRef<{ [key: string]: HTMLTableRowElement | null }>({});
+
+  // State for managing expanded rows
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  const handleExpandAll = () => {
+    const newExpanded: Record<string, boolean> = {};
+    interface Row {
+      id: string;
+      subRows?: Row[];
+    }
+
+    const expandAllRows = (rows: Row[]) => {
+      rows.forEach((row) => {
+        newExpanded[row.id] = true;
+        if (row.subRows) {
+          expandAllRows(row.subRows);
+        }
+      });
+    };
+    expandAllRows(table.getRowModel().rows);
+    setExpanded(newExpanded);
+  };
+
+  const handleCollapseAll = () => {
+    setExpanded({});
+  };
 
   // Measure header offset.
   useLayoutEffect(() => {
@@ -105,25 +145,21 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   };
 
   // Handler to open the Bar Chart Modal.
-  const handleOpenChartModal = useCallback((rowData: ParsedRow) => {
-    const chartData: Record<string, number> = {};
-    Object.keys(rowData).forEach(key => {
-      if (typeof rowData[key] === 'number') {
-        chartData[key] = rowData[key];
-      }
-    });
-    setChartRowData(chartData);
+  const handleOpenChartModal = useCallback((rowId: string) => {
+    setClickedRowId(rowId);
     setChartModalOpen(true);
   }, []);
 
   const handleCloseChartModal = () => {
     setChartModalOpen(false);
-    setChartRowData(null);
+    setClickedRowId(null);
   };
 
-  // Build columns and insert a new Bar Chart column after the first column.
-  const { columns, rows } = useMemo(() => {
+  // Build columns, header row, and rows.
+  const { columns, rows, headerRow } = useMemo(() => {
     const parsedData = parseData(data);
+    // headerRow will contain all header strings.
+    const headerRow = parsedData.columns.map(col => col.header);
     const mappedColumns: ColumnDef<ParsedRow>[] = parsedData.columns
       .filter((_, index) => maxYears || index < years * 4)
       .map((col, index) => ({
@@ -144,7 +180,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            handleOpenChartModal(row.original);
+            handleOpenChartModal(row.id);
           }}
           size="small"
           sx={{ color: 'primary.main' }}
@@ -156,7 +192,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     };
 
     const newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1)];
-    return { columns: newColumns, rows: parsedData.rows };
+    return { columns: newColumns, rows: parsedData.rows, headerRow };
   }, [data, years, maxYears, handleOpenChartModal]);
 
   const table = useReactTable<ParsedRow>({
@@ -165,6 +201,10 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getSubRows: (row) => row.children,
+    state: {
+      expanded,
+    },
+    onExpandedChange: (updaterOrValue) => setExpanded(updaterOrValue as Record<string, boolean>),
   });
 
   const marks = [
@@ -227,6 +267,22 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             step={null}
             sx={{ width: '50%' }}
           />
+        </Box>
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+          <RadioGroup row>
+            <FormControlLabel
+              value="expand"
+              control={<Radio />}
+              label="Expand All"
+              onClick={handleExpandAll}
+            />
+            <FormControlLabel
+              value="collapse"
+              control={<Radio />}
+              label="Collapse All"
+              onClick={handleCollapseAll}
+            />
+          </RadioGroup>
         </Box>
       </Box>
       <TableContainer
@@ -318,7 +374,9 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
       <ChartModal
         open={ChartModalOpen}
         onClose={handleCloseChartModal}
-        rowData={chartRowData || {}}
+        rowData={rows}
+        clickedRowId={clickedRowId}
+        headers={headerRow}
       />
     </>
   );
