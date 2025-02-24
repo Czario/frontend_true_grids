@@ -8,13 +8,12 @@ import genRandomNormalPoints, {
 } from "@visx/mock-data/lib/generators/genRandomNormalPoints";
 import { withTooltip, Tooltip } from "@visx/tooltip";
 import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
-import { voronoi, VoronoiPolygon } from "@visx/voronoi";
+import { voronoi } from "@visx/voronoi";
 import { localPoint } from "@visx/event";
 
-const points: PointsRange[] = genRandomNormalPoints(
-  600,
-  /* seed= */ 0.5
-).filter((_, i) => i < 600);
+const points: PointsRange[] = genRandomNormalPoints(10, /* seed= */ 0.5).filter(
+  (_, i) => i < 10
+);
 
 const x = (d: PointsRange) => d[0];
 const y = (d: PointsRange) => d[1];
@@ -100,13 +99,11 @@ export default withTooltip<DotsProps, PointsRange>(
     return (
       <div>
         <svg width={width} height={height} ref={svgRef}>
-          <GradientPinkRed id="dots-pink" />
-          {/** capture all mouse events with a rect */}
           <rect
             width={width}
             height={height}
             rx={14}
-            fill="url(#dots-pink)"
+            fill="pink"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onTouchMove={handleMouseMove}
@@ -120,7 +117,7 @@ export default withTooltip<DotsProps, PointsRange>(
                 cx={xScale(x(point))}
                 cy={yScale(y(point))}
                 r={i % 3 === 0 ? 2 : 3}
-                fill={tooltipData === point ? "white" : "#f6c431"}
+                fill={tooltipData === point ? "white" : "red"}
               />
             ))}
           </Group>
@@ -130,12 +127,8 @@ export default withTooltip<DotsProps, PointsRange>(
           tooltipLeft != null &&
           tooltipTop != null && (
             <Tooltip left={tooltipLeft + 10} top={tooltipTop + 10}>
-              <div>
-                <strong>x:</strong> {x(tooltipData)}
-              </div>
-              <div>
-                <strong>y:</strong> {y(tooltipData)}
-              </div>
+              <div>{x(tooltipData)}</div>
+              <div>{y(tooltipData)}</div>
             </Tooltip>
           )}
       </div>
