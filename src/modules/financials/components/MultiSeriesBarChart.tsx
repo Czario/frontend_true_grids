@@ -18,38 +18,47 @@ interface MultiSeriesBarChartProps {
   series: Series[];
   width: number;
   height: number;
+  backgroundColor?: string;
+  barColor?: string;
+  labelColor?: string;
 }
 
 const colors = ["#3f51b5", "#f50057", "#4caf50", "#ff9800"];
 
-const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({ series, width, height }) => {
+const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
+  series,
+  width,
+  height,
+  backgroundColor = 'white',
+  barColor = '#4caf50',
+  labelColor = '#000000',
+}) => {
   const margin = { top: 40, right: 30, bottom: 50, left: 50 };
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  const labels = series.length > 0 ? series[0].data.map(d => d.label) : [];
-
-  const x0 = scaleBand<string>({
+  const allData = series.flatMap(s => s.data);
+  const labels = Array.from(new Set(allData.map(d => d.label)));
+  const xScale = scaleBand<string>({
     domain: labels,
-    range: [0, xMax],
     padding: 0.2,
+    range: [0, xMax],
   });
 
-  const x1 = scaleBand<string>({
-    domain: series.map(s => s.name),
-    range: [0, x0.bandwidth()],
-    padding: 0.1,
-  });
-
-  const maxY = Math.max(...series.flatMap(s => s.data.map(d => d.value)));
   const yScale = scaleLinear<number>({
-    domain: [0, maxY],
+    domain: [0, Math.max(...allData.map(d => d.value))],
     range: [yMax, 0],
     nice: true,
   });
 
   return (
-    <svg width={width} height={height}>
+    <svg width={width} height={height} style={{ backgroundColor }}>
+      <defs>
+        <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={barColor} stopOpacity={0.8} />
+          <stop offset="100%" stopColor={barColor} stopOpacity={0.8} />
+        </linearGradient>
+      </defs>
       <Group top={margin.top} left={margin.left}>
         {/* Grid lines */}
         {yScale.ticks(5).map((tickValue, i) => {
@@ -66,31 +75,33 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({ series, width
             />
           );
         })}
-        {labels.map(label => (
-          <Group key={label} left={x0(label) || 0}>
-            {series.map(s => {
-              const d = s.data.find(d => d.label === label);
-              return (
-                <Bar
-                  key={s.name}
-                  x={x1(s.name)}
-                  y={d ? yScale(d.value) : yScale(0)}
-                  width={x1.bandwidth()}
-                  height={d ? yMax - yScale(d.value) : 0}
-                  fill={colors[series.findIndex(ss => ss.name === s.name) % colors.length]}
-                  stroke="#fff"
-                  strokeWidth={1}
-                />
-              );
-            })}
-          </Group>
-        ))}
+        {series.map((s, seriesIndex) =>
+          s.data.map((d, i) => {
+            const barWidth = xScale.bandwidth() / series.length;
+            const barHeight = yMax - (yScale(d.value) ?? 0);
+            const barX = (xScale(d.label) ?? 0) + seriesIndex * barWidth;
+            const barY = yScale(d.value);
+            return (
+              <Bar
+                key={`bar-${seriesIndex}-${i}`}
+                x={barX}
+                y={barY}
+                width={barWidth}
+                height={barHeight}
+                fill="url(#barGradient)"
+                stroke="#388e3c"
+                strokeWidth={1}
+                aria-label={`Series: ${s.name}, Label: ${d.label}, Value: ${d.value}`}
+              />
+            );
+          })
+        )}
         <AxisLeft
           scale={yScale}
           stroke="#333"
           tickStroke="#333"
           tickLabelProps={() => ({
-            fill: '#333',
+            fill: labelColor,
             fontSize: 11,
             textAnchor: 'end',
             dy: '0.33em',
@@ -98,11 +109,11 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({ series, width
         />
         <AxisBottom
           top={yMax}
-          scale={x0}
+          scale={xScale}
           stroke="#333"
           tickStroke="#333"
           tickLabelProps={() => ({
-            fill: '#333',
+            fill: labelColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}

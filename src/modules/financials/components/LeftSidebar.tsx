@@ -10,7 +10,10 @@ import {
   TextField,
   ListItemIcon,
   Checkbox,
+  IconButton,
 } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 interface LeftSidebarProps {
   items: any[];
@@ -32,6 +35,11 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
   handleTabChange,
 }) => {
   const [renderedItems, setRenderedItems] = useState<any[]>([]);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarExpanded(!isSidebarExpanded);
+  };
 
   useEffect(() => {
     console.log('Original items:', items);
@@ -82,31 +90,40 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
   return (
     <Box
       sx={{
-        width: '20%',
+        width: isSidebarExpanded ? '20%' : '2%',
         height: '100%',
-        overflowY: 'auto',
-        p: 2,
+        overflowY: isSidebarExpanded ? 'auto' : 'hidden',
+        p: isSidebarExpanded ? 2 : 0,
         borderRight: '1px solid',
         borderColor: 'divider',
         backgroundColor: 'white',
+        transition: 'width 0.3s, padding 0.3s',
+        position: 'relative',
       }}
     >
-      <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth">
-        <Tab label="Suggested" />
-        <Tab label="All" />
-      </Tabs>
-      <Divider sx={{ my: 1 }} />
-      <TextField
-        label="Search"
-        variant="outlined"
-        fullWidth
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      <List>
-        {renderedItems.map(item => renderRow(item))}
-      </List>
+      <IconButton onClick={toggleSidebar} sx={{ mb: 1, position: 'absolute', top: 8, right: isSidebarExpanded ? -10 : -8, zIndex: 1 }}>
+        {isSidebarExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+      </IconButton>
+      {isSidebarExpanded && (
+        <>
+          <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth">
+            <Tab label="Suggested" />
+            <Tab label="All" />
+          </Tabs>
+          <Divider sx={{ my: 1 }} />
+          <TextField
+            label="Search"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <List>
+            {renderedItems.map(item => renderRow(item))}
+          </List>
+        </>
+      )}
     </Box>
   );
 };

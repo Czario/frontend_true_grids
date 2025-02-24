@@ -31,14 +31,14 @@ const ChartModal: React.FC<ChartModalProps> = ({
   clickedRowId,
   headers,
 }) => {
-  // Default selected chart is Bar Chart.
   const [selectedChart, setSelectedChart] = useState<string[]>(['Bar Chart']);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  // Track selected row IDs from the left sidebar.
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  // Controls for left sidebar (tabs & search).
   const [tabIndex, setTabIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [backgroundColor, setBackgroundColor] = useState('white');
+  const [barColor, setBarColor] = useState('#4caf50');
+  const [labelColor, setLabelColor] = useState('#000000');
 
   const allCharts = ['Bar Chart', 'Line Chart', 'Pie Chart', 'Scatter Chart'];
 
@@ -57,22 +57,25 @@ const ChartModal: React.FC<ChartModalProps> = ({
     setIsFullscreen(prev => !prev);
   };
 
-  // Flatten nested rows (if any)
   const flattenRows = (rows: ParsedRow[]): ParsedRow[] => {
     const flat: ParsedRow[] = [];
-    const flatten = (row: ParsedRow) => {
+    const traverse = (row: ParsedRow) => {
       flat.push(row);
       if (row.children) {
-        row.children.forEach(flatten);
+        row.children.forEach(traverse);
       }
     };
-    rows.forEach(flatten);
+    rows.forEach(traverse);
     return flat;
   };
 
+  useEffect(() => {
+    console.log('Original rowData:', rowData);
+    console.log('Flattened rowData:', flattenRows(rowData));
+  }, [rowData]);
+
   const flattenedRowData = useMemo(() => flattenRows(rowData), [rowData]);
 
-  // Determine which rows to show in the left sidebar.
   const popularRows = flattenedRowData.slice(0, 5);
   const filteredRows = flattenedRowData.filter(
     row =>
@@ -87,7 +90,6 @@ const ChartModal: React.FC<ChartModalProps> = ({
     );
   };
 
-  // Auto-select the clicked row if provided and if no row is already selected.
   useEffect(() => {
     if (clickedRowId && selectedRows.length === 0) {
       setSelectedRows([clickedRowId]);
@@ -98,13 +100,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
     selectedRows.includes(row.id)
   );
 
-  // Build series data for composite charts.
-  // Use the provided header values as x-axis labels.
-  // Assume col0 holds the row name; then for each index from 1 onward, use headers[i] and the numeric value.
   const seriesData = selectedRowsData.map(row => {
     const seriesName = String(row.col0) || '';
     const data = [];
-    // Start from index 1 (skip col0)
     for (let i = 1; i < headers.length; i++) {
       const key = `col${i}`;
       const value = Number(row[key]);
@@ -115,7 +113,6 @@ const ChartModal: React.FC<ChartModalProps> = ({
     return { name: seriesName, data };
   });
 
-  // Chart dimensions (for demo purposes)
   const chartWidth = 600;
   const chartHeight = 400;
 
@@ -126,7 +123,7 @@ const ChartModal: React.FC<ChartModalProps> = ({
           display: 'flex',
           flexDirection: 'column',
           width: isFullscreen ? '100%' : '80%',
-          height: isFullscreen ? '100%' : '80vh', // Fixed container height
+          height: isFullscreen ? '100%' : '80vh',
           margin: 'auto',
           backgroundColor: '#f5f5f5',
           boxShadow: 24,
@@ -135,7 +132,6 @@ const ChartModal: React.FC<ChartModalProps> = ({
           position: 'relative',
         }}
       >
-        {/* Header */}
         <Box
           sx={{
             p: 1.4,
@@ -160,9 +156,7 @@ const ChartModal: React.FC<ChartModalProps> = ({
             </IconButton>
           </Box>
         </Box>
-        {/* Body container */}
         <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-          {/* Left Sidebar */}
           <LeftSidebar
             items={leftSidebarItems}
             selectedRows={selectedRows}
@@ -172,7 +166,6 @@ const ChartModal: React.FC<ChartModalProps> = ({
             tabIndex={tabIndex}
             handleTabChange={handleTabChange}
           />
-          {/* Main Chart Area – single composite chart */}
           <Box
             sx={{
               flex: 1,
@@ -190,6 +183,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
                       series={seriesData}
                       width={chartWidth}
                       height={chartHeight}
+                      backgroundColor={backgroundColor}
+                      barColor={barColor}
+                      labelColor={labelColor}
                     />
                   ) : (
                     <BarChart
@@ -199,6 +195,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
                       }, {} as Record<string, number>)}
                       width={chartWidth}
                       height={chartHeight}
+                      backgroundColor={backgroundColor}
+                      barColor={barColor}
+                      labelColor={labelColor}
                     />
                   )
                 ) : selectedChart.includes('Line Chart') ? (
@@ -207,6 +206,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
                       series={seriesData}
                       width={chartWidth}
                       height={chartHeight}
+                      backgroundColor={backgroundColor}
+                      barColor={barColor}
+                      labelColor={labelColor}
                     />
                   ) : (
                     <LineChart
@@ -216,6 +218,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
                       }, {} as Record<string, number>)}
                       width={chartWidth}
                       height={chartHeight}
+                      backgroundColor={backgroundColor}
+                      barColor={barColor}
+                      labelColor={labelColor}
                     />
                   )
                 ) : (
@@ -224,13 +229,18 @@ const ChartModal: React.FC<ChartModalProps> = ({
               </Box>
             )}
           </Box>
-          {/* Right Sidebar */}
           <RightSidebar
             isSidebarExpanded={false}
             toggleSidebar={() => {}}
             allCharts={allCharts}
             selectedChart={selectedChart}
             handleChartClick={handleChartClick}
+            backgroundColor={backgroundColor}
+            setBackgroundColor={setBackgroundColor}
+            barColor={barColor}
+            setBarColor={setBarColor}
+            labelColor={labelColor}
+            setLabelColor={setLabelColor}
           />
         </Box>
       </Box>

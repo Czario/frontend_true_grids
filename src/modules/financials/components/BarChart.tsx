@@ -8,9 +8,12 @@ interface BarChartProps {
   data: Record<string, number>;
   width: number;
   height: number;
+  backgroundColor?: string;
+  barColor?: string;
+  labelColor?: string;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
+const BarChart: React.FC<BarChartProps> = ({ data, width, height, backgroundColor = 'white', barColor = '#4caf50', labelColor = '#000000' }) => {
   const margin = { top: 40, right: 30, bottom: 50, left: 50 };
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
@@ -33,11 +36,11 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
   });
 
   return (
-    <svg width={width} height={height}>
+    <svg width={width} height={height} style={{ backgroundColor }}>
       <defs>
         <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#4caf50" stopOpacity={0.8} />
-          <stop offset="100%" stopColor="#81c784" stopOpacity={0.8} />
+          <stop offset="0%" stopColor={barColor} stopOpacity={0.8} />
+          <stop offset="100%" stopColor={barColor} stopOpacity={0.8} />
         </linearGradient>
       </defs>
       <Group top={margin.top} left={margin.left}>
@@ -80,7 +83,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
           stroke="#333"
           tickStroke="#333"
           tickLabelProps={() => ({
-            fill: '#333',
+            fill: labelColor,
             fontSize: 11,
             textAnchor: 'end',
             dy: '0.33em',
@@ -92,7 +95,7 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height }) => {
           stroke="#333"
           tickStroke="#333"
           tickLabelProps={() => ({
-            fill: '#333',
+            fill: labelColor,
             fontSize: 11,
             textAnchor: 'middle',
           })}
