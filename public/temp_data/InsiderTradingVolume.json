@@ -1,0 +1,14 @@
+{
+  "leftData": [
+    { "category": "q1", "value1": 20, "value2": 10 },
+    { "category": "q2", "value1": 30, "value2": 20 },
+    { "category": "q3", "value1": 50, "value2": 30 },
+    { "category": "q4", "value1": 25, "value2": 15 }
+  ],
+  "rightData": [
+    { "category": "q1", "value1": 15, "value2": 15 },
+    { "category": "q2", "value1": 25, "value2": 25 },
+    { "category": "q3", "value1": 40, "value2": 40 },
+    { "category": "q4", "value1": 20, "value2": 20 }
+  ]
+}

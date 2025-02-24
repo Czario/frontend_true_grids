@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    { "name": "Interest Expenses" },
+    { "name": "Other income, net" },
+    { "name": "Income Tax" },
+    { "name": "Net income attributable to noncontrolling interests" },
+    { "name": "Net Income (TSLA only)", "shiftRight": 10 },
+    { "name": "Selling, general and administrative expenses" },
+    { "name": "Research and development" },
+    { "name": "Restructuring and other" },
+    { "name": "Gross Profit" },
+    { "name": "Operating Income" },
+    { "name": "Interest Income" },
+    { "name": "Operating Expenses" }
+  ],
+  "links": [
+    {
+      "source": "Operating Expenses",
+      "target": "Selling, general and administrative expenses",
+      "value": 1186
+    },
+    {
+      "source": "Operating Expenses",
+      "target": "Research and development",
+      "value": 1039
+    },
+    {
+      "source": "Operating Expenses",
+      "target": "Restructuring and other",
+      "value": 55
+    },
+    {
+      "source": "Operating Income",
+      "target": "Interest Expenses",
+      "value": 92
+    },
+    {
+      "source": "Interest Income",
+      "target": "Net Income (TSLA only)",
+      "value": 429
+    },
+    {
+      "source": "Operating Income",
+      "target": "Other income, net",
+      "value": 270
+    },
+    {
+      "source": "Operating Income",
+      "target": "Net income attributable to noncontrolling interests",
+      "value": 16
+    },
+    { "source": "Operating Income", "target": "Income Tax", "value": 601 },
+    {
+      "source": "Operating Income",
+      "target": "Net Income (TSLA only)",
+      "value": 2167
+    },
+    {
+      "source": "Gross Profit",
+      "target": "Operating Expenses",
+      "value": 2280
+    },
+    { "source": "Gross Profit", "target": "Operating Income", "value": 2717 }
+  ]
+}

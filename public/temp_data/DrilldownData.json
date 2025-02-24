@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Productivity & Business Processes Revenue",
+    "value": 28317,
+    "children": [
+      {
+        "label": "Microsoft 365 Commercial Products and Cloud Services Revenue",
+        "value": 20449
+      },
+      { "label": "LinkedIn Revenue", "value": 4292 },
+      {
+        "label": "Dynamics Products and Cloud Services Revenue",
+        "value": 1849
+      },
+      {
+        "label": "Microsoft 365 Consumer Products and Cloud Services Revenue",
+        "value": 1727
+      }
+    ]
+  },
+  {
+    "label": "Intelligent Cloud Revenue",
+    "value": 24092,
+    "children": [
+      {
+        "label": "Server Products and Cloud Services Revenue",
+        "value": 22155
+      },
+      {
+        "label": "Enterprise and Partner Services Revenue",
+        "value": 1928
+      }
+    ]
+  },
+  {
+    "label": "More Personal Computing Revenue",
+    "value": 13176,
+    "children": [
+      { "label": "Gaming Revenue", "value": 5621 },
+      {
+        "label": "Windows and Devices Revenue",
+        "value": 4329
+      },
+      {
+        "label": "Search and News Advertising Revenue",
+        "value": 3225
+      }
+    ]
+  }
+]
