@@ -26,15 +26,15 @@ import {
   Radio,
 } from '@mui/material';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import { parseData } from '../utils/parseData';
+import { parseData } from '../../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
 import MemoizedRow from './MemoizedRow';
-import ChartModal from './ChartModal';
+import ChartModal from '../chartsViewer/ChartModal';
 
 const pdfUrl = "/doc_files/tesla_doc_1.pdf";
 
 // Dynamically import the PdfHighlighterModal so that it only loads on the client.
-const EnhancedDocViewer = dynamic(() => import('./DocViewerModal'), {
+const EnhancedDocViewer = dynamic(() => import('../docViewer/DocViewerModal'), {
   ssr: false,
 });
 

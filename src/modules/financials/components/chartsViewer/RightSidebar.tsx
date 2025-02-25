@@ -44,15 +44,9 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
   labelColor,
   setLabelColor,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const [colorPickerType, setColorPickerType] = useState<'background' | 'bar' | 'label'>('background');
-
-  const handleToggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-    toggleSidebar();
-  };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
@@ -76,11 +70,11 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
   return (
     <Box
       sx={{
-        width: isExpanded ? '10%' : '2%',
+        width: isSidebarExpanded ? '15%' : '2%',
         borderLeft: '1px solid',
         borderColor: 'divider',
         backgroundColor: 'white',
-        p: isExpanded ? 2 : 0,
+        p: isSidebarExpanded ? 2 : 0,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -89,14 +83,14 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
         position: 'relative',
       }}
     >
-      <IconButton onClick={handleToggleSidebar} sx={{ mb: 1, position: 'absolute', top: 8, left: isExpanded ? -10 : -8, zIndex: 1 }}>
-        {isExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+      <IconButton onClick={toggleSidebar} sx={{ mb: 1, position: 'absolute', top: 8, left: isSidebarExpanded ? -10 : -8, zIndex: 1 }}>
+        {isSidebarExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}
       </IconButton>
       <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth" sx={{ mt: 4 }}>
         <Tab icon={<BarChartIcon />} />
         <Tab icon={<SettingsIcon />} />
       </Tabs>
-      {isExpanded && tabIndex === 0 && (
+      {isSidebarExpanded && tabIndex === 0 && (
         <Box
           sx={{
             display: 'flex',
@@ -120,7 +114,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
           ))}
         </Box>
       )}
-      {isExpanded && tabIndex === 1 && (
+      {isSidebarExpanded && tabIndex === 1 && (
         <Box sx={{ mt: 4, width: '100%' }}>
           <Settings
             backgroundColor={backgroundColor}

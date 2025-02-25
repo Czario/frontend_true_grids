@@ -52,7 +52,7 @@ const MultiSeriesLineChart: React.FC<MultiSeriesLineChartProps> = ({
   });
 
   return (
-    <svg width={width} height={height} style={{ backgroundColor }}>
+    <svg width="100%" height="100%" style={{ backgroundColor }}>
       <defs>
         <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={barColor} stopOpacity={0.8} />

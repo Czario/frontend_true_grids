@@ -23,6 +23,8 @@ interface LeftSidebarProps {
   setSearchTerm: (value: string) => void;
   tabIndex: number;
   handleTabChange: (event: React.SyntheticEvent, newValue: number) => void;
+  isSidebarExpanded: boolean;
+  toggleSidebar: () => void;
 }
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({
@@ -33,13 +35,10 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
   setSearchTerm,
   tabIndex,
   handleTabChange,
+  isSidebarExpanded,
+  toggleSidebar,
 }) => {
   const [renderedItems, setRenderedItems] = useState<any[]>([]);
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
-
-  const toggleSidebar = () => {
-    setIsSidebarExpanded(!isSidebarExpanded);
-  };
 
   useEffect(() => {
     console.log('Original items:', items);

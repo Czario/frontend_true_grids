@@ -1,21 +1,12 @@
 import React from 'react';
-import { Bar } from '@visx/shape';
+import { LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleBand, scaleLinear } from '@visx/scale';
-import { AxisLeft, AxisBottom } from '@visx/axis';
+import { scaleLinear, scaleTime } from '@visx/scale';
+import { AxisBottom, AxisLeft } from '@visx/axis';
+import { curveMonotoneX } from '@visx/curve';
 
-interface DataPoint {
-  label: string;
-  value: number;
-}
-
-interface Series {
-  name: string;
-  data: DataPoint[];
-}
-
-interface MultiSeriesBarChartProps {
-  series: Series[];
+interface LineChartProps {
+  data: Record<string, number>;
   width: number;
   height: number;
   backgroundColor?: string;
@@ -23,10 +14,8 @@ interface MultiSeriesBarChartProps {
   labelColor?: string;
 }
 
-const colors = ["#3f51b5", "#f50057", "#4caf50", "#ff9800"];
-
-const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
-  series,
+const LineChart: React.FC<LineChartProps> = ({
+  data,
   width,
   height,
   backgroundColor = 'white',
@@ -37,24 +26,26 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  const allData = series.flatMap(s => s.data);
-  const labels = Array.from(new Set(allData.map(d => d.label)));
-  const xScale = scaleBand<string>({
-    domain: labels,
-    padding: 0.2,
+  const chartData = Object.entries(data).map(([key, value]) => ({
+    label: key,
+    value: Number(value),
+  }));
+
+  const xScale = scaleTime<number>({
+    domain: [new Date(chartData[0].label), new Date(chartData[chartData.length - 1].label)],
     range: [0, xMax],
   });
 
   const yScale = scaleLinear<number>({
-    domain: [0, Math.max(...allData.map(d => d.value))],
+    domain: [0, Math.max(...chartData.map(d => d.value))],
     range: [yMax, 0],
     nice: true,
   });
 
   return (
-    <svg width={width} height={height} style={{ backgroundColor }}>
+    <svg width="100%" height="100%" style={{ backgroundColor }}>
       <defs>
-        <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={barColor} stopOpacity={0.8} />
           <stop offset="100%" stopColor={barColor} stopOpacity={0.8} />
         </linearGradient>
@@ -75,27 +66,14 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
             />
           );
         })}
-        {series.map((s, seriesIndex) =>
-          s.data.map((d, i) => {
-            const barWidth = xScale.bandwidth() / series.length;
-            const barHeight = yMax - (yScale(d.value) ?? 0);
-            const barX = (xScale(d.label) ?? 0) + seriesIndex * barWidth;
-            const barY = yScale(d.value);
-            return (
-              <Bar
-                key={`bar-${seriesIndex}-${i}`}
-                x={barX}
-                y={barY}
-                width={barWidth}
-                height={barHeight}
-                fill="url(#barGradient)"
-                stroke="#388e3c"
-                strokeWidth={1}
-                aria-label={`Series: ${s.name}, Label: ${d.label}, Value: ${d.value}`}
-              />
-            );
-          })
-        )}
+        <LinePath
+          data={chartData}
+          x={d => xScale(new Date(d.label)) ?? 0}
+          y={d => yScale(d.value) ?? 0}
+          stroke="url(#lineGradient)"
+          strokeWidth={2}
+          curve={curveMonotoneX}
+        />
         <AxisLeft
           scale={yScale}
           stroke="#333"
@@ -123,4 +101,4 @@ const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
   );
 };
 
-export default MultiSeriesBarChart;
+export default LineChart;

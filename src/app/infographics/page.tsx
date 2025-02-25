@@ -1,8 +1,11 @@
-import React from 'react'
-import InfographicsBase from '../../modules/infographics/components/InfographicsBase'
+"use client";
+import dynamic from 'next/dynamic';
 
-export default function page() {
-  return (
-    <InfographicsBase />
-  )
+const FinancialInfographic = dynamic(
+  () => import('@/modules/infographics/components/SortableComponent'),
+  { ssr: false }
+);
+
+export default function DashboardPage() {
+  return <FinancialInfographic />;
 }

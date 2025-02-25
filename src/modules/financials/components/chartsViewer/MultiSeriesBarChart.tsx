@@ -2,10 +2,20 @@ import React from 'react';
 import { Bar } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleBand, scaleLinear } from '@visx/scale';
-import { AxisBottom, AxisLeft } from '@visx/axis';
+import { AxisLeft, AxisBottom } from '@visx/axis';
 
-interface BarChartProps {
-  data: Record<string, number>;
+interface DataPoint {
+  label: string;
+  value: number;
+}
+
+interface Series {
+  name: string;
+  data: DataPoint[];
+}
+
+interface MultiSeriesBarChartProps {
+  series: Series[];
   width: number;
   height: number;
   backgroundColor?: string;
@@ -13,30 +23,36 @@ interface BarChartProps {
   labelColor?: string;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data, width, height, backgroundColor = 'white', barColor = '#4caf50', labelColor = '#000000' }) => {
+const colors = ["#3f51b5", "#f50057", "#4caf50", "#ff9800"];
+
+const MultiSeriesBarChart: React.FC<MultiSeriesBarChartProps> = ({
+  series,
+  width,
+  height,
+  backgroundColor = 'white',
+  barColor = '#4caf50',
+  labelColor = '#000000',
+}) => {
   const margin = { top: 40, right: 30, bottom: 50, left: 50 };
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  const chartData = Object.entries(data).map(([key, value]) => ({
-    label: key,
-    value: Number(value),
-  }));
-
+  const allData = series.flatMap(s => s.data);
+  const labels = Array.from(new Set(allData.map(d => d.label)));
   const xScale = scaleBand<string>({
-    domain: chartData.map(d => d.label),
-    padding: 0.2,
+    domain: labels,
+    padding: 0.1, // Decreased padding to increase bar size
     range: [0, xMax],
   });
 
   const yScale = scaleLinear<number>({
-    domain: [0, Math.max(...chartData.map(d => d.value))],
+    domain: [0, Math.max(...allData.map(d => d.value))],
     range: [yMax, 0],
     nice: true,
   });
 
   return (
-    <svg width={width} height={height} style={{ backgroundColor }}>
+    <svg width="100%" height="100%" style={{ backgroundColor }}>
       <defs>
         <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={barColor} stopOpacity={0.8} />
@@ -59,25 +75,27 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height, backgroundColo
             />
           );
         })}
-        {chartData.map((d, i) => {
-          const barWidth = xScale.bandwidth();
-          const barHeight = yMax - (yScale(d.value) ?? 0);
-          const barX = xScale(d.label);
-          const barY = yScale(d.value);
-          return (
-            <Bar
-              key={`bar-${i}`}
-              x={barX}
-              y={barY}
-              width={barWidth}
-              height={barHeight}
-              fill="url(#barGradient)"
-              stroke="#388e3c"
-              strokeWidth={1}
-              aria-label={`Label: ${d.label}, Value: ${d.value}`}
-            />
-          );
-        })}
+        {series.map((s, seriesIndex) =>
+          s.data.map((d, i) => {
+            const barWidth = xScale.bandwidth() / series.length;
+            const barHeight = yMax - (yScale(d.value) ?? 0);
+            const barX = (xScale(d.label) ?? 0) + seriesIndex * barWidth;
+            const barY = yScale(d.value);
+            return (
+              <Bar
+                key={`bar-${seriesIndex}-${i}`}
+                x={barX}
+                y={barY}
+                width={barWidth}
+                height={barHeight}
+                fill="url(#barGradient)"
+                stroke="#388e3c"
+                strokeWidth={1}
+                aria-label={`Series: ${s.name}, Label: ${d.label}, Value: ${d.value}`}
+              />
+            );
+          })
+        )}
         <AxisLeft
           scale={yScale}
           stroke="#333"
@@ -105,4 +123,4 @@ const BarChart: React.FC<BarChartProps> = ({ data, width, height, backgroundColo
   );
 };
 
-export default BarChart;
+export default MultiSeriesBarChart;

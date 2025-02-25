@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppStore } from "@/contexts/AppStoreContext";
 import { fetchStatement } from "@/modules/financials/services/apiStatementService";
 import { logoutService } from "@/modules/auth/services/authService";
-import StatementTable from "@/modules/financials/components/StatementTable";
+import StatementTable from "@/modules/financials/components/dataGrid/StatementTable";
 import Navbar from "@/components/Navbar";
 import {
   Box,

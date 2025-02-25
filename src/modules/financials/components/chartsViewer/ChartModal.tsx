@@ -39,6 +39,8 @@ const ChartModal: React.FC<ChartModalProps> = ({
   const [backgroundColor, setBackgroundColor] = useState('white');
   const [barColor, setBarColor] = useState('#4caf50');
   const [labelColor, setLabelColor] = useState('#000000');
+  const [isLeftSidebarExpanded, setIsLeftSidebarExpanded] = useState(true);
+  const [isRightSidebarExpanded, setIsRightSidebarExpanded] = useState(true);
 
   const allCharts = ['Bar Chart', 'Line Chart', 'Pie Chart', 'Scatter Chart'];
 
@@ -55,6 +57,14 @@ const ChartModal: React.FC<ChartModalProps> = ({
 
   const toggleFullscreen = () => {
     setIsFullscreen(prev => !prev);
+  };
+
+  const toggleLeftSidebar = () => {
+    setIsLeftSidebarExpanded(prev => !prev);
+  };
+
+  const toggleRightSidebar = () => {
+    setIsRightSidebarExpanded(prev => !prev);
   };
 
   const flattenRows = (rows: ParsedRow[]): ParsedRow[] => {
@@ -113,8 +123,18 @@ const ChartModal: React.FC<ChartModalProps> = ({
     return { name: seriesName, data };
   });
 
-  const chartWidth = 600;
-  const chartHeight = 400;
+  const calculateChartDimensions = () => {
+    const baseWidth = isFullscreen ? window.innerWidth : window.innerWidth * 0.8;
+    const baseHeight = isFullscreen ? window.innerHeight : window.innerHeight * 0.8;
+    const width = baseWidth * (
+      isLeftSidebarExpanded && isRightSidebarExpanded ? 0.5 :
+      isLeftSidebarExpanded || isRightSidebarExpanded ? 0.7 : 0.9
+    );
+    const height = baseHeight * 0.8;
+    return { width, height };
+  };
+
+  const { width: chartWidth, height: chartHeight } = calculateChartDimensions();
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -165,12 +185,17 @@ const ChartModal: React.FC<ChartModalProps> = ({
             setSearchTerm={setSearchTerm}
             tabIndex={tabIndex}
             handleTabChange={handleTabChange}
+            isSidebarExpanded={isLeftSidebarExpanded}
+            toggleSidebar={toggleLeftSidebar}
           />
           <Box
             sx={{
               flex: 1,
               p: 2,
               overflowY: 'auto',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             {selectedRowsData.length === 0 ? (
@@ -181,8 +206,8 @@ const ChartModal: React.FC<ChartModalProps> = ({
                   seriesData.length > 1 ? (
                     <MultiSeriesBarChart
                       series={seriesData}
-                      width={chartWidth}
-                      height={chartHeight}
+                      width={chartWidth} // Ensure width is a number
+                      height={chartHeight} // Ensure height is a number
                       backgroundColor={backgroundColor}
                       barColor={barColor}
                       labelColor={labelColor}
@@ -193,8 +218,8 @@ const ChartModal: React.FC<ChartModalProps> = ({
                         acc[cur.label] = cur.value;
                         return acc;
                       }, {} as Record<string, number>)}
-                      width={chartWidth}
-                      height={chartHeight}
+                      width={chartWidth} // Ensure width is a number
+                      height={chartHeight} // Ensure height is a number
                       backgroundColor={backgroundColor}
                       barColor={barColor}
                       labelColor={labelColor}
@@ -204,8 +229,8 @@ const ChartModal: React.FC<ChartModalProps> = ({
                   seriesData.length > 1 ? (
                     <MultiSeriesLineChart
                       series={seriesData}
-                      width={chartWidth}
-                      height={chartHeight}
+                      width={chartWidth} // Ensure width is a number
+                      height={chartHeight} // Ensure height is a number
                       backgroundColor={backgroundColor}
                       barColor={barColor}
                       labelColor={labelColor}
@@ -216,8 +241,8 @@ const ChartModal: React.FC<ChartModalProps> = ({
                         acc[cur.label] = cur.value;
                         return acc;
                       }, {} as Record<string, number>)}
-                      width={chartWidth}
-                      height={chartHeight}
+                      width={chartWidth} // Ensure width is a number
+                      height={chartHeight} // Ensure height is a number
                       backgroundColor={backgroundColor}
                       barColor={barColor}
                       labelColor={labelColor}
@@ -230,8 +255,8 @@ const ChartModal: React.FC<ChartModalProps> = ({
             )}
           </Box>
           <RightSidebar
-            isSidebarExpanded={false}
-            toggleSidebar={() => {}}
+            isSidebarExpanded={isRightSidebarExpanded}
+            toggleSidebar={toggleRightSidebar}
             allCharts={allCharts}
             selectedChart={selectedChart}
             handleChartClick={handleChartClick}
