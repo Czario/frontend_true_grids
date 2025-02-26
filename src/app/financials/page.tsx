@@ -28,7 +28,7 @@ const StatementButton = styled(Button)<StatementButtonProps>(
   ({ theme, selected }) => ({
     fontWeight: selected ? 300 : 200,
     textTransform: "capitalize",
-    fontSize: "0.875rem", // Decreased font size
+    fontSize: "0.855rem",
     transition: "all 0.3s ease",
     border: selected
       ? `2px solid ${theme.palette.grey[500]}` 
@@ -41,9 +41,8 @@ const StatementButton = styled(Button)<StatementButtonProps>(
         ? theme.palette.grey[600] 
         : theme.palette.action.hover,
     },
-    padding: "4px 6px",
+    padding: "2px 6px",
     borderRadius: "8px",
-    margin: "0 4px",
   })
 );
 
@@ -129,7 +128,7 @@ const Home: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start", // Changed alignment to left
-          gap: 1, // Decreased gap between elements
+          gap: 0, // Decreased gap between elements
           width: "100%",
           mb: 2, // Decreased bottom margin
         }}
@@ -153,7 +152,7 @@ const Home: React.FC = () => {
             onClick={() => setStatementType("Cash Flow")}
             selected={statementType === "Cash Flow"}
           >
-            Cashflow Statement
+            Cashflow
           </StatementButton>
           <StatementButton
             onClick={() => setStatementType("Balance Sheet")}

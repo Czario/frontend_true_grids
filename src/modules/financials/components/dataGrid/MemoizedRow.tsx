@@ -1,11 +1,22 @@
+'use client';
+
 import React, { memo, forwardRef, RefCallback } from 'react';
-import { TableRow, TableCell, IconButton, Box, styled, Theme, Tooltip, tooltipClasses } from '@mui/material';
+import {
+  TableRow,
+  TableCell,
+  IconButton,
+  Box,
+  styled,
+  Theme,
+  Tooltip,
+  tooltipClasses,
+} from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { flexRender, Row } from '@tanstack/react-table';
 import { ParsedRow } from '@/modules/financials/interfaces/financials';
 
-const FIRST_COLUMN_WIDTH = 300; // Increased by 50%
+const FIRST_COLUMN_WIDTH = 300;
 const DEFAULT_COLUMN_WIDTH = 100;
 const cellPadding = 8;
 
@@ -17,8 +28,8 @@ const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
   padding: cellPadding,
   borderBottom: `1px solid ${theme.palette.divider}`,
   margin: 0,
-  fontSize: '0.875rem', // Reduced text size
-  fontWeight: 'normal', // Ensure normal weight for non-parent rows
+  fontSize: '0.875rem',
+  fontWeight: 'normal',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
@@ -34,7 +45,7 @@ const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme
   '&:hover': {
     backgroundColor: theme.palette.action.selected,
   },
-  fontWeight: 'normal', // Ensure normal weight for non-parent rows
+  fontWeight: 'normal',
 }));
 
 const CustomTooltip = styled(({ className, ...props }: any) => (
@@ -54,16 +65,18 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
 
 export interface MemoizedRowProps {
   row: Row<ParsedRow>;
+  rowKey?: string; // Optional composite key passed from parent.
   onCellClick: (value: string) => void;
-  isSticky?: boolean; // true if this parent row should stick vertically.
-  headerHeight: number; // measured header bottom offset relative to container.
+  isSticky?: boolean;
+  headerHeight: number;
   setRowRef?: RefCallback<HTMLTableRowElement>;
-  isParent: boolean; // true if this is a parent row
+  isParent: boolean;
+  sx?: object;
 }
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
-    ({ row, onCellClick, isSticky, headerHeight, setRowRef, isParent }, ref) => {
+    ({ row, rowKey, onCellClick, isSticky, headerHeight, setRowRef, isParent, sx }, ref) => {
       return (
         <StyledTableRow
           ref={(node) => {
@@ -72,10 +85,9 @@ const MemoizedRow = memo(
           }}
           hover
           role="row"
-          data-row-id={row.id}
-          sx={{ height: '40px' }}
+          data-row-key={rowKey || row.id}
+          sx={{ height: '40px', ...sx }}
         >
-          {/* First Column */}
           <StyledFirstColumnCell
             sx={(theme) => ({
               position: 'sticky',
@@ -91,11 +103,12 @@ const MemoizedRow = memo(
                 ? `inset -1px 0 0 0 ${theme.palette.divider}`
                 : undefined,
               ...(isSticky && { backgroundColor: theme.palette.background.paper }),
-              fontWeight: isParent ? 'bold' : 'normal', // Make parent rows bold
+              fontWeight: isParent ? 'bold' : 'normal',
             })}
             role="cell"
           >
             <Box display="flex" alignItems="center">
+              {/* Expand/Collapse Button placed before the name */}
               <IconButton
                 size="small"
                 onClick={row.getToggleExpandedHandler()}
@@ -126,11 +139,9 @@ const MemoizedRow = memo(
               </CustomTooltip>
             </Box>
           </StyledFirstColumnCell>
-
-          {/* Other Cells */}
-          {row.getVisibleCells().slice(1).map((cell) => (
+          {row.getVisibleCells().slice(1).map((cell, cellIndex) => (
             <StyledTableCell
-              key={cell.id}
+              key={`${cell.id}-${cellIndex}`}
               sx={(theme) => ({
                 width: DEFAULT_COLUMN_WIDTH,
                 minWidth: DEFAULT_COLUMN_WIDTH,
@@ -141,7 +152,7 @@ const MemoizedRow = memo(
                   zIndex: 9,
                   backgroundColor: theme.palette.background.paper,
                 }),
-                fontWeight: isParent ? 'bold' : 'normal', // Make parent rows bold
+                fontWeight: isParent ? 'bold' : 'normal',
               })}
               role="cell"
               onClick={() => onCellClick(cell.getValue() as string)}
