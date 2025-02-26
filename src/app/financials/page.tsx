@@ -14,6 +14,8 @@ import {
   CircularProgress,
   Typography,
   styled,
+  AppBar,
+  Toolbar,
 } from "@mui/material";
 import { DataItem } from "@/modules/financials/interfaces/financials";
 import withAuth from "@/hocs/withAuth";
@@ -26,17 +28,17 @@ const StatementButton = styled(Button)<StatementButtonProps>(
   ({ theme, selected }) => ({
     fontWeight: selected ? 300 : 200,
     textTransform: "capitalize",
-    fontSize: "1rem",
+    fontSize: "0.875rem", // Decreased font size
     transition: "all 0.3s ease",
     border: selected
-      ? `2px solid ${theme.palette.primary.main}`
-      : "2px solid transparent",
-    backgroundColor: selected ? theme.palette.primary.dark : "transparent",
+      ? `2px solid ${theme.palette.grey[500]}` 
+      : `1px solid ${theme.palette.divider}`,
+    backgroundColor: selected ? theme.palette.grey[700] : "transparent", 
     color: selected ? "white" : theme.palette.text.primary,
     "&:hover": {
       transform: "translateY(-2px)",
       backgroundColor: selected
-        ? theme.palette.primary.light
+        ? theme.palette.grey[600] 
         : theme.palette.action.hover,
     },
     padding: "4px 6px",
@@ -112,29 +114,30 @@ const Home: React.FC = () => {
 
   return (
     <div style={{ padding: "5px" }}>
-      <Navbar />
+      <AppBar position="static" sx={{ backgroundColor: "grey.800" }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1, color: "white" }}>
+            TrueGrids
+          </Typography>
+          <Button color="inherit" onClick={() => router.push("/logout")}>
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          gap: 3,
+          alignItems: "flex-start", // Changed alignment to left
+          gap: 1, // Decreased gap between elements
           width: "100%",
-          mb: 4,
+          mb: 2, // Decreased bottom margin
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            fontWeight: 700,
-            color: "primary.main",
-            textAlign: "center",
-            textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
-          }}
-        >
-          TrueGrids Financials
-        </Typography>
+        
+        <br />
+        <br />
+        <br />
 
         <ButtonGroup
           variant="outlined"
@@ -144,19 +147,19 @@ const Home: React.FC = () => {
             onClick={() => setStatementType("Income Statement")}
             selected={statementType === "Income Statement"}
           >
-            📈 Income Statement
+            Income Statement
           </StatementButton>
           <StatementButton
             onClick={() => setStatementType("Cash Flow")}
             selected={statementType === "Cash Flow"}
           >
-            💰 Cashflow Statement
+            Cashflow Statement
           </StatementButton>
           <StatementButton
             onClick={() => setStatementType("Balance Sheet")}
             selected={statementType === "Balance Sheet"}
           >
-            🏦 Balance Sheet
+            Balance Sheet
           </StatementButton>
         </ButtonGroup>
       </Box>

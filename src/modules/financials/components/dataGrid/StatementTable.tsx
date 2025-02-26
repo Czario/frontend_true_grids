@@ -26,6 +26,9 @@ import {
   Radio,
 } from '@mui/material';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { parseData } from '../../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
 import MemoizedRow from './MemoizedRow';
@@ -33,14 +36,14 @@ import ChartModal from '../chartsViewer/ChartModal';
 
 const pdfUrl = "/doc_files/tesla_doc_1.pdf";
 
-// Dynamically import the PdfHighlighterModal so that it only loads on the client.
+// Dynamically import the PdfHighlighterModal
 const EnhancedDocViewer = dynamic(() => import('../docViewer/DocViewerModal'), {
   ssr: false,
 });
 
 const DEFAULT_HEADER_HEIGHT = 56;
-const FIRST_COLUMN_WIDTH = 400;
-const DEFAULT_COLUMN_WIDTH = 200;
+const FIRST_COLUMN_WIDTH = 300;
+const DEFAULT_COLUMN_WIDTH = 100;
 const cellPadding = 8;
 
 const StyledTableHeadCell = styled('th')(({ theme }: { theme: Theme }) => ({
@@ -49,18 +52,30 @@ const StyledTableHeadCell = styled('th')(({ theme }: { theme: Theme }) => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   padding: cellPadding,
-  fontWeight: 'bold',
+  fontWeight: 'bold', // Keep header bold
   margin: 0,
+  boxShadow: theme.shadows[1], 
+  fontFamily: 'Roboto, sans-serif',
+  fontSize: '0.875rem', 
 }));
 
 const StyledSlider = styled(Slider)(({ theme }: { theme: Theme }) => ({
-  width: '100%',
+  width: '50%',
   '& .MuiSlider-thumb': {
     width: 10,
     height: 10,
     borderRadius: 0,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.grey[700],
+    boxShadow: theme.shadows[2], 
   },
+  '& .MuiSlider-track': {
+    backgroundColor: theme.palette.grey[500],
+  },
+  '& .MuiSlider-rail': {
+    backgroundColor: theme.palette.grey[300],
+  },
+  fontFamily: 'Roboto, sans-serif',
+  fontSize: '0.875rem',
 }));
 
 interface StatementTableProps {
@@ -74,6 +89,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [selectedCellValue, setSelectedCellValue] = useState<string | null>(null);
   const [stickyRowId, setStickyRowId] = useState<string | null>(null);
   const [headerHeight, setHeaderHeight] = useState(DEFAULT_HEADER_HEIGHT);
+  const [reversed, setReversed] = useState(false); // State to track column order
 
   // State for the Bar Chart Modal.
   const [ChartModalOpen, setChartModalOpen] = useState(false);
@@ -85,6 +101,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
 
   // State for managing expanded rows
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleExpandAll = () => {
     const newExpanded: Record<string, boolean> = {};
@@ -103,10 +120,16 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     };
     expandAllRows(table.getRowModel().rows);
     setExpanded(newExpanded);
+    setIsExpanded(true);
   };
 
   const handleCollapseAll = () => {
     setExpanded({});
+    setIsExpanded(false);
+  };
+
+  const handleReverseColumns = () => {
+    setReversed(!reversed); // Toggle the reversed state
   };
 
   // Measure header offset.
@@ -183,17 +206,21 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             handleOpenChartModal(row.id);
           }}
           size="small"
-          sx={{ color: 'primary.main' }}
+          sx={{ color: 'red' }} // Changed color to red
         >
-          <BarChartIcon sx={{ color: 'primary.main' }} />
+          <BarChartIcon sx={{ color: 'red' }} /> {/* Changed color to red */}
         </IconButton>
       ),
       size: DEFAULT_COLUMN_WIDTH / 2,
     };
 
-    const newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1)];
+    let newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1)];
+    if (reversed) {
+      newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1).reverse()];
+    }
+
     return { columns: newColumns, rows: parsedData.rows, headerRow };
-  }, [data, years, maxYears, handleOpenChartModal]);
+  }, [data, years, maxYears, handleOpenChartModal, reversed]);
 
   const table = useReactTable<ParsedRow>({
     data: rows,
@@ -254,7 +281,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   return (
     <>
       <Box sx={{ padding: 2 }}>
-        <Box display="flex" alignItems="center" justifyContent="center">
+        <Box display="flex" alignItems="center" justifyContent="space-between">
           <StyledSlider
             value={maxYears ? 11 : years}
             onChange={handleSliderChange}
@@ -265,24 +292,22 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             min={1}
             max={11}
             step={null}
-            sx={{ width: '50%' }}
+            sx={{ width: '28%', boxShadow: 3 }}
           />
-        </Box>
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <RadioGroup row>
-            <FormControlLabel
-              value="expand"
-              control={<Radio />}
-              label="Expand All"
-              onClick={handleExpandAll}
-            />
-            <FormControlLabel
-              value="collapse"
-              control={<Radio />}
-              label="Collapse All"
-              onClick={handleCollapseAll}
-            />
-          </RadioGroup>
+          <Box sx={{ marginLeft: 2, display: 'flex', alignItems: 'center', boxShadow: 3 }}> {/* Added shadow */}
+            <IconButton size="small" onClick={handleReverseColumns} aria-label="Reverse Columns">
+              <SwapHorizIcon />
+            </IconButton>
+            {isExpanded ? (
+              <IconButton size="small" onClick={handleCollapseAll} aria-label="Collapse All">
+                <UnfoldLessIcon />
+              </IconButton>
+            ) : (
+              <IconButton size="small" onClick={handleExpandAll} aria-label="Expand All">
+                <UnfoldMoreIcon />
+              </IconButton>
+            )}
+          </Box>
         </Box>
       </Box>
       <TableContainer
@@ -292,6 +317,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
           overflow: 'auto',
           position: 'relative',
           backgroundColor: 'background.paper',
+          boxShadow: 3, // Added shadow
         }}
         role="table"
       >
@@ -302,6 +328,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             minWidth:
               FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
             borderCollapse: 'collapse',
+            boxShadow: 3, // Added shadow
           }}
         >
           <TableHead>
@@ -318,6 +345,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   width: FIRST_COLUMN_WIDTH,
                   minWidth: FIRST_COLUMN_WIDTH,
                   textAlign: 'left',
+                  boxShadow: 3, // Added shadow
                 }}
                 role="columnheader"
               >
@@ -337,6 +365,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                     zIndex: 2,
                     backgroundColor: 'background.paper',
                     textAlign: 'right',
+                    boxShadow: 3, // Added shadow
                   }}
                   role="columnheader"
                 >
@@ -357,6 +386,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   isSticky={isSticky}
                   headerHeight={headerHeight}
                   setRowRef={isParent ? setParentRowRef(row.id) : undefined}
+                  isParent={isParent} // Pass isParent prop to MemoizedRow
                 />
               );
             })}
