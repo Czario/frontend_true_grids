@@ -18,7 +18,7 @@ import { ParsedRow } from '@/modules/financials/interfaces/financials';
 
 const FIRST_COLUMN_WIDTH = 300;
 const DEFAULT_COLUMN_WIDTH = 100;
-const cellPadding = 8;
+const cellPadding = 1;
 
 const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
   boxSizing: 'border-box',
@@ -30,9 +30,11 @@ const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
   margin: 0,
   fontSize: '0.875rem',
   fontWeight: 'normal',
+  lineHeight: 1,
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
+  lineHeight: 1,
   '&:hover': {
     backgroundColor: theme.palette.action.selected,
   },
@@ -42,10 +44,9 @@ const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme
   padding: cellPadding,
   margin: 0,
   backgroundColor: theme.palette.background.paper,
-  '&:hover': {
-    backgroundColor: theme.palette.action.selected,
-  },
   fontWeight: 'normal',
+  zIndex: 3, // Ensure the first column is above other content
+  opacity: 1, // Ensure the first column is fully opaque
 }));
 
 const CustomTooltip = styled(({ className, ...props }: any) => (
@@ -65,7 +66,7 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
 
 export interface MemoizedRowProps {
   row: Row<ParsedRow>;
-  rowKey?: string; // Optional composite key passed from parent.
+  rowKey?: string;
   onCellClick: (value: string) => void;
   isSticky?: boolean;
   headerHeight: number;
@@ -83,26 +84,26 @@ const MemoizedRow = memo(
             if (setRowRef) setRowRef(node);
             if (typeof ref === 'function') ref(node);
           }}
-          hover
           role="row"
           data-row-key={rowKey || row.id}
-          sx={{ height: '40px', ...sx }}
+          sx={{ height: '10px', ...sx }}
         >
           <StyledFirstColumnCell
             sx={(theme) => ({
               position: 'sticky',
               left: 0,
               top: isSticky ? headerHeight : 'auto',
-              zIndex: isSticky ? 10 : 2,
+              zIndex: 3, // Ensure the first column is above other content
               borderRight: `1px solid ${theme.palette.divider}`,
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
-              paddingLeft: `${row.depth * 0.75}rem`,
+              paddingLeft: `${row.depth * 1.5}rem`, // Increased indentation
               textAlign: 'left',
               boxShadow: isSticky
                 ? `inset -1px 0 0 0 ${theme.palette.divider}`
                 : undefined,
-              ...(isSticky && { backgroundColor: theme.palette.background.paper }),
+              backgroundColor: theme.palette.background.paper, // Ensure background color is not transparent
+              opacity: 1, // Ensure the first column is fully opaque
               fontWeight: isParent ? 'bold' : 'normal',
             })}
             role="cell"
@@ -123,7 +124,7 @@ const MemoizedRow = memo(
               </IconButton>
               <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow>
                 <Box
-                  ml={1}
+                  ml={-1} // Reduced space between arrow and text
                   sx={{
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -151,6 +152,7 @@ const MemoizedRow = memo(
                   top: headerHeight,
                   zIndex: 9,
                   backgroundColor: theme.palette.background.paper,
+                  opacity: 1, // Ensure sticky cells are opaque
                 }),
                 fontWeight: isParent ? 'bold' : 'normal',
               })}
