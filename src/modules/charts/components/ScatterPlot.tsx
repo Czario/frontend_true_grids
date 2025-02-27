@@ -1,93 +1,121 @@
-import React, { useMemo, useCallback, useRef } from "react";
+import React, { useMemo, useCallback, useRef, useState } from "react";
 import { Group } from "@visx/group";
 import { Circle } from "@visx/shape";
-import { GradientPinkRed } from "@visx/gradient";
-import { scaleLinear } from "@visx/scale";
-import genRandomNormalPoints, {
-  PointsRange,
-} from "@visx/mock-data/lib/generators/genRandomNormalPoints";
+import { scaleLinear, scaleOrdinal } from "@visx/scale";
+import { AxisLeft, AxisBottom } from "@visx/axis";
 import { withTooltip, Tooltip } from "@visx/tooltip";
 import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
-import { voronoi } from "@visx/voronoi";
 import { localPoint } from "@visx/event";
+import { GridColumns, GridRows } from "@visx/grid";
+import Slider from "@mui/material/Slider";
+import Box from "@mui/material/Box";
 
-const points: PointsRange[] = genRandomNormalPoints(10, /* seed= */ 0.5).filter(
-  (_, i) => i < 10
-);
-
-const x = (d: PointsRange) => d[0];
-const y = (d: PointsRange) => d[1];
-
-export type DotsProps = {
+export type ScatterPlotProps = {
   width: number;
   height: number;
-  showControls?: boolean;
+  selectedStocks: string[];
+  xAxisField: string;
+  yAxisField: string;
+  financialData: FinancialData[];
+  keys: KeyMetadata[];
 };
+
+type FinancialData = {
+  stock: string;
+  [key: string]: number | string;
+};
+
+export interface KeyMetadata {
+  key: string;
+  color: string;
+}
 
 let tooltipTimeout: number;
 
-export default withTooltip<DotsProps, PointsRange>(
+export default withTooltip<ScatterPlotProps, FinancialData>(
   ({
     width,
     height,
+    selectedStocks,
+    financialData = [],
+    keys = [],
+    xAxisField,
+    yAxisField,
     hideTooltip,
     showTooltip,
     tooltipOpen,
     tooltipData,
     tooltipLeft,
     tooltipTop,
-  }: DotsProps & WithTooltipProvidedProps<PointsRange>) => {
+  }: ScatterPlotProps & WithTooltipProvidedProps<FinancialData>) => {
     if (width < 10) return null;
+    const [sizeMultiplier, setSizeMultiplier] = useState(1);
     const svgRef = useRef<SVGSVGElement>(null);
+    const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+
+    const filteredData = useMemo(
+      () => financialData.filter((d) => selectedStocks.includes(d.stock)),
+      [selectedStocks]
+    );
+
+    const colorScale = scaleOrdinal<string, string>({
+      domain: keys.map((k) => k.key),
+      range: keys.map((k) => k.color),
+    });
+
+    const xMax = width - margin.right - margin.left;
     const xScale = useMemo(
       () =>
         scaleLinear<number>({
-          domain: [1.3, 2.2],
-          range: [0, width],
-          clamp: true,
+          domain: [
+            Math.min(...financialData.map((d) => d[xAxisField] as number)) - 20,
+            Math.max(...financialData.map((d) => d[xAxisField] as number)) + 20,
+          ],
+          range: [margin.left, width - margin.right],
         }),
-      [width]
+      [width, xAxisField]
     );
+
     const yScale = useMemo(
       () =>
         scaleLinear<number>({
-          domain: [0.75, 1.6],
-          range: [height, 0],
-          clamp: true,
+          domain: [
+            Math.min(...financialData.map((d) => d[yAxisField] as number)) - 20,
+            Math.max(...financialData.map((d) => d[yAxisField] as number)) + 20,
+          ],
+          range: [height - margin.bottom, margin.top],
         }),
-      [height]
+      [height, yAxisField]
     );
-    const voronoiLayout = useMemo(
+    const yMax = height - margin.bottom - margin.top;
+
+    const sizeScale = useMemo(
       () =>
-        voronoi<PointsRange>({
-          x: (d) => xScale(x(d)) ?? 0,
-          y: (d) => yScale(y(d)) ?? 0,
-          width,
-          height,
-        })(points),
-      [width, height, xScale, yScale]
+        scaleLinear<number>({
+          domain: [
+            Math.min(...financialData.map((d) => d.netIncome as number)),
+            Math.max(...financialData.map((d) => d.netIncome as number)),
+          ],
+          range: [6, 18],
+        }),
+      []
     );
 
-    // event handlers
     const handleMouseMove = useCallback(
-      (event: React.MouseEvent | React.TouchEvent) => {
+      (event: React.MouseEvent | React.TouchEvent, data: FinancialData) => {
         if (tooltipTimeout) clearTimeout(tooltipTimeout);
         if (!svgRef.current) return;
 
-        // find the nearest polygon to the current mouse position
         const point = localPoint(svgRef.current, event);
         if (!point) return;
-        const neighborRadius = 100;
-        const closest = voronoiLayout.find(point.x, point.y, neighborRadius);
-        if (closest) {
-          showTooltip({
-            tooltipLeft: xScale(x(closest.data)),
-            tooltipTop: yScale(y(closest.data)),
-            tooltipData: closest.data,
-          });
-        }
+
+        showTooltip({
+          tooltipLeft: point.x,
+          tooltipTop: point.y,
+          tooltipData: data,
+        });
       },
-      [xScale, yScale, showTooltip, voronoiLayout]
+      [showTooltip]
     );
 
     const handleMouseLeave = useCallback(() => {
@@ -98,28 +126,80 @@ export default withTooltip<DotsProps, PointsRange>(
 
     return (
       <div>
-        <svg width={width} height={height} ref={svgRef}>
-          <rect
-            width={width}
-            height={height}
-            rx={14}
-            fill="pink"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            onTouchMove={handleMouseMove}
-            onTouchEnd={handleMouseLeave}
+        <Box sx={{ width: 300, marginBottom: 2 }}>
+          <Slider
+            value={sizeMultiplier}
+            onChange={(_, value) => setSizeMultiplier(value as number)}
+            min={0.5}
+            max={2}
+            step={0.1}
+            valueLabelDisplay="auto"
+            aria-labelledby="size-slider"
           />
-          <Group pointerEvents="none">
-            {points.map((point, i) => (
-              <Circle
-                key={`point-${point[0]}-${i}`}
-                className="dot"
-                cx={xScale(x(point))}
-                cy={yScale(y(point))}
-                r={i % 3 === 0 ? 2 : 3}
-                fill={tooltipData === point ? "white" : "red"}
-              />
-            ))}
+        </Box>
+        <svg width={width} height={height} ref={svgRef}>
+          <rect width={width} height={height} fill="#f4f4f4" rx={14} />
+          <GridRows
+            scale={yScale}
+            width={xMax}
+            left={margin.left}
+            stroke="#e2e8f0"
+            strokeOpacity={0.8}
+          />
+          <GridColumns
+            scale={xScale}
+            top={margin.top}
+            height={yMax}
+            stroke="#e2e8f0"
+            strokeOpacity={0.8}
+          />
+
+          <AxisBottom
+            scale={xScale}
+            top={height - margin.bottom}
+            stroke="#333"
+            tickStroke="#333"
+            tickLabelProps={() => ({
+              fill: "#333",
+              fontSize: 12,
+              textAnchor: "middle",
+            })}
+          />
+
+          <AxisLeft
+            scale={yScale}
+            left={margin.left}
+            stroke="#333"
+            tickStroke="#333"
+            tickLabelProps={() => ({
+              fill: "#333",
+              fontSize: 12,
+              textAnchor: "end",
+              dx: "-4",
+            })}
+          />
+
+          <Group>
+            {filteredData.map((point, i) => {
+              const cx = xScale(point[xAxisField]);
+              const cy = yScale(point[yAxisField]);
+              const radius = sizeScale(point.netIncome);
+              const color = colorScale(point.stock) as string;
+
+              return (
+                <Circle
+                  key={`point-${point.stock}`}
+                  cx={cx}
+                  cy={cy}
+                  r={radius * sizeMultiplier}
+                  fill={color}
+                  stroke="white"
+                  strokeWidth={1.5}
+                  onMouseMove={(e) => handleMouseMove(e, point)}
+                  onMouseLeave={handleMouseLeave}
+                />
+              );
+            })}
           </Group>
         </svg>
         {tooltipOpen &&
@@ -127,8 +207,18 @@ export default withTooltip<DotsProps, PointsRange>(
           tooltipLeft != null &&
           tooltipTop != null && (
             <Tooltip left={tooltipLeft + 10} top={tooltipTop + 10}>
-              <div>{x(tooltipData)}</div>
-              <div>{y(tooltipData)}</div>
+              <div>
+                <strong>Stock:</strong> {tooltipData.stock}
+              </div>
+              <div>
+                <strong>{xAxisField}:</strong> {tooltipData[xAxisField]}
+              </div>
+              <div>
+                <strong>{yAxisField}:</strong> {tooltipData[yAxisField]}
+              </div>
+              <div>
+                <strong>Net Income:</strong> {tooltipData.netIncome}
+              </div>
             </Tooltip>
           )}
       </div>

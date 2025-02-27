@@ -1,0 +1,150 @@
+{
+  "data": [
+    {
+      "date": "2024-03-31",
+      "Revenue": 100,
+      "Profit": 60,
+      "Expenses": 40,
+      "COGS": 80
+    },
+    {
+      "date": "2024-06-30",
+      "Revenue": 110,
+      "Profit": 70,
+      "Expenses": 40,
+      "COGS": 90
+    },
+    {
+      "date": "2024-09-30",
+      "Revenue": 120,
+      "Profit": 80,
+      "Expenses": 40,
+      "COGS": 100
+    },
+    {
+      "date": "2024-12-31",
+      "Revenue": 130,
+      "Profit": 85,
+      "Expenses": 45,
+      "COGS": 100
+    },
+    {
+      "date": "2025-03-31",
+      "Revenue": 140,
+      "Profit": 88,
+      "Expenses": 52,
+      "COGS": 105
+    },
+    {
+      "date": "2025-06-30",
+      "Revenue": 150,
+      "Profit": 90,
+      "Expenses": 60,
+      "COGS": 100
+    },
+    {
+      "date": "2025-09-30",
+      "Revenue": 160,
+      "Profit": 95,
+      "Expenses": 65,
+      "COGS": 105
+    },
+    {
+      "date": "2025-12-31",
+      "Revenue": 170,
+      "Profit": 110,
+      "Expenses": 70,
+      "COGS": 110
+    },
+    {
+      "date": "2026-03-31",
+      "Revenue": 180,
+      "Profit": 120,
+      "Expenses": 80,
+      "COGS": 100
+    },
+    {
+      "date": "2026-06-30",
+      "Revenue": 185,
+      "Profit": 130,
+      "Expenses": 75,
+      "COGS": 110
+    },
+    {
+      "date": "2026-09-30",
+      "Revenue": 190,
+      "Profit": 135,
+      "Expenses": 75,
+      "COGS": 115
+    },
+    {
+      "date": "2026-12-31",
+      "Revenue": 200,
+      "Profit": 140,
+      "Expenses": 60,
+      "COGS": 100
+    },
+    {
+      "date": "2027-03-31",
+      "Revenue": 210,
+      "Profit": 150,
+      "Expenses": 60,
+      "COGS": 120
+    },
+    {
+      "date": "2027-06-30",
+      "Revenue": 220,
+      "Profit": 160,
+      "Expenses": 70,
+      "COGS": 130
+    },
+    {
+      "date": "2027-09-30",
+      "Revenue": 230,
+      "Profit": 165,
+      "Expenses": 75,
+      "COGS": 140
+    },
+    {
+      "date": "2027-12-31",
+      "Revenue": 240,
+      "Profit": 170,
+      "Expenses": 80,
+      "COGS": 150
+    },
+    {
+      "date": "2028-03-31",
+      "Revenue": 250,
+      "Profit": 175,
+      "Expenses": 85,
+      "COGS": 160
+    },
+    {
+      "date": "2028-06-30",
+      "Revenue": 260,
+      "Profit": 180,
+      "Expenses": 90,
+      "COGS": 170
+    },
+    {
+      "date": "2028-09-30",
+      "Revenue": 270,
+      "Profit": 190,
+      "Expenses": 95,
+      "COGS": 180
+    },
+    {
+      "date": "2028-12-31",
+      "Revenue": 280,
+      "Profit": 200,
+      "Expenses": 100,
+      "COGS": 190
+    }
+  ],
+  "keys": [
+    { "key": "Revenue", "color": "#4CAF50" },
+    { "key": "Profit", "color": "#FF9800" },
+    { "key": "Expenses", "color": "#F44336" },
+    { "key": "COGS", "color": "pink" }
+  ]
+}
