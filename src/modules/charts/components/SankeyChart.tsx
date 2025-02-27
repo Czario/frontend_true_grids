@@ -1,195 +1,252 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Sankey,
   sankeyCenter,
-  sankeyRight,
-  sankeyLeft,
-  sankeyJustify,
-  SankeyNode,
+  SankeyNode as VisxNodeDatum,
 } from "@visx/sankey";
 import { Group } from "@visx/group";
-import { BarRounded, LinkHorizontal } from "@visx/shape";
-import { useTooltip, Tooltip } from "@visx/tooltip";
-import { localPoint } from "@visx/event";
+import { LinkHorizontal } from "@visx/shape";
 import { Text } from "@visx/text";
-import energy from "./../../../../public/temp_data/SankeyMock.json";
+import { Tooltip, defaultStyles } from "@visx/tooltip";
+import {
+  SankeyLink,
+  SankeyDataType,
+  NodeDatum,
+} from "@/modules/charts/interfaces/Sankey";
+export const primaryColor = "#2394DF";
+export const accentColor1 = "#71E7D6";
+export const accentTextColor = "#6f7288";
+export const subTextColor = "#C9CBCF";
 
-export const background = "#f7f9fc";
-export const nodeColor = "#4A90E2";
-export const linkColor = "rgba(74, 144, 226, 0.5)";
-export const textColor = "#ffffff";
+const defaultMargin = { top: 50, left: 20, right: 20, bottom: 20 };
 
-type NodeDatum = { name: string };
-type LinkDatum = {};
-
-const nodeAlignments = {
-  sankeyCenter,
-  sankeyJustify,
-  sankeyLeft,
-  sankeyRight,
-} as const;
-
-const defaultMargin = { top: 50, left: 50, right: 50, bottom: 50 };
-
-export type SankeyDemoProps = {
+export type DynamicSankeyChartProps = {
   width: number;
-  height: number;
-  showControls?: boolean;
+  // Optional passed height – we’ll choose the smaller of the passed value and our computed height.
+  height?: number;
   margin?: { top: number; right: number; bottom: number; left: number };
+  sankeyData: SankeyDataType;
 };
 
-export default function SankeyDemo({
+export default function DynamicSankeyChart({
   width,
-  height,
+  height: passedHeight,
   margin = defaultMargin,
-}: SankeyDemoProps) {
-  const {
-    tooltipData,
-    tooltipLeft,
-    tooltipTop,
-    tooltipOpen,
-    showTooltip,
-    hideTooltip,
-  } = useTooltip();
-
-  const xMax = width - margin.left - margin.right;
-  const yMax = height - margin.top - margin.bottom;
-
-  const processData = () => {
-    let links = energy.links.map((item) => ({
-      ...item,
-      source: energy.nodes.findIndex((node) => node.name === item.source),
-      target: energy.nodes.findIndex((node) => node.name === item.target),
-    }));
-
-    let nodes = [...energy.nodes].map((node, index) => ({ ...node, index }));
-
-    nodes.sort((a, b) => a.index - b.index); // Sort by index before passing to Sankey
-
-    return { nodes, links };
-  };
-
-  const [nodeAlignment, setTileMethod] =
-    useState<keyof typeof nodeAlignments>("sankeyCenter");
-  const [nodePadding, setNodePadding] = useState(40);
-  const [nodeWidth, setNodeWidth] = useState(20);
-
+  sankeyData,
+}: DynamicSankeyChartProps) {
   if (width < 10) return null;
 
+  // === DYNAMIC HEIGHT CALCULATION ===
+  // Assume a constant height for each node. Adjust this constant as needed.
+  const perNodeHeight = 60;
+
+  const sourceNodes = useMemo(
+    () =>
+      sankeyData.nodes.filter((node: NodeDatum) =>
+        sankeyData.links.every((link: SankeyLink) => link.target !== node.name)
+      ),
+    [sankeyData]
+  );
+
+  const sinkNodes = useMemo(
+    () =>
+      sankeyData.nodes.filter((node: NodeDatum) =>
+        sankeyData.links.every((link: SankeyLink) => link.source !== node.name)
+      ),
+    [sankeyData]
+  );
+
+  const intermediateNodes = useMemo(
+    () =>
+      sankeyData.nodes.filter(
+        (node: NodeDatum) =>
+          sankeyData.links.some(
+            (link: SankeyLink) => link.target === node.name
+          ) &&
+          sankeyData.links.some((link: SankeyLink) => link.source === node.name)
+      ),
+    [sankeyData]
+  );
+
+  // Get the maximum count among the columns
+  const maxNodes = Math.max(
+    sourceNodes.length,
+    sinkNodes.length,
+    intermediateNodes.length
+  );
+  // Compute a dynamic height based on node count plus vertical margins.
+  const computedHeight = maxNodes * perNodeHeight + margin.top + margin.bottom;
+  // If a height was passed, choose the smaller of that or the computed height.
+  const finalHeight = passedHeight
+    ? Math.min(passedHeight, computedHeight)
+    : computedHeight;
+  // === END DYNAMIC HEIGHT CALCULATION ===
+
+  const xMax = width - margin.left - margin.right;
+  const yMax = finalHeight - margin.top - margin.bottom;
+
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    content: string;
+    isHoveredOnLeft: boolean;
+  }>({ visible: false, x: 0, y: 0, content: "", isHoveredOnLeft: false });
+
+  const processData = useMemo(() => {
+    const nodes: NodeDatum[] = sankeyData.nodes.map(
+      (node: NodeDatum, index: number) => ({
+        ...node,
+        index,
+      })
+    );
+    nodes.sort((a: NodeDatum, b: NodeDatum) => (a.index ?? 0) - (b.index ?? 0));
+
+    const links = sankeyData.links.map((item: any) => ({
+      ...item,
+      source: sankeyData.nodes.findIndex(
+        (node: any) => node.name === item.source
+      ),
+      target: sankeyData.nodes.findIndex(
+        (node: any) => node.name === item.target
+      ),
+    }));
+
+    return { nodes, links };
+  }, [sankeyData]);
+
+  // Sankey layout settings
+  const sankeySettings = {
+    nodeWidth: 20,
+    nodePadding: 35,
+    size: [xMax, yMax] as [number, number],
+    nodeAlign: sankeyCenter,
+    nodeSort: (a: NodeDatum, b: NodeDatum) => (a.index ?? 0) - (b.index ?? 0),
+  };
+
+  // Offsets for labels (always drawn above the node)
+  const nodeTextOffset = 16;
+  const valueLabelOffset = -12;
+
+  // Helper for horizontal text alignment based on node x positions
+  const getTextAnchor = (node: NodeDatum) => {
+    if (node.x0 === undefined || node.x1 === undefined) return "middle";
+    if (node.x0 < xMax / 3) return "start";
+    if (node.x1 > (2 * xMax) / 3) return "end";
+    return "middle";
+  };
+
   return (
-    <div>
-      <style>{`
-        .visx-sankey-link:hover {
-          stroke-opacity: 0.7;
-        }
-        .visx-sankey-node:hover {
-          filter: brightness(1.3);
-        }
-        .visx-sankey-demo-container {
-          background: ${background};
-          padding: ${margin.top}px ${margin.right}px ${margin.bottom}px ${margin.left}px;
-          border-radius: 5px;
-          position: relative;
-        }
-      `}</style>
-      <div className="visx-sankey-demo-container">
-        <svg width={xMax} height={yMax}>
-          <Sankey<NodeDatum, LinkDatum>
-            root={processData()}
-            nodeWidth={nodeWidth}
-            size={[xMax, yMax]}
-            nodePadding={nodePadding}
-            nodeAlign={nodeAlignments[nodeAlignment]}
-          >
+    <div style={{ borderRadius: 5, position: "relative" }}>
+      <svg width={xMax} height={yMax} style={{ overflow: "visible" }}>
+        <Group transform={`translate(0, ${margin.top})`}>
+          <Sankey<NodeDatum, SankeyLink> root={processData} {...sankeySettings}>
             {({ graph, createPath }) => (
               <>
-                {/* Links */}
+                {/* Render Links */}
                 <Group>
                   {graph.links.map((link, i) => (
                     <LinkHorizontal
                       key={i}
-                      className="visx-sankey-link"
                       data={link}
                       path={createPath}
                       fill="transparent"
-                      stroke={linkColor}
+                      stroke={primaryColor}
                       strokeWidth={link.width}
                       strokeOpacity={0.5}
-                      onPointerMove={(event) => {
-                        const coords = localPoint(
-                          (event.target as SVGElement).ownerSVGElement,
-                          event
-                        );
-                        showTooltip({
-                          tooltipData: `${
-                            (link.source as SankeyNode<NodeDatum, LinkDatum>)
-                              .name
-                          } > ${
-                            (link.target as SankeyNode<NodeDatum, LinkDatum>)
-                              .name
-                          } = ${link.value}`,
-                          tooltipTop: (coords?.y ?? 0) + 10,
-                          tooltipLeft: (coords?.x ?? 0) + 10,
-                        });
-                      }}
-                      onMouseOut={hideTooltip}
                     />
                   ))}
                 </Group>
 
-                {/* Nodes */}
+                {/* Render Nodes */}
                 <Group>
-                  {graph.nodes.map(({ y0, y1, x0, x1, name }, i) => {
+                  {graph.nodes.map((node, i) => {
+                    const { x0, x1, y0, y1 } = node;
                     if (
-                      y0 == undefined ||
-                      y1 == undefined ||
                       x0 == undefined ||
-                      x1 == undefined
-                    ) {
+                      x1 == undefined ||
+                      y0 === undefined ||
+                      y1 == undefined
+                    )
                       return null;
-                    }
+                    const nodeWidth = x1 - x0;
                     const nodeHeight = y1 - y0;
-                    const isNearTop = false;
-                    const textY = y1 + 15;
-                    const textAnchor = "middle";
-
+                    const textAnchor = getTextAnchor(node);
+                    // Always position labels above the rectangle.
+                    const nameLabelY = -nodeTextOffset;
+                    const valueLabelY = -nodeTextOffset - valueLabelOffset;
                     return (
-                      <Group key={i}>
-                        {/* Node Bar */}
-                        <BarRounded
-                          key={i}
-                          className="visx-sankey-node"
-                          width={x1 - x0}
+                      <Group
+                        key={i}
+                        transform={`translate(${x0}, ${y0})`}
+                        onMouseEnter={(event) => {
+                          const { offsetX, offsetY } = event.nativeEvent;
+                          setTooltip({
+                            visible: true,
+                            x: offsetX + margin.left,
+                            y: offsetY + margin.top,
+                            content: `${node.name}: US$${node.label}`,
+                            isHoveredOnLeft: false,
+                          });
+                        }}
+                        onMouseMove={(event) => {
+                          setTooltip((prev) => ({
+                            ...prev,
+                            x: x0 + nodeWidth / 2 + margin.left,
+                            y: y0 + margin.top,
+                            isHoveredOnLeft: false,
+                          }));
+                        }}
+                        onMouseLeave={() => {
+                          setTooltip({
+                            visible: false,
+                            x: 0,
+                            y: 0,
+                            content: "",
+                            isHoveredOnLeft: false,
+                          });
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {/* Node Rectangle */}
+                        <rect
+                          width={nodeWidth}
                           height={nodeHeight}
-                          x={x0}
-                          y={y0}
-                          radius={3}
-                          all
-                          fill={nodeColor}
-                          onPointerMove={(event) => {
-                            const coords = localPoint(
-                              (event.target as SVGElement).ownerSVGElement,
-                              event
-                            );
-                            showTooltip({
-                              tooltipData: name,
-                              tooltipTop: (coords?.y ?? 0) + 10,
-                              tooltipLeft: (coords?.x ?? 0) + 10,
-                            });
-                          }}
-                          onMouseOut={hideTooltip}
+                          fill={primaryColor}
                         />
-
-                        {/* Node Label */}
+                        {/* Node Name Label */}
                         <Text
-                          x={(x0 + x1) / 2}
-                          y={textY}
-                          fill="red"
-                          fontSize={12}
+                          x={
+                            textAnchor === "start"
+                              ? 0
+                              : textAnchor === "end"
+                              ? nodeWidth
+                              : nodeWidth / 2
+                          }
+                          y={nameLabelY}
                           textAnchor={textAnchor}
-                          dy={isNearTop ? 0 : -5}
+                          fill={accentTextColor}
+                          fontSize={12}
                         >
-                          {name}
+                          {node.name.length > 12
+                            ? `${node.name.slice(0, 12)}...`
+                            : node.name}
+                        </Text>
+                        {/* Node Value Label */}
+                        <Text
+                          x={
+                            textAnchor === "start"
+                              ? 0
+                              : textAnchor === "end"
+                              ? nodeWidth
+                              : nodeWidth / 2
+                          }
+                          y={valueLabelY}
+                          textAnchor={textAnchor}
+                          fill={subTextColor}
+                          fontSize={12}
+                        >
+                          {`US$${node.label}`}
                         </Text>
                       </Group>
                     );
@@ -198,15 +255,33 @@ export default function SankeyDemo({
               </>
             )}
           </Sankey>
-        </svg>
+        </Group>
+      </svg>
 
-        {/* Tooltip */}
-        {tooltipOpen && (
-          <Tooltip key={Math.random()} top={tooltipTop} left={tooltipLeft}>
-            {tooltipData}
+      {tooltip.visible && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            transform: `translate(${tooltip.x ?? 0}px, ${tooltip.y - 50}px)`,
+          }}
+        >
+          <Tooltip
+            style={{
+              ...defaultStyles,
+              backgroundColor: "black",
+              color: "white",
+              padding: "6px 10px",
+              borderRadius: "4px",
+              fontSize: "12px",
+              left: "-50%",
+              position: "relative",
+            }}
+          >
+            {tooltip.content}
           </Tooltip>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

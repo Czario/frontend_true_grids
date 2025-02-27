@@ -1,0 +1,278 @@
+[
+  {
+    "date": "2024 Q4",
+    "nodes": [
+      { "name": "Revenues", "label": 18831 },
+      { "name": "Total automotive revenues", "label": 18831 },
+      { "name": "Automotive sales", "label": 18831 },
+      { "name": "Automotive regulatory credits", "label": 739 },
+      { "name": "Automotive leasing", "label": 18831 },
+      { "name": "Energy generation and storage", "label": 18831 },
+      { "name": "Services and other", "label": 18831 },
+      { "name": "Gross Profit", "label": 4179 },
+      { "name": "Cost of Revenues (COGS)", "label": 21528 },
+      { "name": "INCOME FROM OPERATIONS", "label": 1583 },
+      { "name": "Operating Expenses", "label": 2280 },
+      { "name": "Restructuring and other", "label": 55 },
+      {
+        "name": "Selling, general and administrative expenses",
+        "label": 1186
+      },
+      { "name": "Research and development", "label": 1039 },
+      { "name": "Cost of energy generation and storage", "label": 2289 },
+      { "name": "Cost of services and other", "label": 2729 },
+      { "name": "Cost of automotive sales", "label": 16268 },
+      { "name": "Cost of automotive leasing", "label": 242 },
+      { "name": "Total automotive cost of revenues", "label": 16510 }
+    ],
+    "links": [
+      {
+        "source": "Total automotive cost of revenues",
+        "target": "Cost of automotive sales",
+        "value": 15743
+      },
+      {
+        "source": "Total automotive cost of revenues",
+        "target": "Cost of automotive leasing",
+        "value": 247
+      },
+      {
+        "source": "Cost of Revenues (COGS)",
+        "target": "Total automotive cost of revenues",
+        "value": 15990
+      },
+      {
+        "source": "Cost of Revenues (COGS)",
+        "target": "Cost of energy generation and storage",
+        "value": 1651
+      },
+      {
+        "source": "Cost of Revenues (COGS)",
+        "target": "Cost of services and other",
+        "value": 2544
+      },
+      {
+        "source": "Operating Expenses",
+        "target": "Selling, general and administrative expenses",
+        "value": 1186
+      },
+      {
+        "source": "Operating Expenses",
+        "target": "Research and development",
+        "value": 1039
+      },
+      {
+        "source": "Operating Expenses",
+        "target": "Restructuring and other",
+        "value": 55
+      },
+      {
+        "source": "Gross Profit",
+        "target": "Operating Expenses",
+        "value": 2280
+      },
+      {
+        "source": "Gross Profit",
+        "target": "INCOME FROM OPERATIONS",
+        "value": 1583
+      },
+      {
+        "source": "Revenues",
+        "target": "Cost of Revenues (COGS)",
+        "value": 20185
+      },
+      { "source": "Revenues", "target": "Gross Profit", "value": 4997 },
+      {
+        "source": "Automotive sales",
+        "target": "Total automotive revenues",
+        "value": 18831
+      },
+      {
+        "source": "Automotive regulatory credits",
+        "target": "Total automotive revenues",
+        "value": 739
+      },
+      {
+        "source": "Automotive leasing",
+        "target": "Total automotive revenues",
+        "value": 446
+      },
+      {
+        "source": "Total automotive revenues",
+        "target": "Revenues",
+        "value": 20016
+      },
+      {
+        "source": "Energy generation and storage",
+        "target": "Revenues",
+        "value": 2376
+      },
+      { "source": "Services and other", "target": "Revenues", "value": 2790 }
+    ]
+  },
+  {
+    "date": "2024 Q3",
+    "nodes": [
+      {
+        "name": "Selling, general and administrative expenses",
+        "label": 1277.0
+      },
+      {
+        "name": "Research and development",
+        "label": 1074.0
+      },
+      {
+        "name": "Restructuring and other",
+        "label": 622.0
+      },
+      {
+        "name": "Automotive sales",
+        "label": 18530.0
+      },
+      {
+        "name": "Automotive regulatory credits",
+        "label": 890.0
+      },
+      {
+        "name": "Automotive leasing",
+        "label": 458.0
+      },
+      {
+        "name": "Total automotive revenues",
+        "label": 19878.0
+      },
+      {
+        "name": "Energy generation and storage",
+        "label": 3014.0
+      },
+      {
+        "name": "Services and other",
+        "label": 2608.0
+      },
+      {
+        "name": "Revenues",
+        "label": 25500.0
+      },
+      {
+        "name": "Cost of automotive sales",
+        "label": 15962.0
+      },
+      {
+        "name": "Cost of automotive leasing",
+        "label": 245.0
+      },
+      {
+        "name": "Gross Profit",
+        "label": 4578.0
+      },
+      {
+        "name": "Operating Income",
+        "label": 1605.0
+      },
+      {
+        "name": "Operating Expenses",
+        "label": 2973.0
+      },
+      {
+        "name": "Total automotive cost of revenues",
+        "label": 16207.0
+      },
+      {
+        "name": "Cost of energy generation and storage",
+        "label": 2274.0
+      },
+      {
+        "name": "Cost of services and other",
+        "label": 2441.0
+      },
+      {
+        "name": "Cost of Revenues (COGS)",
+        "label": 20922.0
+      }
+    ],
+    "links": [
+      {
+        "source": "Automotive sales",
+        "target": "Total automotive revenues",
+        "value": 18530.0
+      },
+      {
+        "source": "Automotive regulatory credits",
+        "target": "Total automotive revenues",
+        "value": 890.0
+      },
+      {
+        "source": "Automotive leasing",
+        "target": "Total automotive revenues",
+        "value": 458.0
+      },
+      {
+        "source": "Total automotive revenues",
+        "target": "Revenues",
+        "value": 19878.0
+      },
+      {
+        "source": "Energy generation and storage",
+        "target": "Revenues",
+        "value": 3014.0
+      },
+      { "source": "Services and other", "target": "Revenues", "value": 2608.0 },
+      {
+        "source": "Total automotive cost of revenues",
+        "target": "Cost of automotive sales",
+        "value": 15962.0
+      },
+      {
+        "source": "Total automotive cost of revenues",
+        "target": "Cost of automotive leasing",
+        "value": 245.0
+      },
+      {
+        "source": "Cost of Revenues (COGS)",
+        "target": "Total automotive cost of revenues",
+        "value": 16207.0
+      },
+      {
+        "source": "Cost of Revenues (COGS)",
+        "target": "Cost of energy generation and storage",
+        "value": 2274.0
+      },
+      {
+        "source": "Cost of Revenues (COGS)",
+        "target": "Cost of services and other",
+        "value": 2441.0
+      },
+      { "source": "Revenues", "target": "Gross Profit", "value": 4578.0 },
+      {
+        "source": "Revenues",
+        "target": "Cost of Revenues (COGS)",
+        "value": 20922.0
+      },
+      {
+        "source": "Operating Expenses",
+        "target": "Selling, general and administrative expenses",
+        "value": 1277.0
+      },
+      {
+        "source": "Operating Expenses",
+        "target": "Research and development",
+        "value": 1074.0
+      },
+      {
+        "source": "Operating Expenses",
+        "target": "Restructuring and other",
+        "value": 622.0
+      },
+      {
+        "source": "Gross Profit",
+        "target": "Operating Expenses",
+        "value": 2973.0
+      },
+      {
+        "source": "Gross Profit",
+        "target": "Operating Income",
+        "value": 1605.0
+      }
+    ]
+  }
+]
