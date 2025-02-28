@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, forwardRef, RefCallback, useCallback, useState } from 'react';
+import React, { memo, forwardRef, RefCallback, useCallback, useState, useEffect } from 'react';
 import {
   TableRow,
   TableCell,
@@ -19,6 +19,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { flexRender, Row } from '@tanstack/react-table';
 import { ParsedRow } from '@/modules/financials/interfaces/financials';
 import { highlightText } from '../../utils/highlightText';
+import { initializeTooltips } from '@/utils/tooltipInitializer';
 
 const FIRST_COLUMN_WIDTH = 300;
 const DEFAULT_COLUMN_WIDTH = 100;
@@ -66,6 +67,43 @@ const CustomTooltip = styled(({ className, ...props }: any) => (
   },
 }));
 
+// Fast tooltip for action buttons with no delay
+const ActionTooltip = styled(({ className, ...props }: any) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }: { theme: Theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.grey[800],
+    color: 'white',
+    boxShadow: theme.shadows[1],
+    fontSize: 11, // Reduced from 12 to 11
+    padding: '4px 8px', // Compact padding
+    borderRadius: 2, // Smaller rounded corners
+    maxWidth: 120, // Limit maximum width
+  },
+  enterTouchDelay: 0,
+  leaveTouchDelay: 0,
+}));
+
+// Memoize the tooltip content
+const MemoizedTooltipContent = memo(({ value, searchTerm }: { value: string, searchTerm?: string }) => (
+  <Box
+    ml={-1} // Reduced space between arrow and text
+    sx={{
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      maxWidth: 'calc(100% - 24px)',
+    }}
+  >
+    {searchTerm
+      ? highlightText(
+          String(value || ''),
+          searchTerm
+        )
+      : value}
+  </Box>
+));
+
 export interface MemoizedRowProps {
   row: Row<ParsedRow>;
   rowKey?: string;
@@ -86,6 +124,15 @@ const MemoizedRow = memo(
 
       const handleCopy = useCallback((value: string) => {
         navigator.clipboard.writeText(value);
+      }, []);
+
+      // Pre-load tooltips on mount
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          initializeTooltips();
+        }, 50); // Short delay to allow the component to render
+
+        return () => clearTimeout(timer); // Cleanup the timeout
       }, []);
       
       return (
@@ -134,26 +181,8 @@ const MemoizedRow = memo(
               >
                 {row.getIsExpanded() ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
               </IconButton>
-              <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow>
-                <Box
-                  ml={-1} // Reduced space between arrow and text
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: 'calc(100% - 24px)',
-                  }}
-                >
-                  {searchTerm 
-                    ? highlightText(
-                        String(row.getVisibleCells()[0].getValue() || ''),
-                        searchTerm
-                      )
-                    : flexRender(
-                        row.getVisibleCells()[0].column.columnDef.cell,
-                        row.getVisibleCells()[0].getContext()
-                      )}
-                </Box>
+              <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow TransitionComponent={null}>
+                <MemoizedTooltipContent value={row.getVisibleCells()[0].getValue() as string} searchTerm={searchTerm} />
               </CustomTooltip>
             </Box>
           </StyledFirstColumnCell>
@@ -226,39 +255,89 @@ const MemoizedRow = memo(
                         boxShadow: '0 0 5px rgba(0,0,0,0.1)',
                       }}
                     >
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCopy(cellValue);
+                      <ActionTooltip 
+                        title="Copy to clipboard" 
+                        placement="top"
+                        arrow
+                        enterDelay={0}
+                        TransitionProps={{ timeout: 50 }}
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              py: 0.5, // Smaller vertical padding
+                              px: 1, // Smaller horizontal padding
+                              minHeight: 'unset' // Remove minimum height
+                            }
+                          }
                         }}
-                        sx={{ padding: '2px' }}
-                        title="Copy to clipboard"
                       >
-                        <ContentCopyIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
-                      </IconButton>
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onCellClick(cellValue);
+                        <IconButton 
+                          size="small" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCopy(cellValue);
+                          }}
+                          sx={{ padding: '2px' }}
+                        >
+                          <ContentCopyIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
+                        </IconButton>
+                      </ActionTooltip>
+                      
+                      <ActionTooltip 
+                        title="Audit" 
+                        placement="top"
+                        arrow
+                        enterDelay={0}
+                        TransitionProps={{ timeout: 50 }}
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              py: 0.5,
+                              px: 1,
+                              minHeight: 'unset'
+                            }
+                          }
                         }}
-                        sx={{ padding: '2px' }}
-                        title="Audit"
                       >
-                        <ReceiptIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
-                      </IconButton>
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Comment clicked for', cellValue);
+                        <IconButton 
+                          size="small" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCellClick(cellValue);
+                          }}
+                          sx={{ padding: '2px' }}
+                        >
+                          <ReceiptIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
+                        </IconButton>
+                      </ActionTooltip>
+                      
+                      <ActionTooltip 
+                        title="Comment" 
+                        placement="top"
+                        arrow
+                        enterDelay={0}
+                        TransitionProps={{ timeout: 50 }}
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              py: 0.5,
+                              px: 1,
+                              minHeight: 'unset'
+                            }
+                          }
                         }}
-                        sx={{ padding: '2px' }}
-                        title="Comment"
                       >
-                        <CommentIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
-                      </IconButton>
+                        <IconButton 
+                          size="small" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log('Comment clicked for', cellValue);
+                          }}
+                          sx={{ padding: '2px' }}
+                        >
+                          <CommentIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
+                        </IconButton>
+                      </ActionTooltip>
                     </Box>
                   )}
                   
@@ -270,6 +349,7 @@ const MemoizedRow = memo(
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
+                    position: 'relative', // Add position relative
                   }}
                   title={cellValue} // Native HTML tooltip instead of React component
                   >
