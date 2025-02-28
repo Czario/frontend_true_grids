@@ -50,15 +50,28 @@ const DEFAULT_HEADER_HEIGHT = 28; // Reduced header height
 const FIRST_COLUMN_WIDTH = 470; // Fixed width for the first column
 const DEFAULT_COLUMN_WIDTH = 120; // Fixed width for other columns
 
-// Global search filter function
+// Improved global search filter function
 const globalFilterFn: FilterFn<ParsedRow> = (row, columnId, searchTerm) => {
-  const searchable = Object.values(row.original).filter(val => 
-    typeof val === 'string' || typeof val === 'number'
-  );
+  // Exit quickly if no search term
+  if (!searchTerm || searchTerm.length === 0) return true;
   
-  return searchable.some(val => 
-    String(val).toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Normalize search term for better matching
+  const lowerSearchTerm = searchTerm.toLowerCase().trim();
+  
+  // Skip filtering empty terms
+  if (lowerSearchTerm === '') return true;
+
+  // Create a searchable representation of the row data
+  const searchableFields = Object.entries(row.original)
+    .filter(([key, value]) => 
+      // Only include string and number values from meaningful fields
+      (typeof value === 'string' || typeof value === 'number') &&
+      !['id', 'hasChildren', 'children', '__expanded'].includes(key)
+    )
+    .map(([key, value]) => String(value).toLowerCase());
+  
+  // Check if any field contains the search term
+  return searchableFields.some(field => field.includes(lowerSearchTerm));
 };
 
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
@@ -126,10 +139,15 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     setReversed(!reversed);
   };
 
+  // Update the handleSearch function to use memoization
   const handleSearch = useCallback((term: string) => {
-    setSearchTerm(term);
-    // Expand all rows when searching for better visibility
-    if (term) {
+    // Clean up the search term
+    const cleanedTerm = term.trim();
+    
+    setSearchTerm(cleanedTerm);
+    
+    // Expand all rows when searching for better visibility, but only if search term is not empty
+    if (cleanedTerm) {
       handleExpandAll();
     }
   }, []);

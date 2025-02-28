@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Box, IconButton, InputBase, Paper, ClickAwayListener, Grow } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import useDebounce from '../../hooks/useDebounce';
 
 interface TableSearchProps {
   onSearch: (term: string) => void;
@@ -10,29 +11,52 @@ interface TableSearchProps {
 
 const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(searchTerm);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const mountRef = useRef<HTMLDivElement>(null);
+  
+  // Debounce search input to reduce render frequency
+  const debouncedSearchTerm = useDebounce(inputValue, 200);
+
+  // Handle input change with debouncing
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  }, []);
+
+  // Effect for when the debounced search term changes
+  useEffect(() => {
+    // Only trigger the search if the debounced value doesn't match current searchTerm
+    if (debouncedSearchTerm !== searchTerm) {
+      onSearch(debouncedSearchTerm);
+    }
+  }, [debouncedSearchTerm, onSearch, searchTerm]);
+
+  // Sync state when searchTerm changes from outside
+  useEffect(() => {
+    setInputValue(searchTerm);
+  }, [searchTerm]);
 
   // Use a safer approach to show/hide the search box
-  const handleSearchClick = () => {
+  const handleSearchClick = useCallback(() => {
     // Set a small delay to ensure any pending state updates complete first
     setTimeout(() => {
       setIsSearchOpen(true);
     }, 50);
-  };
+  }, []);
 
-  const handleCloseSearch = () => {
+  const handleCloseSearch = useCallback(() => {
     if (searchTerm) {
+      setInputValue('');
       onSearch('');
     }
     setIsSearchOpen(false);
-  };
+  }, [onSearch, searchTerm]);
 
-  const handleClickAway = () => {
-    if (!searchTerm) {
+  const handleClickAway = useCallback(() => {
+    if (!inputValue) {
       setIsSearchOpen(false);
     }
-  };
+  }, [inputValue]);
 
   // Focus the input when search is opened
   useEffect(() => {
@@ -61,10 +85,9 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
         </IconButton>
       )}
       
-      {/* Replaced Fade with Grow which has fewer measurement issues */}
       {isSearchOpen && (
         <ClickAwayListener onClickAway={handleClickAway}>
-          <Grow in={true} style={{ transformOrigin: 'top right' }}>
+          <div>  {/* Using div instead of Grow to avoid measurement issues */}
             <Paper
               elevation={2}
               sx={{
@@ -79,12 +102,12 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
               <InputBase
                 inputRef={searchInputRef}
                 placeholder="Search table..."
-                value={searchTerm}
-                onChange={(e) => onSearch(e.target.value)}
+                value={inputValue}
+                onChange={handleInputChange}
                 sx={{ ml: 1, flex: 1, fontSize: '0.875rem' }}
                 inputProps={{ 'aria-label': 'search table' }}
               />
-              {searchTerm && (
+              {inputValue && (
                 <IconButton 
                   size="small" 
                   onClick={handleCloseSearch}
@@ -94,11 +117,11 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
                 </IconButton>
               )}
             </Paper>
-          </Grow>
+          </div>
         </ClickAwayListener>
       )}
     </Box>
   );
 };
 
-export default TableSearch;
+export default React.memo(TableSearch);

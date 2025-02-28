@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 
 interface HighlightedTextProps {
@@ -6,36 +6,71 @@ interface HighlightedTextProps {
   searchTerm: string;
 }
 
+// Memoized component for text highlighting
 export const HighlightedText: React.FC<HighlightedTextProps> = ({ text, searchTerm }) => {
-  if (!searchTerm || typeof text !== 'string') {
-    return <>{text}</>;
-  }
+  // Use memoization to avoid unnecessary re-renders
+  const content = useMemo(() => {
+    if (!searchTerm || typeof text !== 'string') {
+      return <>{text}</>;
+    }
 
-  const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  const parts = text.split(regex);
+    try {
+      // Normalize strings for better matching
+      const normalizedText = text.toLowerCase();
+      const normalizedSearchTerm = searchTerm.toLowerCase();
+      
+      // Quick check if search term exists in the text
+      if (!normalizedText.includes(normalizedSearchTerm)) {
+        return <>{text}</>;
+      }
+      
+      // Escape special regex characters
+      const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedSearchTerm})`, 'gi');
+      const parts = text.split(regex);
+      
+      if (parts.length <= 1) return <>{text}</>;
+      
+      return (
+        <>
+          {parts.map((part, i) => 
+            part.toLowerCase() === searchTerm.toLowerCase() ? (
+              <Box 
+                component="span" 
+                key={i} 
+                sx={{ 
+                  backgroundColor: 'rgba(255, 255, 0, 0.4)',
+                  fontWeight: 'medium'
+                }}
+              >
+                {part}
+              </Box>
+            ) : part
+          )}
+        </>
+      );
+    } catch (e) {
+      return <>{text}</>;
+    }
+  }, [text, searchTerm]);
 
-  return (
-    <>
-      {parts.map((part, i) => (
-        regex.test(part) ? (
-          <mark key={i} style={{ backgroundColor: 'yellow', padding: 0 }}>
-            {part}
-          </mark>
-        ) : (
-          part
-        )
-      ))}
-    </>
-  );
+  return content;
 };
 
+// Optimized function for performance-critical contexts
 export const highlightText = (text: string, searchTerm: string): React.ReactNode => {
   if (!searchTerm || !text) return text;
   
+  // Quick check if search term exists in the text
+  if (!text.toLowerCase().includes(searchTerm.toLowerCase())) {
+    return text;
+  }
+  
   try {
-    // Case insensitive search
-    const searchRegex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    const parts = text.split(searchRegex);
+    // Escape special regex characters
+    const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedSearchTerm})`, 'gi');
+    const parts = text.split(regex);
     
     if (parts.length <= 1) return text;
     
@@ -61,7 +96,6 @@ export const highlightText = (text: string, searchTerm: string): React.ReactNode
       </>
     );
   } catch (e) {
-    // Fallback to plain text if any error occurs in highlighting
     return text;
   }
 };
