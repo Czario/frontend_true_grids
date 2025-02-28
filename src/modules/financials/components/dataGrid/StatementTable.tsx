@@ -231,7 +231,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     filterFns: {
       customSearch: globalFilterFn,
     },
-    globalFilterFn: 'customSearch',
+    globalFilterFn: globalFilterFn,
     enableGlobalFilter: true,
     onExpandedChange: (updaterOrValue) =>
       setExpanded(updaterOrValue as Record<string, boolean>),
