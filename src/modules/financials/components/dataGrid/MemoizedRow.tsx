@@ -35,9 +35,7 @@ const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
   lineHeight: 1,
-  '&:hover': {
-    backgroundColor: theme.palette.action.selected,
-  },
+  // Removed hover effect
 }));
 
 const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
@@ -93,16 +91,18 @@ const MemoizedRow = memo(
               position: 'sticky',
               left: 0,
               top: isSticky ? headerHeight : 'auto',
-              zIndex: 3, // Ensure the first column is above other content
+              zIndex: isSticky ? 10 : 3, // Increase z-index when sticky to match other columns
               borderRight: `1px solid ${theme.palette.divider}`,
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
               paddingLeft: `${row.depth * 1.5}rem`, // Increased indentation
               textAlign: 'left',
               boxShadow: isSticky
-                ? `inset -1px 0 0 0 ${theme.palette.divider}`
-                : undefined,
-              backgroundColor: theme.palette.background.paper, // Ensure background color is not transparent
+                ? `0px 2px 4px -1px rgba(0,0,0,0.2), inset -1px 0 0 0 ${theme.palette.divider}`
+                : `inset -1px 0 0 0 ${theme.palette.divider}`,
+              backgroundColor: isSticky 
+                ? theme.palette.background.default  // Use a slightly different color for sticky rows
+                : theme.palette.background.paper,
               opacity: 1, // Ensure the first column is fully opaque
               fontWeight: isParent ? 'bold' : 'normal',
             })}
@@ -151,7 +151,8 @@ const MemoizedRow = memo(
                   position: 'sticky',
                   top: headerHeight,
                   zIndex: 9,
-                  backgroundColor: theme.palette.background.paper,
+                  backgroundColor: theme.palette.background.default, // Match first column background
+                  boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)',
                   opacity: 1, // Ensure sticky cells are opaque
                 }),
                 fontWeight: isParent ? 'bold' : 'normal',

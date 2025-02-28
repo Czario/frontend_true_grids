@@ -34,8 +34,7 @@ import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials'
 import MemoizedRow from './MemoizedRow';
 import ChartModal from '../chartsViewer/ChartModal';
 import { StyledTableHeadCell } from './StyledComponents';
-import { SearchOption, FlatParsedRow, StatementTableProps } from './types';
-import SearchBar from './SearchBar';
+import { FlatParsedRow, StatementTableProps } from './types';
 
 const pdfUrl = '/doc_files/tesla_doc_1.pdf';
 
@@ -55,8 +54,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [stickyRowId, setStickyRowId] = useState<string | null>(null);
   const [headerHeight, setHeaderHeight] = useState(DEFAULT_HEADER_HEIGHT);
   const [reversed, setReversed] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null);
   const [chartModalOpen, setChartModalOpen] = useState(false);
   const [clickedRowId, setClickedRowId] = useState<string | null>(null);
 
@@ -83,15 +80,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     recurse(parsedData.rows);
     return result;
   }, [parsedData]);
-
-  const searchOptions: SearchOption[] = useMemo(
-    () =>
-      flatRows.map((row, index) => ({
-        id: `${row.id}-${index}`,
-        label: String(row.col0),
-      })),
-    [flatRows]
-  );
 
   const handleExpandAll = () => {
     const newExpanded: Record<string, boolean> = {};
@@ -191,52 +179,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     return { columns: newColumns, rows: parsedData.rows, headerRow };
   }, [parsedData, handleOpenChartModal, reversed]);
 
-  const handleSearchChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: string | number | boolean | (ParsedRow | string)[] | null
-  ) => {
-    setSearchTerm((value as string) || '');
-    if (!value) {
-      setHighlightedRowId(null); // Remove highlight when search term is cleared
-    }
-  };
-
-  const handleSearchSelect = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: SearchOption | string | null
-  ) => {
-    if (!value || typeof value === 'string') return;
-    const renderedRows = table.getRowModel().rows;
-    const targetIndex = renderedRows.findIndex(
-      (row) => String(row.getVisibleCells()[0].getValue()) === value.label
-    );
-    if (targetIndex !== -1) {
-      const compositeKey = `${renderedRows[targetIndex].id}-${targetIndex}`;
-      setHighlightedRowId(compositeKey);
-      const flatMatch = flatRows.find((r) => String(r.col0) === value.label);
-      if (flatMatch) {
-        setExpanded((prev) => {
-          const newExpanded = { ...prev };
-          flatMatch.parentIds.forEach((parentId) => {
-            newExpanded[parentId] = true;
-          });
-          return newExpanded;
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (highlightedRowId && tableContainerRef.current) {
-      const element = tableContainerRef.current.querySelector(
-        `[data-row-key="${highlightedRowId}"]`
-      );
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-  }, [highlightedRowId]);
-
   const table = useReactTable<ParsedRow>({
     data: rows,
     columns,
@@ -286,16 +228,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
 
   return (
     <>
-      <Box sx={{ paddingDown: 1 }}>
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <SearchBar
-            searchOptions={searchOptions}
-            searchTerm={searchTerm}
-            handleSearchChange={handleSearchChange}
-            handleSearchSelect={handleSearchSelect}
-          />
-        </Box>
-      </Box>
       <TableContainer
         ref={tableContainerRef}
         sx={{
@@ -331,25 +263,85 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   position: 'sticky',
                   top: 0,
                   left: 0,
-                  zIndex: 3,
-                  backgroundColor: 'grey.200',
-                  opacity: 1,
-                  borderRight: '1px solid',
-                  borderColor: 'divider',
-                  width: FIRST_COLUMN_WIDTH,
-                  minWidth: FIRST_COLUMN_WIDTH,
-                  textAlign: 'left',
-                  boxShadow: 3,
+                  zIndex: 11, // Higher than sticky rows (which was 10)
+                    backgroundColor: 'grey.200',
+                    opacity: 1,
+                    borderRight: '1px solid',
+                    borderColor: 'divider',
+                    width: FIRST_COLUMN_WIDTH,
+                    minWidth: FIRST_COLUMN_WIDTH,
+                    textAlign: 'left',
+                    boxShadow: `0px 2px 4px -1px rgba(0,0,0,0.2), inset -1px 0 0 0 ${(theme: any) => theme.palette.divider}`, // Consistent with sticky rows
                 }}
                 role="columnheader"
               >
                 <Box display="flex" alignItems="center">
                   {isExpanded ? (
-                    <IconButton size="small" onClick={handleCollapseAll} aria-label="Collapse All" sx={{ color: 'grey.700', paddingLeft: 0 }}>
+                    <IconButton 
+                      size="small" 
+                      onClick={handleCollapseAll} 
+                      aria-label="Collapse All" 
+                      disableRipple
+                      sx={{ 
+                        color: 'grey.700', 
+                        paddingLeft: 0,
+                        backgroundColor: 'transparent !important',
+                        transition: 'none',
+                        '&:hover': {
+                          backgroundColor: 'transparent !important',
+                          boxShadow: 'none !important',
+                        },
+                        '&.MuiIconButton-root': {
+                          backgroundColor: 'transparent !important',
+                        },
+                        '&.MuiButtonBase-root': {
+                          backgroundColor: 'transparent !important',
+                        },
+                        '&:active': {
+                          backgroundColor: 'transparent !important',
+                        },
+                        '&::before': {
+                          display: 'none !important',
+                        },
+                        '&::after': {
+                          display: 'none !important',
+                        }
+                      }}
+                    >
                       <UnfoldLessIcon />
                     </IconButton>
                   ) : (
-                    <IconButton size="small" onClick={handleExpandAll} aria-label="Expand All" sx={{ color: 'grey.700', paddingLeft: 0 }}>
+                    <IconButton 
+                      size="small" 
+                      onClick={handleExpandAll} 
+                      aria-label="Expand All" 
+                      disableRipple
+                      sx={{ 
+                        color: 'grey.700', 
+                        paddingLeft: 0,
+                        backgroundColor: 'transparent !important',
+                        transition: 'none',
+                        '&:hover': {
+                          backgroundColor: 'transparent !important',
+                          boxShadow: 'none !important',
+                        },
+                        '&.MuiIconButton-root': {
+                          backgroundColor: 'transparent !important',
+                        },
+                        '&.MuiButtonBase-root': {
+                          backgroundColor: 'transparent !important',
+                        },
+                        '&:active': {
+                          backgroundColor: 'transparent !important',
+                        },
+                        '&::before': {
+                          display: 'none !important',
+                        },
+                        '&::after': {
+                          display: 'none !important',
+                        }
+                      }}
+                    >
                       <UnfoldMoreIcon />
                     </IconButton>
                   )}
@@ -377,24 +369,49 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                     minWidth: header.column.id === 'barChart' ? DEFAULT_COLUMN_WIDTH / 2 : DEFAULT_COLUMN_WIDTH,
                     position: 'sticky',
                     top: 0,
-                    zIndex: 2,
+                    zIndex: 10, // Match z-index with sticky rows but lower than first column
                     backgroundColor: 'grey.200',
                     opacity: 1,
                     textAlign: 'right',
-                    boxShadow: 3,
+                    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)', // Consistent shadow
                   }}
                   role="columnheader"
                 >
                   {index === 0 ? (
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    <Box position="relative" width="100%">
+                      {/* Header text */}
+                      <Box
+                        sx={{
+                          display: 'inline-block',
+                          textAlign: 'right', 
+                          width: 'calc(100% - 28px)', // Reserve space for the button
+                          pr: 1,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                      </Box>
+                      
+                      {/* Right-aligned button */}
                       <IconButton
                         size="small"
                         onClick={handleReverseColumns}
                         aria-label="Reverse Columns"
-                        sx={{ color: 'grey.700' }}
+                        sx={{
+                          color: 'grey.700',
+                          position: 'absolute',
+                          right: 0,
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          padding: '2px',
+                          '&:hover': {
+                            backgroundColor: 'transparent',
+                          },
+                        }}
                       >
-                        <SwapHorizIcon />
+                        <SwapHorizIcon fontSize="small" />
                       </IconButton>
                     </Box>
                   ) : (
@@ -408,7 +425,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             {table.getRowModel().rows.map((row, index) => {
               const compositeKey = `${row.id}-${index}`;
               const isParent = row.depth === 0;
-              const isHighlighted = compositeKey === highlightedRowId;
               return (
                 <MemoizedRow
                   key={compositeKey}
@@ -419,13 +435,6 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   headerHeight={headerHeight}
                   setRowRef={isParent ? setParentRowRef(row.id) : undefined}
                   isParent={isParent}
-                  sx={{
-                    backgroundColor: isHighlighted ? 'grey.300' : 'inherit',
-                    height: '28px',
-                    '& .MuiTableCell-root': {
-                      backgroundColor: isHighlighted ? 'grey.300' : 'inherit', // Apply highlight to entire row
-                    },
-                  }}
                 />
               );
             })}
