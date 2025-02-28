@@ -388,6 +388,8 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
           position: 'relative',
           backgroundColor: 'background.paper', // Ensure container is opaque
           boxShadow: 3,
+          border: '1px solid', // Add main border to table container
+          borderColor: 'divider',
         }}
         role="table"
       >
@@ -396,8 +398,13 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
           sx={{
             tableLayout: 'fixed',
             minWidth: FIRST_COLUMN_WIDTH + DEFAULT_COLUMN_WIDTH * (columns.length - 1),
-            borderCollapse: 'collapse',
+            borderCollapse: 'separate', // Changed from collapse to separate for better border rendering
+            borderSpacing: 0, // Ensure no spaces between cells
             boxShadow: 3,
+            '& th, & td': {
+              border: '1px solid', // Add border to all cells
+              borderColor: 'divider',
+            },
           }}
         >
           <TableHead>
@@ -530,33 +537,14 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   role="columnheader"
                 >
                   {index === 0 ? (
-                    <Box position="relative" width="100%">
-                      {/* Header text */}
-                      <Box
-                        sx={{
-                          display: 'inline-block',
-                          textAlign: 'right',
-                          width: 'calc(100% - 28px)', // Reserve space for the button
-                          pr: 1,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                      </Box>
-                      
-                      {/* Right-aligned button */}
+                    <Box position="relative" width="100%" display="flex" justifyContent="center" alignItems="center">
+                      {/* Centered button */}
                       <IconButton
                         size="small"
                         onClick={handleReverseColumns}
                         aria-label="Reverse Columns"
                         sx={{
                           color: 'grey.700',
-                          position: 'absolute',
-                          right: 0,
-                          top: '50%',
-                          transform: 'translateY(-50%)',
                           padding: '2px',
                           '&:hover': {
                             backgroundColor: 'transparent',

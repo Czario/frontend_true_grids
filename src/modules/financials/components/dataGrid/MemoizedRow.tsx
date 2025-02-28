@@ -32,6 +32,7 @@ const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
   textOverflow: 'ellipsis',
   padding: cellPadding,
   borderBottom: `1px solid ${theme.palette.divider}`,
+  borderRight: `1px solid ${theme.palette.divider}`,
   margin: 0,
   fontSize: '0.875rem',
   fontWeight: 'normal',
@@ -41,6 +42,9 @@ const StyledTableCell = styled(TableCell)(({ theme }: { theme: Theme }) => ({
 const StyledTableRow = styled(TableRow)(({ theme }: { theme: Theme }) => ({
   lineHeight: 1,
   // Removed hover effect
+  '& td:last-child': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
 }));
 
 const StyledFirstColumnCell = styled(StyledTableCell)(({ theme }: { theme: Theme }) => ({
@@ -152,6 +156,7 @@ const MemoizedRow = memo(
               top: isSticky ? headerHeight : 'auto',
               zIndex: isSticky ? 10 : 3, // Increase z-index when sticky to match other columns
               borderRight: `1px solid ${theme.palette.divider}`,
+              borderLeft: `1px solid ${theme.palette.divider}`,
               width: FIRST_COLUMN_WIDTH,
               minWidth: FIRST_COLUMN_WIDTH,
               paddingLeft: `${row.depth * 1.5}rem`, // Increased indentation

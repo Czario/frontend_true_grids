@@ -11,6 +11,7 @@ export const StyledTableHeadCell = styled('th')(({ theme }: { theme: Theme }) =>
   boxShadow: theme.shadows[1],
   fontFamily: 'Roboto, sans-serif',
   fontSize: '0.875rem',
+  border: `1px solid ${theme.palette.divider}`,
 }));
 
 export const StyledButton = styled(Button, {
