@@ -18,6 +18,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import CommentIcon from '@mui/icons-material/Comment';
 import { flexRender, Row } from '@tanstack/react-table';
 import { ParsedRow } from '@/modules/financials/interfaces/financials';
+import { highlightText } from '../../utils/highlightText';
 
 const FIRST_COLUMN_WIDTH = 300;
 const DEFAULT_COLUMN_WIDTH = 100;
@@ -74,11 +75,12 @@ export interface MemoizedRowProps {
   setRowRef?: RefCallback<HTMLTableRowElement>;
   isParent: boolean;
   sx?: object;
+  searchTerm?: string;
 }
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
-    ({ row, rowKey, onCellClick, isSticky, headerHeight, setRowRef, isParent, sx }, ref) => {
+    ({ row, rowKey, onCellClick, isSticky, headerHeight, setRowRef, isParent, sx, searchTerm }, ref) => {
       // Track both row hover and specific cell hover
       const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
@@ -142,10 +144,15 @@ const MemoizedRow = memo(
                     maxWidth: 'calc(100% - 24px)',
                   }}
                 >
-                  {flexRender(
-                    row.getVisibleCells()[0].column.columnDef.cell,
-                    row.getVisibleCells()[0].getContext()
-                  )}
+                  {searchTerm 
+                    ? highlightText(
+                        row.getVisibleCells()[0].getValue() as string,
+                        searchTerm
+                      )
+                    : flexRender(
+                        row.getVisibleCells()[0].column.columnDef.cell,
+                        row.getVisibleCells()[0].getContext()
+                      )}
                 </Box>
               </CustomTooltip>
             </Box>

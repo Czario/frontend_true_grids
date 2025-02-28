@@ -13,8 +13,10 @@ import {
   useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
+  getFilteredRowModel,
   flexRender,
   ColumnDef,
+  FilterFn,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -35,6 +37,8 @@ import MemoizedRow from './MemoizedRow';
 import ChartModal from '../chartsViewer/ChartModal';
 import { StyledTableHeadCell } from './StyledComponents';
 import { FlatParsedRow, StatementTableProps } from './types';
+import TableSearch from './TableSearch';
+import { highlightText } from '../../utils/highlightText';
 
 const pdfUrl = '/doc_files/tesla_doc_1.pdf';
 
@@ -46,6 +50,17 @@ const DEFAULT_HEADER_HEIGHT = 28; // Reduced header height
 const FIRST_COLUMN_WIDTH = 470; // Fixed width for the first column
 const DEFAULT_COLUMN_WIDTH = 120; // Fixed width for other columns
 
+// Global search filter function
+const globalFilterFn: FilterFn<ParsedRow> = (row, columnId, searchTerm) => {
+  const searchable = Object.values(row.original).filter(val => 
+    typeof val === 'string' || typeof val === 'number'
+  );
+  
+  return searchable.some(val => 
+    String(val).toLowerCase().includes(searchTerm.toLowerCase())
+  );
+};
+
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [years, setYears] = useState(3);
   const [maxYears, setMaxYears] = useState(false);
@@ -56,6 +71,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [reversed, setReversed] = useState(false);
   const [chartModalOpen, setChartModalOpen] = useState(false);
   const [clickedRowId, setClickedRowId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const headerRowRef = useRef<HTMLTableRowElement>(null);
@@ -63,6 +79,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isTableMounted, setIsTableMounted] = useState(false);
 
   const parsedData = useMemo(() => parseData(data), [data]);
 
@@ -109,6 +126,14 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     setReversed(!reversed);
   };
 
+  const handleSearch = useCallback((term: string) => {
+    setSearchTerm(term);
+    // Expand all rows when searching for better visibility
+    if (term) {
+      handleExpandAll();
+    }
+  }, []);
+
   useLayoutEffect(() => {
     const measureHeaderOffset = () => {
       if (headerRowRef.current && tableContainerRef.current) {
@@ -152,6 +177,10 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
         return typeof value === 'number' ? value.toLocaleString() : value;
       },
       size: index === 0 ? FIRST_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH,
+      cell: ({ getValue }) => {
+        const value = getValue() as string;
+        return searchTerm ? highlightText(value, searchTerm) : value;
+      }
     }));
 
     const barChartColumn: ColumnDef<ParsedRow> = {
@@ -177,17 +206,20 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
       newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1).reverse()];
     }
     return { columns: newColumns, rows: parsedData.rows, headerRow };
-  }, [parsedData, handleOpenChartModal, reversed]);
+  }, [parsedData, handleOpenChartModal, reversed, searchTerm]);
 
   const table = useReactTable<ParsedRow>({
     data: rows,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSubRows: (row) => row.children,
     state: {
       expanded,
+      globalFilter: searchTerm,
     },
+    globalFilterFn,
     onExpandedChange: (updaterOrValue) =>
       setExpanded(updaterOrValue as Record<string, boolean>),
   });
@@ -197,37 +229,95 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   };
 
   useEffect(() => {
+    if (tableContainerRef.current) {
+      setIsTableMounted(true);
+    }
+    return () => {
+      setIsTableMounted(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Only set up the scroll handler if the table is mounted
+    if (!isTableMounted || !tableContainerRef.current) return;
+    
     const container = tableContainerRef.current;
-    if (!container) return;
+    let scrollHandler: (() => void) | null = null;
     let ticking = false;
-    const handleScroll = () => {
+    
+    scrollHandler = () => {
+      // Safety check - if container disappeared during execution, remove the handler
+      if (!tableContainerRef.current) {
+        if (container && scrollHandler) {
+          container.removeEventListener('scroll', scrollHandler);
+        }
+        return;
+      }
+      
       if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = container.scrollTop;
-          let currentStickyId: string | null = null;
-          let maxOffset = -Infinity;
-          Object.entries(parentRowRefs.current).forEach(([rowId, el]) => {
-            if (el) {
-              const offset = el.offsetTop;
-              if (offset <= scrollTop + headerHeight && offset > maxOffset) {
-                maxOffset = offset;
-                currentStickyId = rowId;
-              }
-            }
-          });
-          setStickyRowId(currentStickyId);
-          ticking = false;
-        });
         ticking = true;
+        
+        // Use requestIdleCallback if available, otherwise use requestAnimationFrame
+        const scheduleUpdate = window.requestIdleCallback || window.requestAnimationFrame;
+        
+        scheduleUpdate(() => {
+          try {
+            // Additional safety checks
+            if (!tableContainerRef.current || !isTableMounted) {
+              ticking = false;
+              return;
+            }
+            
+            const currentContainer = tableContainerRef.current;
+            const scrollTop = currentContainer.scrollTop;
+            
+            let currentStickyId: string | null = null;
+            let maxOffset = -Infinity;
+            
+            Object.entries(parentRowRefs.current).forEach(([rowId, el]) => {
+              if (el) {
+                const offset = el.offsetTop;
+                if (offset <= scrollTop + headerHeight && offset > maxOffset) {
+                  maxOffset = offset;
+                  currentStickyId = rowId;
+                }
+              }
+            });
+            
+            setStickyRowId(currentStickyId);
+          } catch (error) {
+            console.error('Error in scroll handler:', error);
+          } finally {
+            ticking = false;
+          }
+        });
       }
     };
 
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [rows, headerHeight]);
+    // Use a small delay to ensure the DOM is ready
+    const timerId = setTimeout(() => {
+      if (container && scrollHandler) {
+        container.addEventListener('scroll', scrollHandler);
+      }
+    }, 100); // Longer timeout for extra safety
+
+    return () => {
+      clearTimeout(timerId);
+      if (container && scrollHandler) {
+        container.removeEventListener('scroll', scrollHandler);
+      }
+    };
+  }, [headerHeight, rows, isTableMounted]);
 
   return (
     <>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+        <TableSearch 
+          onSearch={handleSearch}
+          searchTerm={searchTerm}
+        />
+      </Box>
+      
       <TableContainer
         ref={tableContainerRef}
         sx={{
@@ -435,6 +525,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   headerHeight={headerHeight}
                   setRowRef={isParent ? setParentRowRef(row.id) : undefined}
                   isParent={isParent}
+                  searchTerm={searchTerm}
                 />
               );
             })}
