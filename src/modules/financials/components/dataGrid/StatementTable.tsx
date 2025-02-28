@@ -44,7 +44,7 @@ const EnhancedDocViewer = dynamic(() => import('../docViewer/DocViewerModal'), {
 
 const DEFAULT_HEADER_HEIGHT = 28; // Reduced header height
 const FIRST_COLUMN_WIDTH = 470; // Fixed width for the first column
-const DEFAULT_COLUMN_WIDTH = 100; // Fixed width for other columns
+const DEFAULT_COLUMN_WIDTH = 120; // Fixed width for other columns
 
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [years, setYears] = useState(3);

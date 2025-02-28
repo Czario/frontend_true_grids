@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, forwardRef, RefCallback } from 'react';
+import React, { memo, forwardRef, RefCallback, useCallback, useState } from 'react';
 import {
   TableRow,
   TableCell,
@@ -13,6 +13,9 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import CommentIcon from '@mui/icons-material/Comment';
 import { flexRender, Row } from '@tanstack/react-table';
 import { ParsedRow } from '@/modules/financials/interfaces/financials';
 
@@ -76,6 +79,13 @@ export interface MemoizedRowProps {
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
     ({ row, rowKey, onCellClick, isSticky, headerHeight, setRowRef, isParent, sx }, ref) => {
+      // Track both row hover and specific cell hover
+      const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
+
+      const handleCopy = useCallback((value: string) => {
+        navigator.clipboard.writeText(value);
+      }, []);
+      
       return (
         <StyledTableRow
           ref={(node) => {
@@ -140,29 +150,128 @@ const MemoizedRow = memo(
               </CustomTooltip>
             </Box>
           </StyledFirstColumnCell>
-          {row.getVisibleCells().slice(1).map((cell, cellIndex) => (
+          {/* Handle barChart column separately without icons */}
+          {row.getVisibleCells().slice(1, 2).map((cell, cellIndex) => (
             <StyledTableCell
               key={`${cell.id}-${cellIndex}`}
               sx={(theme) => ({
-                width: DEFAULT_COLUMN_WIDTH,
-                minWidth: DEFAULT_COLUMN_WIDTH,
-                textAlign: 'right',
+                width: DEFAULT_COLUMN_WIDTH / 2,
+                minWidth: DEFAULT_COLUMN_WIDTH / 2,
+                textAlign: 'center',
                 ...(isSticky && {
                   position: 'sticky',
                   top: headerHeight,
                   zIndex: 9,
-                  backgroundColor: theme.palette.background.default, // Match first column background
+                  backgroundColor: theme.palette.background.default,
                   boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)',
-                  opacity: 1, // Ensure sticky cells are opaque
+                  opacity: 1,
                 }),
                 fontWeight: isParent ? 'bold' : 'normal',
               })}
               role="cell"
-              onClick={() => onCellClick(cell.getValue() as string)}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </StyledTableCell>
           ))}
+          {/* Modified implementation for remaining columns */}
+          {row.getVisibleCells().slice(2).map((cell, cellIndex) => {
+            const cellId = `${row.id}-${cell.id}`;
+            const cellValue = cell.getValue() as string;
+            
+            return (
+              <StyledTableCell
+                key={`${cell.id}-${cellIndex}`}
+                sx={(theme) => ({
+                  width: DEFAULT_COLUMN_WIDTH,
+                  minWidth: DEFAULT_COLUMN_WIDTH,
+                  position: 'relative',
+                  paddingLeft: '2px',
+                  paddingRight: '4px',
+                  ...(isSticky && {
+                    position: 'sticky',
+                    top: headerHeight,
+                    zIndex: 9,
+                    backgroundColor: theme.palette.background.default,
+                    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)',
+                    opacity: 1,
+                  }),
+                  fontWeight: isParent ? 'bold' : 'normal',
+                })}
+                role="cell"
+                onMouseEnter={() => setHoveredCellId(cellId)}
+                onMouseLeave={() => setHoveredCellId(null)}
+              >
+                <Box sx={{ 
+                  display: 'flex', 
+                  width: '100%',
+                  position: 'relative', 
+                }}>
+                  {/* Only render icons when specific cell is hovered */}
+                  {hoveredCellId === cellId && (
+                    <Box 
+                      sx={{ 
+                        display: 'flex',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '4px',
+                        position: 'absolute',
+                        left: 0,
+                        zIndex: 2,
+                        boxShadow: '0 0 5px rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      <IconButton 
+                        size="small" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopy(cellValue);
+                        }}
+                        sx={{ padding: '2px' }}
+                        title="Copy to clipboard"
+                      >
+                        <ContentCopyIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
+                      </IconButton>
+                      <IconButton 
+                        size="small" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onCellClick(cellValue);
+                        }}
+                        sx={{ padding: '2px' }}
+                        title="Audit"
+                      >
+                        <ReceiptIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
+                      </IconButton>
+                      <IconButton 
+                        size="small" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Comment clicked for', cellValue);
+                        }}
+                        sx={{ padding: '2px' }}
+                        title="Comment"
+                      >
+                        <CommentIcon fontSize="small" sx={{ fontSize: '0.9rem' }} />
+                      </IconButton>
+                    </Box>
+                  )}
+                  
+                  {/* Cell content */}
+                  <Box sx={{
+                    width: '100%',
+                    textAlign: 'right',
+                    padding: '0 4px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                  title={cellValue} // Native HTML tooltip instead of React component
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Box>
+                </Box>
+              </StyledTableCell>
+            );
+          })}
         </StyledTableRow>
       );
     }
