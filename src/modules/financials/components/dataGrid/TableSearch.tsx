@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Box, IconButton, InputBase, Paper, ClickAwayListener, Grow } from '@mui/material';
+import { Box, IconButton, InputBase, Paper, ClickAwayListener, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import useDebounce from '../../hooks/useDebounce';
@@ -7,16 +7,17 @@ import useDebounce from '../../hooks/useDebounce';
 interface TableSearchProps {
   onSearch: (term: string) => void;
   searchTerm: string;
+  resultCount?: number; // New prop to show result count
 }
 
-const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
+const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm, resultCount }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [inputValue, setInputValue] = useState(searchTerm);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const mountRef = useRef<HTMLDivElement>(null);
   
-  // Debounce search input to reduce render frequency
-  const debouncedSearchTerm = useDebounce(inputValue, 200);
+  // Faster debounce for better UX
+  const debouncedSearchTerm = useDebounce(inputValue, 150);
 
   // Handle input change with debouncing
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +26,7 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
 
   // Effect for when the debounced search term changes
   useEffect(() => {
-    // Only trigger the search if the debounced value doesn't match current searchTerm
+    // Only trigger search if the debounced value actually changed
     if (debouncedSearchTerm !== searchTerm) {
       onSearch(debouncedSearchTerm);
     }
@@ -36,14 +37,18 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
     setInputValue(searchTerm);
   }, [searchTerm]);
 
-  // Use a safer approach to show/hide the search box
+  // Open search box
   const handleSearchClick = useCallback(() => {
-    // Set a small delay to ensure any pending state updates complete first
+    setIsSearchOpen(true);
+    // Schedule focus after state update completes
     setTimeout(() => {
-      setIsSearchOpen(true);
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
     }, 50);
   }, []);
 
+  // Close and clear search
   const handleCloseSearch = useCallback(() => {
     if (searchTerm) {
       setInputValue('');
@@ -52,6 +57,7 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
     setIsSearchOpen(false);
   }, [onSearch, searchTerm]);
 
+  // Handle click away
   const handleClickAway = useCallback(() => {
     if (!inputValue) {
       setIsSearchOpen(false);
@@ -65,7 +71,7 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
         if (searchInputRef.current) {
           searchInputRef.current.focus();
         }
-      }, 150);
+      }, 50);
       return () => clearTimeout(timerId);
     }
   }, [isSearchOpen]);
@@ -87,7 +93,7 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
       
       {isSearchOpen && (
         <ClickAwayListener onClickAway={handleClickAway}>
-          <div>  {/* Using div instead of Grow to avoid measurement issues */}
+          <div>
             <Paper
               elevation={2}
               sx={{
@@ -107,6 +113,22 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm }) => {
                 sx={{ ml: 1, flex: 1, fontSize: '0.875rem' }}
                 inputProps={{ 'aria-label': 'search table' }}
               />
+              
+              {/* Show result count when searching */}
+              {inputValue && typeof resultCount === 'number' && (
+                <Typography 
+                  variant="caption" 
+                  sx={{ 
+                    mx: 0.5, 
+                    color: resultCount > 0 ? 'success.main' : 'text.disabled',
+                    fontSize: '0.7rem',
+                    userSelect: 'none'
+                  }}
+                >
+                  {resultCount}
+                </Typography>
+              )}
+              
               {inputValue && (
                 <IconButton 
                   size="small" 

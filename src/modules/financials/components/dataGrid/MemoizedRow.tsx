@@ -146,7 +146,7 @@ const MemoizedRow = memo(
                 >
                   {searchTerm 
                     ? highlightText(
-                        row.getVisibleCells()[0].getValue() as string,
+                        String(row.getVisibleCells()[0].getValue() || ''),
                         searchTerm
                       )
                     : flexRender(
@@ -183,7 +183,7 @@ const MemoizedRow = memo(
           {/* Modified implementation for remaining columns */}
           {row.getVisibleCells().slice(2).map((cell, cellIndex) => {
             const cellId = `${row.id}-${cell.id}`;
-            const cellValue = cell.getValue() as string;
+            const cellValue = String(cell.getValue() || '');
             
             return (
               <StyledTableCell
@@ -273,7 +273,9 @@ const MemoizedRow = memo(
                   }}
                   title={cellValue} // Native HTML tooltip instead of React component
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {searchTerm
+                      ? highlightText(cellValue, searchTerm)
+                      : flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Box>
                 </Box>
               </StyledTableCell>

@@ -39,6 +39,8 @@ import { StyledTableHeadCell } from './StyledComponents';
 import { FlatParsedRow, StatementTableProps } from './types';
 import TableSearch from './TableSearch';
 import { highlightText } from '../../utils/highlightText';
+import { normalizeSearchText, prepareForSearch, multiTermSearch } from '../../utils/searchUtils';
+import useDebounce from '../../hooks/useDebounce';
 
 const pdfUrl = '/doc_files/tesla_doc_1.pdf';
 
@@ -50,28 +52,22 @@ const DEFAULT_HEADER_HEIGHT = 28; // Reduced header height
 const FIRST_COLUMN_WIDTH = 470; // Fixed width for the first column
 const DEFAULT_COLUMN_WIDTH = 120; // Fixed width for other columns
 
-// Improved global search filter function
+// Much more robust search filter function
 const globalFilterFn: FilterFn<ParsedRow> = (row, columnId, searchTerm) => {
   // Exit quickly if no search term
   if (!searchTerm || searchTerm.length === 0) return true;
   
-  // Normalize search term for better matching
-  const lowerSearchTerm = searchTerm.toLowerCase().trim();
-  
-  // Skip filtering empty terms
-  if (lowerSearchTerm === '') return true;
-
-  // Create a searchable representation of the row data
-  const searchableFields = Object.entries(row.original)
-    .filter(([key, value]) => 
-      // Only include string and number values from meaningful fields
-      (typeof value === 'string' || typeof value === 'number') &&
-      !['id', 'hasChildren', 'children', '__expanded'].includes(key)
-    )
-    .map(([key, value]) => String(value).toLowerCase());
-  
-  // Check if any field contains the search term
-  return searchableFields.some(field => field.includes(lowerSearchTerm));
+  try {
+    // Prepare row data for search
+    const searchableText = prepareForSearch(row.original);
+    
+    // Use advanced multi-term search
+    return multiTermSearch(searchableText, searchTerm);
+  } catch (error) {
+    console.error('Search filter error:', error);
+    // Don't filter out rows if there's an error
+    return true;
+  }
 };
 
 const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
@@ -85,6 +81,9 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
   const [chartModalOpen, setChartModalOpen] = useState(false);
   const [clickedRowId, setClickedRowId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchResultCount, setSearchResultCount] = useState<number>(0);
+  const [rawSearchTerm, setRawSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(rawSearchTerm, 200);
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const headerRowRef = useRef<HTMLTableRowElement>(null);
@@ -139,17 +138,9 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     setReversed(!reversed);
   };
 
-  // Update the handleSearch function to use memoization
+  // Update the handleSearch function
   const handleSearch = useCallback((term: string) => {
-    // Clean up the search term
-    const cleanedTerm = term.trim();
-    
-    setSearchTerm(cleanedTerm);
-    
-    // Expand all rows when searching for better visibility, but only if search term is not empty
-    if (cleanedTerm) {
-      handleExpandAll();
-    }
+    setRawSearchTerm(term);
   }, []);
 
   useLayoutEffect(() => {
@@ -237,7 +228,11 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
       expanded,
       globalFilter: searchTerm,
     },
-    globalFilterFn,
+    filterFns: {
+      customSearch: globalFilterFn,
+    },
+    globalFilterFn: 'customSearch',
+    enableGlobalFilter: true,
     onExpandedChange: (updaterOrValue) =>
       setExpanded(updaterOrValue as Record<string, boolean>),
   });
@@ -309,7 +304,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
             ticking = false;
           }
         });
-      }
+      }  
     };
 
     // Use a small delay to ensure the DOM is ready
@@ -327,12 +322,61 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
     };
   }, [headerHeight, rows, isTableMounted]);
 
+  useEffect(() => {
+    if (searchTerm) {
+      // Count visible rows after filtering
+      const visibleRowsCount = table.getRowModel().rows.length;
+      setSearchResultCount(visibleRowsCount);
+    } else {
+      setSearchResultCount(0);
+    }
+  }, [searchTerm, table.getRowModel().rows.length]);
+
+  // Use the debounced search term for filtering
+  useEffect(() => {
+    // This ensures search only happens after debounce
+    setSearchTerm(debouncedSearchTerm);
+    
+    // Expand all rows when searching for better visibility
+    if (debouncedSearchTerm) {
+      handleExpandAll();
+    }
+  }, [debouncedSearchTerm]);
+
+  // New effect: offload filtering to a web worker
+  useEffect(() => {
+    if (!window.Worker) return; // Fallback if unsupported
+
+    const worker = new Worker(new URL('../../workers/searchWorker.ts', import.meta.url));
+    // Pass rows in a light format (using flatRows or preprocessed data)
+    worker.postMessage({ rows: flatRows, searchTerm });
+    
+    worker.onmessage = (e) => {
+      const { filteredIds, error } = e.data;
+      if (error) {
+        console.error(error);
+        setSearchResultCount(0);
+      } else if (filteredIds === null) {
+        // null means no filtering; show all
+        setSearchResultCount(flatRows.length);
+      } else {
+        setSearchResultCount(filteredIds.length);
+      }
+      worker.terminate();
+    };
+
+    return () => {
+      worker.terminate();
+    };
+  }, [searchTerm, flatRows]);
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
         <TableSearch 
           onSearch={handleSearch}
-          searchTerm={searchTerm}
+          searchTerm={rawSearchTerm}
+          resultCount={searchTerm ? searchResultCount : undefined}
         />
       </Box>
       
@@ -372,14 +416,14 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   top: 0,
                   left: 0,
                   zIndex: 11, // Higher than sticky rows (which was 10)
-                    backgroundColor: 'grey.200',
-                    opacity: 1,
-                    borderRight: '1px solid',
-                    borderColor: 'divider',
-                    width: FIRST_COLUMN_WIDTH,
-                    minWidth: FIRST_COLUMN_WIDTH,
-                    textAlign: 'left',
-                    boxShadow: `0px 2px 4px -1px rgba(0,0,0,0.2), inset -1px 0 0 0 ${(theme: any) => theme.palette.divider}`, // Consistent with sticky rows
+                  backgroundColor: 'grey.200',
+                  opacity: 1,
+                  borderRight: '1px solid',
+                  borderColor: 'divider',
+                  width: FIRST_COLUMN_WIDTH,
+                  minWidth: FIRST_COLUMN_WIDTH,
+                  textAlign: 'left',
+                  boxShadow: `0px 2px 4px -1px rgba(0,0,0,0.2), inset -1px 0 0 0 ${(theme: any) => theme.palette.divider}`, // Consistent with sticky rows
                 }}
                 role="columnheader"
               >
@@ -395,7 +439,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                         paddingLeft: 0,
                         backgroundColor: 'transparent !important',
                         transition: 'none',
-                        '&:hover': {
+                        '&:hover': { 
                           backgroundColor: 'transparent !important',
                           boxShadow: 'none !important',
                         },
@@ -429,7 +473,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                         paddingLeft: 0,
                         backgroundColor: 'transparent !important',
                         transition: 'none',
-                        '&:hover': {
+                        '&:hover': { 
                           backgroundColor: 'transparent !important',
                           boxShadow: 'none !important',
                         },
@@ -453,7 +497,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                       <UnfoldMoreIcon />
                     </IconButton>
                   )}
-                  <Box
+                  <Box 
                     ml={-1}
                     sx={{
                       whiteSpace: 'nowrap',
@@ -491,7 +535,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                       <Box
                         sx={{
                           display: 'inline-block',
-                          textAlign: 'right', 
+                          textAlign: 'right',
                           width: 'calc(100% - 28px)', // Reserve space for the button
                           pr: 1,
                           overflow: 'hidden',
