@@ -1,6 +1,7 @@
 'use client';
 
-import React, { memo, forwardRef, RefCallback, useCallback, useState, useEffect } from 'react';
+import React, { memo, forwardRef, RefCallback, useCallback, useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import {
   TableRow,
   TableCell,
@@ -16,6 +17,9 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import CommentIcon from '@mui/icons-material/Comment';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import SettingsIcon from '@mui/icons-material/Settings';
+import FunctionsIcon from '@mui/icons-material/Functions';
 import { flexRender, Row } from '@tanstack/react-table';
 import { ParsedRow } from '@/modules/financials/interfaces/financials';
 import { highlightText } from '../../utils/highlightText';
@@ -88,25 +92,137 @@ const ActionTooltip = styled(({ className, ...props }: any) => (
   leaveTouchDelay: 0,
 }));
 
-// Memoize the tooltip content
-const MemoizedTooltipContent = memo(({ value, searchTerm }: { value: string, searchTerm?: string }) => (
-  <Box
-    ml={-1} // Reduced space between arrow and text
-    sx={{
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      maxWidth: 'calc(100% - 24px)',
-    }}
-  >
-    {searchTerm
-      ? highlightText(
-          String(value || ''),
-          searchTerm
-        )
-      : value}
-  </Box>
-));
+// Create a portal-based tooltip component that renders outside the table DOM
+const TextPopup = ({ 
+  text, 
+  searchTerm,
+  anchorEl,
+  onClose 
+}: { 
+  text: string, 
+  searchTerm?: string,
+  anchorEl: HTMLElement | null,
+  onClose: () => void
+}) => {
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  // Calculate position based on anchor element
+  useEffect(() => {
+    if (!anchorEl) return;
+    
+    const rect = anchorEl.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    
+    setPosition({
+      top: rect.bottom + scrollTop + 5, // 5px below the element
+      left: rect.left + scrollLeft,
+    });
+  }, [anchorEl]);
+  
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node) && 
+          anchorEl && !anchorEl.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [anchorEl, onClose]);
+
+  if (!anchorEl) return null;
+
+  // Create portal to render outside table DOM structure
+  return ReactDOM.createPortal(
+    <div
+      ref={popupRef}
+      style={{
+        position: 'absolute',
+        top: position.top,
+        left: position.left,
+        zIndex: 9999, // Very high z-index
+        backgroundColor: 'white',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        padding: '8px 12px',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+        maxWidth: '400px',
+        minWidth: '200px',
+        wordBreak: 'break-word',
+        whiteSpace: 'normal',
+        fontSize: '0.875rem',
+        lineHeight: 1.5,
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {searchTerm ? highlightText(text, searchTerm) : text}
+    </div>,
+    document.body // Render directly in body
+  );
+};
+
+// Modify the MemoizedTooltipContent component
+const MemoizedTooltipContent = memo(({ 
+  value, 
+  searchTerm
+}: { 
+  value: string, 
+  searchTerm?: string 
+}) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  
+  // Check if content is actually overflowing
+  useEffect(() => {
+    if (contentRef.current) {
+      const isTextOverflowing = contentRef.current.scrollWidth > contentRef.current.clientWidth;
+      setIsOverflowing(isTextOverflowing);
+    }
+  }, [value]);
+  
+  return (
+    <Box
+      ml={-1}
+      sx={{
+        position: 'relative',
+        display: 'inline-block',
+        maxWidth: 'calc(100% - 24px)',
+      }}
+    >
+      {/* Regular display with ellipsis */}
+      <Box
+        ref={contentRef}
+        sx={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          width: '100%',
+          cursor: isOverflowing ? 'pointer' : 'default',
+        }}
+        onMouseEnter={() => isOverflowing && setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        onClick={() => isOverflowing && setShowTooltip(prev => !prev)}
+      >
+        {searchTerm
+          ? highlightText(String(value || ''), searchTerm)
+          : value}
+      </Box>
+      
+      {/* Portal-based tooltip */}
+      <TextPopup 
+        text={String(value || '')}
+        searchTerm={searchTerm}
+        anchorEl={showTooltip ? contentRef.current : null}
+        onClose={() => setShowTooltip(false)}
+      />
+    </Box>
+  );
+});
 
 export interface MemoizedRowProps {
   row: Row<ParsedRow>;
@@ -118,11 +234,12 @@ export interface MemoizedRowProps {
   isParent: boolean;
   sx?: object;
   searchTerm?: string;
+  onChartClick?: (rowId: string) => void; // Add this prop
 }
 
 const MemoizedRow = memo(
   forwardRef<HTMLTableRowElement, MemoizedRowProps>(
-    ({ row, rowKey, onCellClick, isSticky, headerHeight, setRowRef, isParent, sx, searchTerm }, ref) => {
+    ({ row, rowKey, onCellClick, isSticky, headerHeight, setRowRef, isParent, sx, searchTerm, onChartClick }, ref) => {
       // Track both row hover and specific cell hover
       const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
@@ -138,6 +255,14 @@ const MemoizedRow = memo(
 
         return () => clearTimeout(timer); // Cleanup the timeout
       }, []);
+
+      // Update the chart click handler
+      const handleChartClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (onChartClick && row.id) {
+          onChartClick(row.id);
+        }
+      }, [row.id, onChartClick]);
       
       return (
         <StyledTableRow
@@ -171,51 +296,84 @@ const MemoizedRow = memo(
               fontWeight: isParent ? 'bold' : 'normal',
             })}
             role="cell"
+            onMouseEnter={() => setHoveredCellId(`${row.id}-firstcol`)}
+            onMouseLeave={() => setHoveredCellId(null)}
           >
-            <Box display="flex" alignItems="center">
-              {/* Expand/Collapse Button placed before the name */}
-              <IconButton
-                size="small"
-                onClick={row.getToggleExpandedHandler()}
-                disabled={!row.original.hasChildren}
-                aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
-                sx={{
-                  visibility: row.original.hasChildren ? 'visible' : 'hidden',
-                  transition: 'transform 0.2s ease',
-                }}
-              >
-                {row.getIsExpanded() ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
-              </IconButton>
-              <CustomTooltip title={row.getVisibleCells()[0].getValue() as string} arrow TransitionComponent={null}>
-                <MemoizedTooltipContent value={row.getVisibleCells()[0].getValue() as string} searchTerm={searchTerm} />
-              </CustomTooltip>
+            <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+              {/* Left side with expand/collapse and name */}
+              <Box display="flex" alignItems="center" style={{ maxWidth: 'calc(100% - 90px)' }}>
+                {/* Expand/Collapse Button placed before the name */}
+                <IconButton
+                  size="small"
+                  onClick={row.getToggleExpandedHandler()}
+                  disabled={!row.original.hasChildren}
+                  aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
+                  sx={{
+                    visibility: row.original.hasChildren ? 'visible' : 'hidden',
+                    transition: 'transform 0.2s ease',
+                  }}
+                >
+                  {row.getIsExpanded() ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+                </IconButton>
+                
+                {/* Use direct component instead of CustomTooltip for better hover behavior */}
+                <MemoizedTooltipContent 
+                  value={row.getVisibleCells()[0].getValue() as string} 
+                  searchTerm={searchTerm} 
+                />
+              </Box>
+              
+              {/* Row action icons - shown on hover for all rows */}
+              {hoveredCellId === `${row.id}-firstcol` && (
+                <Box display="flex" alignItems="center" sx={{ mr: 0.5 }}>
+                  <ActionTooltip 
+                    title="Settings" 
+                    placement="top"
+                    arrow
+                    enterDelay={0}
+                  >
+                    <IconButton 
+                      size="small"
+                      sx={{ padding: '1px' }}
+                    >
+                      <SettingsIcon fontSize="small" sx={{ fontSize: '0.9rem', color: 'grey.500' }} />
+                    </IconButton>
+                  </ActionTooltip>
+                  
+                  <ActionTooltip 
+                    title="Chart" 
+                    placement="top"
+                    arrow
+                    enterDelay={0}
+                  >
+                    <IconButton 
+                      size="small"
+                      onClick={handleChartClick}
+                      sx={{ padding: '1px' }}
+                    >
+                      <BarChartIcon fontSize="small" sx={{ fontSize: '0.9rem', color: 'grey.500' }} />
+                    </IconButton>
+                  </ActionTooltip>
+                  
+                  <ActionTooltip 
+                    title="Formula" 
+                    placement="top"
+                    arrow
+                    enterDelay={0}
+                  >
+                    <IconButton 
+                      size="small"
+                      sx={{ padding: '1px' }}
+                    >
+                      <FunctionsIcon fontSize="small" sx={{ fontSize: '0.9rem', color: 'grey.500' }} />
+                    </IconButton>
+                  </ActionTooltip>
+                </Box>
+              )}
             </Box>
           </StyledFirstColumnCell>
-          {/* Handle barChart column separately without icons */}
-          {row.getVisibleCells().slice(1, 2).map((cell, cellIndex) => (
-            <StyledTableCell
-              key={`${cell.id}-${cellIndex}`}
-              sx={(theme) => ({
-                width: DEFAULT_COLUMN_WIDTH / 2,
-                minWidth: DEFAULT_COLUMN_WIDTH / 2,
-                textAlign: 'center',
-                ...(isSticky && {
-                  position: 'sticky',
-                  top: headerHeight,
-                  zIndex: 9,
-                  backgroundColor: theme.palette.background.default,
-                  boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)',
-                  opacity: 1,
-                }),
-                fontWeight: isParent ? 'bold' : 'normal',
-              })}
-              role="cell"
-            >
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </StyledTableCell>
-          ))}
-          {/* Modified implementation for remaining columns */}
-          {row.getVisibleCells().slice(2).map((cell, cellIndex) => {
+          {/* Fix: Handle all non-first columns uniformly */}
+          {row.getVisibleCells().slice(1).map((cell, cellIndex) => {
             const cellId = `${row.id}-${cell.id}`;
             const cellValue = String(cell.getValue() || '');
             
@@ -228,6 +386,7 @@ const MemoizedRow = memo(
                   position: 'relative',
                   paddingLeft: '2px',
                   paddingRight: '4px',
+                  textAlign: 'right', // All non-first columns are right-aligned
                   ...(isSticky && {
                     position: 'sticky',
                     top: headerHeight,

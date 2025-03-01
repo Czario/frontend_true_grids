@@ -78,14 +78,24 @@ const TableSearch: React.FC<TableSearchProps> = ({ onSearch, searchTerm, resultC
 
   return (
     <Box 
-      sx={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', mb: 1 }}
+      sx={{ 
+        position: 'relative', 
+        display: 'flex',
+        justifyContent: 'flex-start',
+        // Remove the mb: 1 that was here previously to rely on parent spacing
+      }}
       ref={mountRef}
     >
       {!isSearchOpen && (
         <IconButton 
           onClick={handleSearchClick} 
           size="small"
-          sx={{ color: 'grey.700' }}
+          sx={{ 
+            color: 'grey.700',
+            padding: '4px', // Consistent padding
+            height: 32, // Match height with button
+            width: 32,
+          }}
         >
           <SearchIcon />
         </IconButton>

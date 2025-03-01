@@ -31,6 +31,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { parseData } from '../../utils/parseData';
 import { DataItem, ParsedRow } from '@/modules/financials/interfaces/financials';
 import MemoizedRow from './MemoizedRow';
@@ -192,30 +193,13 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
       }
     }));
 
-    const barChartColumn: ColumnDef<ParsedRow> = {
-      id: 'barChart',
-      header: '',
-      cell: ({ row }) => (
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            handleOpenChartModal(row.id);
-          }}
-          size="small"
-          sx={{ color: 'grey' }}
-        >
-          <BarChartIcon sx={{ color: 'grey' }} />
-        </IconButton>
-      ),
-      size: DEFAULT_COLUMN_WIDTH / 2,
-    };
-
-    let newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1)];
+    // Remove the separate barChart column - we'll add these actions to first column instead
+    let newColumns = [...mappedColumns];
     if (reversed) {
-      newColumns = [mappedColumns[0], barChartColumn, ...mappedColumns.slice(1).reverse()];
+      newColumns = [mappedColumns[0], ...mappedColumns.slice(1).reverse()];
     }
     return { columns: newColumns, rows: parsedData.rows, headerRow };
-  }, [parsedData, handleOpenChartModal, reversed, searchTerm]);
+  }, [parsedData, reversed, searchTerm]);
 
   const table = useReactTable<ParsedRow>({
     data: rows,
@@ -372,12 +356,36 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'flex-start', 
+          mb: 0.5, // Reduced from 1 to 0.5 to minimize space below
+          gap: 0.5, // Reduced from 2 to 0.5 for tighter alignment
+          alignItems: 'center'
+        }}
+      >
+        {/* Move search to left alignment */}
         <TableSearch 
           onSearch={handleSearch}
           searchTerm={rawSearchTerm}
           resultCount={searchTerm ? searchResultCount : undefined}
         />
+        
+        {/* Add reverse column button next to search */}
+        <IconButton
+          size="small"
+          onClick={handleReverseColumns}
+          aria-label="Reverse Columns"
+          sx={{ 
+            color: 'grey.700',
+            padding: '4px', // Consistent padding
+            height: 32, // Match height with search component
+            width: 32,
+          }}
+        >
+          <SwapHorizIcon fontSize="small" />
+        </IconButton>
       </Box>
       
       <TableContainer
@@ -520,43 +528,23 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   </Box>
                 </Box>
               </StyledTableHeadCell>
-              {table.getHeaderGroups()[0].headers.slice(1).map((header, index) => (
+              {table.getHeaderGroups()[0].headers.slice(1).map((header) => (
                 <StyledTableHeadCell
                   key={header.id}
                   sx={{
-                    width: header.column.id === 'barChart' ? DEFAULT_COLUMN_WIDTH / 2 : DEFAULT_COLUMN_WIDTH,
-                    minWidth: header.column.id === 'barChart' ? DEFAULT_COLUMN_WIDTH / 2 : DEFAULT_COLUMN_WIDTH,
+                    width: DEFAULT_COLUMN_WIDTH,
+                    minWidth: DEFAULT_COLUMN_WIDTH,
                     position: 'sticky',
                     top: 0,
-                    zIndex: 10, // Match z-index with sticky rows but lower than first column
+                    zIndex: 10,
                     backgroundColor: 'grey.200',
                     opacity: 1,
                     textAlign: 'right',
-                    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)', // Consistent shadow
+                    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2)',
                   }}
                   role="columnheader"
                 >
-                  {index === 0 ? (
-                    <Box position="relative" width="100%" display="flex" justifyContent="center" alignItems="center">
-                      {/* Centered button */}
-                      <IconButton
-                        size="small"
-                        onClick={handleReverseColumns}
-                        aria-label="Reverse Columns"
-                        sx={{
-                          color: 'grey.700',
-                          padding: '2px',
-                          '&:hover': {
-                            backgroundColor: 'transparent',
-                          },
-                        }}
-                      >
-                        <SwapHorizIcon fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  ) : (
-                    flexRender(header.column.columnDef.header, header.getContext())
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </StyledTableHeadCell>
               ))}
             </TableRow>
@@ -576,6 +564,7 @@ const StatementTable: React.FC<StatementTableProps> = ({ data }) => {
                   setRowRef={isParent ? setParentRowRef(row.id) : undefined}
                   isParent={isParent}
                   searchTerm={searchTerm}
+                  onChartClick={handleOpenChartModal} // Pass the chart click handler
                 />
               );
             })}
